@@ -1,0 +1,6385 @@
+{
+  "targetLang": "en",
+  "words": [
+    {
+      "word": "Hello",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Merhaba"
+        ]
+      }
+    },
+    {
+      "word": "Hi",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Selam"
+        ]
+      }
+    },
+    {
+      "word": "Please",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Lütfen"
+        ]
+      }
+    },
+    {
+      "word": "Thanks",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Teşekkürler"
+        ]
+      }
+    },
+    {
+      "word": "Sorry",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Üzgünüm"
+        ]
+      }
+    },
+    {
+      "word": "Yes",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Evet"
+        ]
+      }
+    },
+    {
+      "word": "No",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Hayır"
+        ]
+      }
+    },
+    {
+      "word": "Friend",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Arkadaş"
+        ]
+      }
+    },
+    {
+      "word": "Family",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Aile"
+        ]
+      }
+    },
+    {
+      "word": "Mother",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Anne"
+        ]
+      }
+    },
+    {
+      "word": "Father",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Baba"
+        ]
+      }
+    },
+    {
+      "word": "Brother",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Erkek kardeş"
+        ]
+      }
+    },
+    {
+      "word": "Sister",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kız kardeş"
+        ]
+      }
+    },
+    {
+      "word": "Child",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Çocuk"
+        ]
+      }
+    },
+    {
+      "word": "Baby",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Bebek"
+        ]
+      }
+    },
+    {
+      "word": "Man",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Adam"
+        ]
+      }
+    },
+    {
+      "word": "Woman",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kadın"
+        ]
+      }
+    },
+    {
+      "word": "Boy",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Erkek çocuk"
+        ]
+      }
+    },
+    {
+      "word": "Girl",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kız"
+        ]
+      }
+    },
+    {
+      "word": "People",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "İnsanlar"
+        ]
+      }
+    },
+    {
+      "word": "Name",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "İsim"
+        ]
+      }
+    },
+    {
+      "word": "Home",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Ev"
+        ]
+      }
+    },
+    {
+      "word": "House",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Ev"
+        ]
+      }
+    },
+    {
+      "word": "Room",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Oda"
+        ]
+      }
+    },
+    {
+      "word": "Door",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kapı"
+        ]
+      }
+    },
+    {
+      "word": "Window",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Pencere"
+        ]
+      }
+    },
+    {
+      "word": "Table",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Masa"
+        ]
+      }
+    },
+    {
+      "word": "Chair",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Sandalye"
+        ]
+      }
+    },
+    {
+      "word": "Bed",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yatak"
+        ]
+      }
+    },
+    {
+      "word": "Kitchen",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Mutfak"
+        ]
+      }
+    },
+    {
+      "word": "Bathroom",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Banyo"
+        ]
+      }
+    },
+    {
+      "word": "School",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Okul"
+        ]
+      }
+    },
+    {
+      "word": "Teacher",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Öğretmen"
+        ]
+      }
+    },
+    {
+      "word": "Student",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Öğrenci"
+        ]
+      }
+    },
+    {
+      "word": "Book",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kitap"
+        ]
+      }
+    },
+    {
+      "word": "Pen",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kalem"
+        ]
+      }
+    },
+    {
+      "word": "Bag",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Çanta"
+        ]
+      }
+    },
+    {
+      "word": "Phone",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Telefon"
+        ]
+      }
+    },
+    {
+      "word": "Computer",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Bilgisayar"
+        ]
+      }
+    },
+    {
+      "word": "Car",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Araba"
+        ]
+      }
+    },
+    {
+      "word": "Bus",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Otobüs"
+        ]
+      }
+    },
+    {
+      "word": "Train",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Tren"
+        ]
+      }
+    },
+    {
+      "word": "Plane",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Uçak"
+        ]
+      }
+    },
+    {
+      "word": "Bike",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Bisiklet"
+        ]
+      }
+    },
+    {
+      "word": "Street",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Sokak"
+        ]
+      }
+    },
+    {
+      "word": "City",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Şehir"
+        ]
+      }
+    },
+    {
+      "word": "Country",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Ülke"
+        ]
+      }
+    },
+    {
+      "word": "Map",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Harita"
+        ]
+      }
+    },
+    {
+      "word": "Water",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Su"
+        ]
+      }
+    },
+    {
+      "word": "Food",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yemek"
+        ]
+      }
+    },
+    {
+      "word": "Bread",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Ekmek"
+        ]
+      }
+    },
+    {
+      "word": "Milk",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Süt"
+        ]
+      }
+    },
+    {
+      "word": "Coffee",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kahve"
+        ]
+      }
+    },
+    {
+      "word": "Tea",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Çay"
+        ]
+      }
+    },
+    {
+      "word": "Apple",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Elma"
+        ]
+      }
+    },
+    {
+      "word": "Banana",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Muz"
+        ]
+      }
+    },
+    {
+      "word": "Rice",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Pirinç"
+        ]
+      }
+    },
+    {
+      "word": "Meat",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Et"
+        ]
+      }
+    },
+    {
+      "word": "Fish",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Balık"
+        ]
+      }
+    },
+    {
+      "word": "Egg",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yumurta"
+        ]
+      }
+    },
+    {
+      "word": "Breakfast",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kahvaltı"
+        ]
+      }
+    },
+    {
+      "word": "Lunch",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Öğle yemeği"
+        ]
+      }
+    },
+    {
+      "word": "Dinner",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Akşam yemeği"
+        ]
+      }
+    },
+    {
+      "word": "Restaurant",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Restoran"
+        ]
+      }
+    },
+    {
+      "word": "Menu",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Menü"
+        ]
+      }
+    },
+    {
+      "word": "Money",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Para"
+        ]
+      }
+    },
+    {
+      "word": "Shop",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Dükkan"
+        ]
+      }
+    },
+    {
+      "word": "Market",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Pazar"
+        ]
+      }
+    },
+    {
+      "word": "Price",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Fiyat"
+        ]
+      }
+    },
+    {
+      "word": "Cheap",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Ucuz"
+        ]
+      }
+    },
+    {
+      "word": "Expensive",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Pahalı"
+        ]
+      }
+    },
+    {
+      "word": "Clothes",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kıyafet"
+        ]
+      }
+    },
+    {
+      "word": "Shirt",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Gömlek"
+        ]
+      }
+    },
+    {
+      "word": "Shoes",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Ayakkabı"
+        ]
+      }
+    },
+    {
+      "word": "Hat",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Şapka"
+        ]
+      }
+    },
+    {
+      "word": "Day",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Gün"
+        ]
+      }
+    },
+    {
+      "word": "Night",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Gece"
+        ]
+      }
+    },
+    {
+      "word": "Morning",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Sabah"
+        ]
+      }
+    },
+    {
+      "word": "Evening",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Akşam"
+        ]
+      }
+    },
+    {
+      "word": "Week",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Hafta"
+        ]
+      }
+    },
+    {
+      "word": "Month",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Ay"
+        ]
+      }
+    },
+    {
+      "word": "Year",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yıl"
+        ]
+      }
+    },
+    {
+      "word": "Today",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Bugün"
+        ]
+      }
+    },
+    {
+      "word": "Tomorrow",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yarın"
+        ]
+      }
+    },
+    {
+      "word": "Yesterday",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Dün"
+        ]
+      }
+    },
+    {
+      "word": "Time",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Zaman"
+        ]
+      }
+    },
+    {
+      "word": "Hour",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Saat"
+        ]
+      }
+    },
+    {
+      "word": "Minute",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Dakika"
+        ]
+      }
+    },
+    {
+      "word": "Clock",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Saat"
+        ]
+      }
+    },
+    {
+      "word": "Now",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Şimdi"
+        ]
+      }
+    },
+    {
+      "word": "Later",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Sonra"
+        ]
+      }
+    },
+    {
+      "word": "Always",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Her zaman"
+        ]
+      }
+    },
+    {
+      "word": "Never",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Asla"
+        ]
+      }
+    },
+    {
+      "word": "Sometimes",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Bazen"
+        ]
+      }
+    },
+    {
+      "word": "Often",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Sık sık"
+        ]
+      }
+    },
+    {
+      "word": "Big",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Büyük"
+        ]
+      }
+    },
+    {
+      "word": "Small",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Küçük"
+        ]
+      }
+    },
+    {
+      "word": "Long",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Uzun"
+        ]
+      }
+    },
+    {
+      "word": "Short",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kısa"
+        ]
+      }
+    },
+    {
+      "word": "Hot",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Sıcak"
+        ]
+      }
+    },
+    {
+      "word": "Cold",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Soğuk"
+        ]
+      }
+    },
+    {
+      "word": "New",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yeni"
+        ]
+      }
+    },
+    {
+      "word": "Old",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Eski"
+        ]
+      }
+    },
+    {
+      "word": "Good",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "İyi"
+        ]
+      }
+    },
+    {
+      "word": "Bad",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kötü"
+        ]
+      }
+    },
+    {
+      "word": "Happy",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Mutlu"
+        ]
+      }
+    },
+    {
+      "word": "Sad",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Üzgün"
+        ]
+      }
+    },
+    {
+      "word": "Tired",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yorgun"
+        ]
+      }
+    },
+    {
+      "word": "Hungry",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Aç"
+        ]
+      }
+    },
+    {
+      "word": "Thirsty",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Susuz"
+        ]
+      }
+    },
+    {
+      "word": "Beautiful",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Güzel"
+        ]
+      }
+    },
+    {
+      "word": "Clean",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Temiz"
+        ]
+      }
+    },
+    {
+      "word": "Dirty",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kirli"
+        ]
+      }
+    },
+    {
+      "word": "Fast",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Hızlı"
+        ]
+      }
+    },
+    {
+      "word": "Slow",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yavaş"
+        ]
+      }
+    },
+    {
+      "word": "Easy",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kolay"
+        ]
+      }
+    },
+    {
+      "word": "Hard",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Zor"
+        ]
+      }
+    },
+    {
+      "word": "Open",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Açık"
+        ]
+      }
+    },
+    {
+      "word": "Close",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kapatmak"
+        ]
+      }
+    },
+    {
+      "word": "Come",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Gelmek"
+        ]
+      }
+    },
+    {
+      "word": "Go",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Gitmek"
+        ]
+      }
+    },
+    {
+      "word": "Walk",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yürümek"
+        ]
+      }
+    },
+    {
+      "word": "Run",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Koşmak"
+        ]
+      }
+    },
+    {
+      "word": "Sit",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Oturmak"
+        ]
+      }
+    },
+    {
+      "word": "Stand",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Ayakta durmak"
+        ]
+      }
+    },
+    {
+      "word": "Eat",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yemek"
+        ]
+      }
+    },
+    {
+      "word": "Drink",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "İçmek"
+        ]
+      }
+    },
+    {
+      "word": "Sleep",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Uyumak"
+        ]
+      }
+    },
+    {
+      "word": "Wake",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Uyanmak"
+        ]
+      }
+    },
+    {
+      "word": "Read",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Okumak"
+        ]
+      }
+    },
+    {
+      "word": "Write",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yazmak"
+        ]
+      }
+    },
+    {
+      "word": "Speak",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Konuşmak"
+        ]
+      }
+    },
+    {
+      "word": "Listen",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Dinlemek"
+        ]
+      }
+    },
+    {
+      "word": "Look",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Bakmak"
+        ]
+      }
+    },
+    {
+      "word": "See",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Görmek"
+        ]
+      }
+    },
+    {
+      "word": "Watch",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "İzlemek"
+        ]
+      }
+    },
+    {
+      "word": "Play",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Oynamak"
+        ]
+      }
+    },
+    {
+      "word": "Work",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Çalışmak"
+        ]
+      }
+    },
+    {
+      "word": "Study",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Çalışmak"
+        ]
+      }
+    },
+    {
+      "word": "Learn",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Öğrenmek"
+        ]
+      }
+    },
+    {
+      "word": "Teach",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Öğretmek"
+        ]
+      }
+    },
+    {
+      "word": "Help",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yardım"
+        ]
+      }
+    },
+    {
+      "word": "Need",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "İhtiyaç"
+        ]
+      }
+    },
+    {
+      "word": "Want",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "İstemek"
+        ]
+      }
+    },
+    {
+      "word": "Like",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Beğenmek"
+        ]
+      }
+    },
+    {
+      "word": "Love",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Sevmek"
+        ]
+      }
+    },
+    {
+      "word": "Know",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Bilmek"
+        ]
+      }
+    },
+    {
+      "word": "Think",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Düşünmek"
+        ]
+      }
+    },
+    {
+      "word": "Feel",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Hissetmek"
+        ]
+      }
+    },
+    {
+      "word": "Buy",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Satın almak"
+        ]
+      }
+    },
+    {
+      "word": "Sell",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Satmak"
+        ]
+      }
+    },
+    {
+      "word": "Pay",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Ödemek"
+        ]
+      }
+    },
+    {
+      "word": "Give",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Vermek"
+        ]
+      }
+    },
+    {
+      "word": "Take",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Almak"
+        ]
+      }
+    },
+    {
+      "word": "Bring",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Getirmek"
+        ]
+      }
+    },
+    {
+      "word": "Find",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Bulmak"
+        ]
+      }
+    },
+    {
+      "word": "Lose",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kaybetmek"
+        ]
+      }
+    },
+    {
+      "word": "Start",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Başlamak"
+        ]
+      }
+    },
+    {
+      "word": "Finish",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Bitirmek"
+        ]
+      }
+    },
+    {
+      "word": "Wait",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Beklemek"
+        ]
+      }
+    },
+    {
+      "word": "Meet",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Tanışmak"
+        ]
+      }
+    },
+    {
+      "word": "Call",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Aramak"
+        ]
+      }
+    },
+    {
+      "word": "Ask",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Sormak"
+        ]
+      }
+    },
+    {
+      "word": "Answer",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Cevap"
+        ]
+      }
+    },
+    {
+      "word": "Tell",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Söylemek"
+        ]
+      }
+    },
+    {
+      "word": "Say",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Demek"
+        ]
+      }
+    },
+    {
+      "word": "Talk",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Konuşmak"
+        ]
+      }
+    },
+    {
+      "word": "Understand",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Anlamak"
+        ]
+      }
+    },
+    {
+      "word": "Remember",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Hatırlamak"
+        ]
+      }
+    },
+    {
+      "word": "Forget",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Unutmak"
+        ]
+      }
+    },
+    {
+      "word": "Color",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Renk"
+        ]
+      }
+    },
+    {
+      "word": "Red",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kırmızı"
+        ]
+      }
+    },
+    {
+      "word": "Blue",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Mavi"
+        ]
+      }
+    },
+    {
+      "word": "Green",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yeşil"
+        ]
+      }
+    },
+    {
+      "word": "Yellow",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Sarı"
+        ]
+      }
+    },
+    {
+      "word": "Black",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Siyah"
+        ]
+      }
+    },
+    {
+      "word": "White",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Beyaz"
+        ]
+      }
+    },
+    {
+      "word": "Weather",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Hava"
+        ]
+      }
+    },
+    {
+      "word": "Sun",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Güneş"
+        ]
+      }
+    },
+    {
+      "word": "Rain",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yağmur"
+        ]
+      }
+    },
+    {
+      "word": "Snow",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Kar"
+        ]
+      }
+    },
+    {
+      "word": "Wind",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Rüzgar"
+        ]
+      }
+    },
+    {
+      "word": "Cloud",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Bulut"
+        ]
+      }
+    },
+    {
+      "word": "Job",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "İş"
+        ]
+      }
+    },
+    {
+      "word": "Doctor",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Doktor"
+        ]
+      }
+    },
+    {
+      "word": "Nurse",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Hemşire"
+        ]
+      }
+    },
+    {
+      "word": "Police",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Polis"
+        ]
+      }
+    },
+    {
+      "word": "Driver",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Şoför"
+        ]
+      }
+    },
+    {
+      "word": "Hospital",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Hastane"
+        ]
+      }
+    },
+    {
+      "word": "Hotel",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Otel"
+        ]
+      }
+    },
+    {
+      "word": "Airport",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Havalimanı"
+        ]
+      }
+    },
+    {
+      "word": "Station",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "İstasyon"
+        ]
+      }
+    },
+    {
+      "word": "Ticket",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Bilet"
+        ]
+      }
+    },
+    {
+      "word": "Passport",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Pasaport"
+        ]
+      }
+    },
+    {
+      "word": "Language",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Dil"
+        ]
+      }
+    },
+    {
+      "word": "English",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "İngilizce"
+        ]
+      }
+    },
+    {
+      "word": "Question",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Soru"
+        ]
+      }
+    },
+    {
+      "word": "Problem",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Sorun"
+        ]
+      }
+    },
+    {
+      "word": "Idea",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Fikir"
+        ]
+      }
+    },
+    {
+      "word": "Number",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Sayı"
+        ]
+      }
+    },
+    {
+      "word": "Left",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Sol"
+        ]
+      }
+    },
+    {
+      "word": "Right",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Sağ"
+        ]
+      }
+    },
+    {
+      "word": "Up",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yukarı"
+        ]
+      }
+    },
+    {
+      "word": "Down",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Aşağı"
+        ]
+      }
+    },
+    {
+      "word": "Near",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Yakın"
+        ]
+      }
+    },
+    {
+      "word": "Far",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Uzak"
+        ]
+      }
+    },
+    {
+      "word": "Here",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Burada"
+        ]
+      }
+    },
+    {
+      "word": "There",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Orada"
+        ]
+      }
+    },
+    {
+      "word": "Inside",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "İçeride"
+        ]
+      }
+    },
+    {
+      "word": "Outside",
+      "phonetic": null,
+      "level": "beginner",
+      "glosses": {
+        "tr": [
+          "Dışarıda"
+        ]
+      }
+    },
+    {
+      "word": "Journey",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Yolculuk"
+        ]
+      }
+    },
+    {
+      "word": "Adventure",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Macera"
+        ]
+      }
+    },
+    {
+      "word": "Experience",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Deneyim"
+        ]
+      }
+    },
+    {
+      "word": "Opportunity",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Fırsat"
+        ]
+      }
+    },
+    {
+      "word": "Challenge",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Meydan okuma"
+        ]
+      }
+    },
+    {
+      "word": "Success",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Başarı"
+        ]
+      }
+    },
+    {
+      "word": "Failure",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Başarısızlık"
+        ]
+      }
+    },
+    {
+      "word": "Progress",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İlerleme"
+        ]
+      }
+    },
+    {
+      "word": "Goal",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Hedef"
+        ]
+      }
+    },
+    {
+      "word": "Ambition",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Hırs"
+        ]
+      }
+    },
+    {
+      "word": "Courage",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Cesaret"
+        ]
+      }
+    },
+    {
+      "word": "Confidence",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Güven"
+        ]
+      }
+    },
+    {
+      "word": "Patience",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Sabır"
+        ]
+      }
+    },
+    {
+      "word": "Responsibility",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Sorumluluk"
+        ]
+      }
+    },
+    {
+      "word": "Decision",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Karar"
+        ]
+      }
+    },
+    {
+      "word": "Opinion",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Görüş"
+        ]
+      }
+    },
+    {
+      "word": "Argument",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Tartışma"
+        ]
+      }
+    },
+    {
+      "word": "Discussion",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Tartışma"
+        ]
+      }
+    },
+    {
+      "word": "Advice",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Tavsiye"
+        ]
+      }
+    },
+    {
+      "word": "Suggestion",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Öneri"
+        ]
+      }
+    },
+    {
+      "word": "Agreement",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Anlaşma"
+        ]
+      }
+    },
+    {
+      "word": "Disagreement",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Anlaşmazlık"
+        ]
+      }
+    },
+    {
+      "word": "Complaint",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Şikayet"
+        ]
+      }
+    },
+    {
+      "word": "Request",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Talep"
+        ]
+      }
+    },
+    {
+      "word": "Permission",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İzin"
+        ]
+      }
+    },
+    {
+      "word": "Appointment",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Randevu"
+        ]
+      }
+    },
+    {
+      "word": "Interview",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Mülakat"
+        ]
+      }
+    },
+    {
+      "word": "Meeting",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Toplantı"
+        ]
+      }
+    },
+    {
+      "word": "Deadline",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Son tarih"
+        ]
+      }
+    },
+    {
+      "word": "Schedule",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Program"
+        ]
+      }
+    },
+    {
+      "word": "Project",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Proje"
+        ]
+      }
+    },
+    {
+      "word": "Report",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Rapor"
+        ]
+      }
+    },
+    {
+      "word": "Presentation",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Sunum"
+        ]
+      }
+    },
+    {
+      "word": "Research",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Araştırma"
+        ]
+      }
+    },
+    {
+      "word": "Evidence",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kanıt"
+        ]
+      }
+    },
+    {
+      "word": "Result",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Sonuç"
+        ]
+      }
+    },
+    {
+      "word": "Solution",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Çözüm"
+        ]
+      }
+    },
+    {
+      "word": "Method",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Yöntem"
+        ]
+      }
+    },
+    {
+      "word": "Strategy",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Strateji"
+        ]
+      }
+    },
+    {
+      "word": "Process",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Süreç"
+        ]
+      }
+    },
+    {
+      "word": "System",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Sistem"
+        ]
+      }
+    },
+    {
+      "word": "Technology",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Teknoloji"
+        ]
+      }
+    },
+    {
+      "word": "Internet",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İnternet"
+        ]
+      }
+    },
+    {
+      "word": "Software",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Yazılım"
+        ]
+      }
+    },
+    {
+      "word": "Device",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Cihaz"
+        ]
+      }
+    },
+    {
+      "word": "Environment",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Çevre"
+        ]
+      }
+    },
+    {
+      "word": "Pollution",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kirlilik"
+        ]
+      }
+    },
+    {
+      "word": "Climate",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İklim"
+        ]
+      }
+    },
+    {
+      "word": "Nature",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Doğa"
+        ]
+      }
+    },
+    {
+      "word": "Wildlife",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Yaban hayatı"
+        ]
+      }
+    },
+    {
+      "word": "Energy",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Enerji"
+        ]
+      }
+    },
+    {
+      "word": "Resource",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kaynak"
+        ]
+      }
+    },
+    {
+      "word": "Recycling",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Geri dönüşüm"
+        ]
+      }
+    },
+    {
+      "word": "Sustainability",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Sürdürülebilirlik"
+        ]
+      }
+    },
+    {
+      "word": "Community",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Topluluk"
+        ]
+      }
+    },
+    {
+      "word": "Society",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Toplum"
+        ]
+      }
+    },
+    {
+      "word": "Culture",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kültür"
+        ]
+      }
+    },
+    {
+      "word": "Tradition",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Gelenek"
+        ]
+      }
+    },
+    {
+      "word": "Custom",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Gelenek"
+        ]
+      }
+    },
+    {
+      "word": "Ceremony",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Tören"
+        ]
+      }
+    },
+    {
+      "word": "Festival",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Festival"
+        ]
+      }
+    },
+    {
+      "word": "Celebration",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kutlama"
+        ]
+      }
+    },
+    {
+      "word": "Religion",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Din"
+        ]
+      }
+    },
+    {
+      "word": "Belief",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İnanç"
+        ]
+      }
+    },
+    {
+      "word": "Value",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Değer"
+        ]
+      }
+    },
+    {
+      "word": "Attitude",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Tutum"
+        ]
+      }
+    },
+    {
+      "word": "Behavior",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Davranış"
+        ]
+      }
+    },
+    {
+      "word": "Personality",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kişilik"
+        ]
+      }
+    },
+    {
+      "word": "Character",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Karakter"
+        ]
+      }
+    },
+    {
+      "word": "Emotion",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Duygu"
+        ]
+      }
+    },
+    {
+      "word": "Anxiety",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kaygı"
+        ]
+      }
+    },
+    {
+      "word": "Stress",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Stres"
+        ]
+      }
+    },
+    {
+      "word": "Pressure",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Baskı"
+        ]
+      }
+    },
+    {
+      "word": "Motivation",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Motivasyon"
+        ]
+      }
+    },
+    {
+      "word": "Inspiration",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İlham"
+        ]
+      }
+    },
+    {
+      "word": "Creativity",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Yaratıcılık"
+        ]
+      }
+    },
+    {
+      "word": "Imagination",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Hayal gücü"
+        ]
+      }
+    },
+    {
+      "word": "Memory",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Hafıza"
+        ]
+      }
+    },
+    {
+      "word": "Concentration",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Konsantrasyon"
+        ]
+      }
+    },
+    {
+      "word": "Skill",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Beceri"
+        ]
+      }
+    },
+    {
+      "word": "Talent",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Yetenek"
+        ]
+      }
+    },
+    {
+      "word": "Ability",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Yetenek"
+        ]
+      }
+    },
+    {
+      "word": "Knowledge",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Bilgi"
+        ]
+      }
+    },
+    {
+      "word": "Education",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Eğitim"
+        ]
+      }
+    },
+    {
+      "word": "Degree",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Diploma"
+        ]
+      }
+    },
+    {
+      "word": "Career",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kariyer"
+        ]
+      }
+    },
+    {
+      "word": "Profession",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Meslek"
+        ]
+      }
+    },
+    {
+      "word": "Employee",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Çalışan"
+        ]
+      }
+    },
+    {
+      "word": "Employer",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İşveren"
+        ]
+      }
+    },
+    {
+      "word": "Salary",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Maaş"
+        ]
+      }
+    },
+    {
+      "word": "Income",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Gelir"
+        ]
+      }
+    },
+    {
+      "word": "Expense",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Gider"
+        ]
+      }
+    },
+    {
+      "word": "Budget",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Bütçe"
+        ]
+      }
+    },
+    {
+      "word": "Investment",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Yatırım"
+        ]
+      }
+    },
+    {
+      "word": "Debt",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Borç"
+        ]
+      }
+    },
+    {
+      "word": "Tax",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Vergi"
+        ]
+      }
+    },
+    {
+      "word": "Insurance",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Sigorta"
+        ]
+      }
+    },
+    {
+      "word": "Contract",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Sözleşme"
+        ]
+      }
+    },
+    {
+      "word": "Law",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Yasa"
+        ]
+      }
+    },
+    {
+      "word": "Right",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Hak"
+        ]
+      }
+    },
+    {
+      "word": "Duty",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Görev"
+        ]
+      }
+    },
+    {
+      "word": "Rule",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kural"
+        ]
+      }
+    },
+    {
+      "word": "Punishment",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Ceza"
+        ]
+      }
+    },
+    {
+      "word": "Crime",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Suç"
+        ]
+      }
+    },
+    {
+      "word": "Justice",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Adalet"
+        ]
+      }
+    },
+    {
+      "word": "Government",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Hükümet"
+        ]
+      }
+    },
+    {
+      "word": "Politics",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Siyaset"
+        ]
+      }
+    },
+    {
+      "word": "Election",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Seçim"
+        ]
+      }
+    },
+    {
+      "word": "Citizen",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Vatandaş"
+        ]
+      }
+    },
+    {
+      "word": "Border",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Sınır"
+        ]
+      }
+    },
+    {
+      "word": "Immigration",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Göç"
+        ]
+      }
+    },
+    {
+      "word": "Refugee",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Mülteci"
+        ]
+      }
+    },
+    {
+      "word": "Conflict",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Çatışma"
+        ]
+      }
+    },
+    {
+      "word": "Peace",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Barış"
+        ]
+      }
+    },
+    {
+      "word": "War",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Savaş"
+        ]
+      }
+    },
+    {
+      "word": "Safety",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Güvenlik"
+        ]
+      }
+    },
+    {
+      "word": "Danger",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Tehlike"
+        ]
+      }
+    },
+    {
+      "word": "Risk",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Risk"
+        ]
+      }
+    },
+    {
+      "word": "Accident",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kaza"
+        ]
+      }
+    },
+    {
+      "word": "Emergency",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Acil durum"
+        ]
+      }
+    },
+    {
+      "word": "Health",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Sağlık"
+        ]
+      }
+    },
+    {
+      "word": "Illness",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Hastalık"
+        ]
+      }
+    },
+    {
+      "word": "Symptom",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Semptom"
+        ]
+      }
+    },
+    {
+      "word": "Treatment",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Tedavi"
+        ]
+      }
+    },
+    {
+      "word": "Medicine",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İlaç"
+        ]
+      }
+    },
+    {
+      "word": "Surgery",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Ameliyat"
+        ]
+      }
+    },
+    {
+      "word": "Exercise",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Egzersiz"
+        ]
+      }
+    },
+    {
+      "word": "Diet",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Diyet"
+        ]
+      }
+    },
+    {
+      "word": "Nutrition",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Beslenme"
+        ]
+      }
+    },
+    {
+      "word": "Lifestyle",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Yaşam tarzı"
+        ]
+      }
+    },
+    {
+      "word": "Habit",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Alışkanlık"
+        ]
+      }
+    },
+    {
+      "word": "Routine",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Rutin"
+        ]
+      }
+    },
+    {
+      "word": "Hobby",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Hobi"
+        ]
+      }
+    },
+    {
+      "word": "Entertainment",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Eğlence"
+        ]
+      }
+    },
+    {
+      "word": "Performance",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Performans"
+        ]
+      }
+    },
+    {
+      "word": "Audience",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Seyirci"
+        ]
+      }
+    },
+    {
+      "word": "Review",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İnceleme"
+        ]
+      }
+    },
+    {
+      "word": "Criticism",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Eleştiri"
+        ]
+      }
+    },
+    {
+      "word": "Reputation",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İtibar"
+        ]
+      }
+    },
+    {
+      "word": "Influence",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Etki"
+        ]
+      }
+    },
+    {
+      "word": "Benefit",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Fayda"
+        ]
+      }
+    },
+    {
+      "word": "Disadvantage",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Dezavantaj"
+        ]
+      }
+    },
+    {
+      "word": "Advantage",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Avantaj"
+        ]
+      }
+    },
+    {
+      "word": "Impact",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Etki"
+        ]
+      }
+    },
+    {
+      "word": "Consequence",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Sonuç"
+        ]
+      }
+    },
+    {
+      "word": "Cause",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Neden"
+        ]
+      }
+    },
+    {
+      "word": "Reason",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Sebep"
+        ]
+      }
+    },
+    {
+      "word": "Purpose",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Amaç"
+        ]
+      }
+    },
+    {
+      "word": "Intention",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Niyet"
+        ]
+      }
+    },
+    {
+      "word": "Expectation",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Beklenti"
+        ]
+      }
+    },
+    {
+      "word": "Assumption",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Varsayım"
+        ]
+      }
+    },
+    {
+      "word": "Possibility",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Olasılık"
+        ]
+      }
+    },
+    {
+      "word": "Probability",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Olasılık"
+        ]
+      }
+    },
+    {
+      "word": "Certainty",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kesinlik"
+        ]
+      }
+    },
+    {
+      "word": "Doubt",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Şüphe"
+        ]
+      }
+    },
+    {
+      "word": "Compare",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Karşılaştırmak"
+        ]
+      }
+    },
+    {
+      "word": "Contrast",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Zıtlık"
+        ]
+      }
+    },
+    {
+      "word": "Describe",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Tanımlamak"
+        ]
+      }
+    },
+    {
+      "word": "Explain",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Açıklamak"
+        ]
+      }
+    },
+    {
+      "word": "Summarize",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Özetlemek"
+        ]
+      }
+    },
+    {
+      "word": "Analyze",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Analiz etmek"
+        ]
+      }
+    },
+    {
+      "word": "Evaluate",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Değerlendirmek"
+        ]
+      }
+    },
+    {
+      "word": "Predict",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Tahmin etmek"
+        ]
+      }
+    },
+    {
+      "word": "Recommend",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Tavsiye etmek"
+        ]
+      }
+    },
+    {
+      "word": "Persuade",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İkna etmek"
+        ]
+      }
+    },
+    {
+      "word": "Negotiate",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Müzakere etmek"
+        ]
+      }
+    },
+    {
+      "word": "Compromise",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Uzlaşma"
+        ]
+      }
+    },
+    {
+      "word": "Cooperate",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İşbirliği yapmak"
+        ]
+      }
+    },
+    {
+      "word": "Compete",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Rekabet etmek"
+        ]
+      }
+    },
+    {
+      "word": "Achieve",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Başarmak"
+        ]
+      }
+    },
+    {
+      "word": "Improve",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Geliştirmek"
+        ]
+      }
+    },
+    {
+      "word": "Develop",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Geliştirmek"
+        ]
+      }
+    },
+    {
+      "word": "Maintain",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Sürdürmek"
+        ]
+      }
+    },
+    {
+      "word": "Organize",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Organize etmek"
+        ]
+      }
+    },
+    {
+      "word": "Manage",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Yönetmek"
+        ]
+      }
+    },
+    {
+      "word": "Avoid",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kaçınmak"
+        ]
+      }
+    },
+    {
+      "word": "Prevent",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Önlemek"
+        ]
+      }
+    },
+    {
+      "word": "Reduce",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Azaltmak"
+        ]
+      }
+    },
+    {
+      "word": "Increase",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Artırmak"
+        ]
+      }
+    },
+    {
+      "word": "Replace",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Değiştirmek"
+        ]
+      }
+    },
+    {
+      "word": "Require",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Gerektirmek"
+        ]
+      }
+    },
+    {
+      "word": "Involve",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İçermek"
+        ]
+      }
+    },
+    {
+      "word": "Include",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Dahil etmek"
+        ]
+      }
+    },
+    {
+      "word": "Exclude",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Hariç tutmak"
+        ]
+      }
+    },
+    {
+      "word": "Belong",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Ait olmak"
+        ]
+      }
+    },
+    {
+      "word": "Depend",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Bağlı olmak"
+        ]
+      }
+    },
+    {
+      "word": "Relate",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İlişkilendirmek"
+        ]
+      }
+    },
+    {
+      "word": "Refer",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Atıfta bulunmak"
+        ]
+      }
+    },
+    {
+      "word": "Mention",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Bahsetmek"
+        ]
+      }
+    },
+    {
+      "word": "Emphasize",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Vurgulamak"
+        ]
+      }
+    },
+    {
+      "word": "Appreciate",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Takdir etmek"
+        ]
+      }
+    },
+    {
+      "word": "Respect",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Saygı"
+        ]
+      }
+    },
+    {
+      "word": "Trust",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Güvenmek"
+        ]
+      }
+    },
+    {
+      "word": "Blame",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Suçlamak"
+        ]
+      }
+    },
+    {
+      "word": "Forgive",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Affetmek"
+        ]
+      }
+    },
+    {
+      "word": "Admit",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kabul etmek"
+        ]
+      }
+    },
+    {
+      "word": "Deny",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Reddetmek"
+        ]
+      }
+    },
+    {
+      "word": "Claim",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İddia etmek"
+        ]
+      }
+    },
+    {
+      "word": "Prove",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kanıtlamak"
+        ]
+      }
+    },
+    {
+      "word": "Convince",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "İkna etmek"
+        ]
+      }
+    },
+    {
+      "word": "Aware",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Farkında"
+        ]
+      }
+    },
+    {
+      "word": "Familiar",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Aşina"
+        ]
+      }
+    },
+    {
+      "word": "Curious",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Meraklı"
+        ]
+      }
+    },
+    {
+      "word": "Ambitious",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Hırslı"
+        ]
+      }
+    },
+    {
+      "word": "Reliable",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Güvenilir"
+        ]
+      }
+    },
+    {
+      "word": "Responsible",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Sorumlu"
+        ]
+      }
+    },
+    {
+      "word": "Independent",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Bağımsız"
+        ]
+      }
+    },
+    {
+      "word": "Flexible",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Esnek"
+        ]
+      }
+    },
+    {
+      "word": "Efficient",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Verimli"
+        ]
+      }
+    },
+    {
+      "word": "Effective",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Etkili"
+        ]
+      }
+    },
+    {
+      "word": "Significant",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Önemli"
+        ]
+      }
+    },
+    {
+      "word": "Essential",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Temel"
+        ]
+      }
+    },
+    {
+      "word": "Necessary",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Gerekli"
+        ]
+      }
+    },
+    {
+      "word": "Temporary",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Geçici"
+        ]
+      }
+    },
+    {
+      "word": "Permanent",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kalıcı"
+        ]
+      }
+    },
+    {
+      "word": "Frequent",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Sık"
+        ]
+      }
+    },
+    {
+      "word": "Rare",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Nadir"
+        ]
+      }
+    },
+    {
+      "word": "Sudden",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Ani"
+        ]
+      }
+    },
+    {
+      "word": "Gradual",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kademeli"
+        ]
+      }
+    },
+    {
+      "word": "Immediate",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Acil"
+        ]
+      }
+    },
+    {
+      "word": "Previous",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Önceki"
+        ]
+      }
+    },
+    {
+      "word": "Current",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Mevcut"
+        ]
+      }
+    },
+    {
+      "word": "Recent",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Son"
+        ]
+      }
+    },
+    {
+      "word": "Ancient",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Antik"
+        ]
+      }
+    },
+    {
+      "word": "Modern",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Modern"
+        ]
+      }
+    },
+    {
+      "word": "Urban",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kentsel"
+        ]
+      }
+    },
+    {
+      "word": "Rural",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kırsal"
+        ]
+      }
+    },
+    {
+      "word": "Public",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Kamuya açık"
+        ]
+      }
+    },
+    {
+      "word": "Private",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Özel"
+        ]
+      }
+    },
+    {
+      "word": "Official",
+      "phonetic": null,
+      "level": "intermediate",
+      "glosses": {
+        "tr": [
+          "Resmi"
+        ]
+      }
+    },
+    {
+      "word": "Nuance",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Nüans"
+        ]
+      }
+    },
+    {
+      "word": "Subtlety",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "İncelik"
+        ]
+      }
+    },
+    {
+      "word": "Ambiguity",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Belirsizlik"
+        ]
+      }
+    },
+    {
+      "word": "Paradox",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Paradoks"
+        ]
+      }
+    },
+    {
+      "word": "Irony",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "İroni"
+        ]
+      }
+    },
+    {
+      "word": "Metaphor",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Metafor"
+        ]
+      }
+    },
+    {
+      "word": "Analogy",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Analoji"
+        ]
+      }
+    },
+    {
+      "word": "Hypothesis",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Hipotez"
+        ]
+      }
+    },
+    {
+      "word": "Thesis",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Tez"
+        ]
+      }
+    },
+    {
+      "word": "Premise",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Öncül"
+        ]
+      }
+    },
+    {
+      "word": "Inference",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Çıkarım"
+        ]
+      }
+    },
+    {
+      "word": "Implication",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "İma"
+        ]
+      }
+    },
+    {
+      "word": "Assumption",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Varsayım"
+        ]
+      }
+    },
+    {
+      "word": "Corollary",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Sonuç"
+        ]
+      }
+    },
+    {
+      "word": "Rationale",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Gerekçe"
+        ]
+      }
+    },
+    {
+      "word": "Justification",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Gerekçelendirme"
+        ]
+      }
+    },
+    {
+      "word": "Critique",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Eleştiri"
+        ]
+      }
+    },
+    {
+      "word": "Discourse",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Söylem"
+        ]
+      }
+    },
+    {
+      "word": "Rhetoric",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Retorik"
+        ]
+      }
+    },
+    {
+      "word": "Eloquent",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Belagatli"
+        ]
+      }
+    },
+    {
+      "word": "Articulate",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Açık konuşan"
+        ]
+      }
+    },
+    {
+      "word": "Coherent",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Tutarlı"
+        ]
+      }
+    },
+    {
+      "word": "Concise",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Özlü"
+        ]
+      }
+    },
+    {
+      "word": "Verbose",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Gereksiz uzun"
+        ]
+      }
+    },
+    {
+      "word": "Ambivalent",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kararsız"
+        ]
+      }
+    },
+    {
+      "word": "Skeptical",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Şüpheci"
+        ]
+      }
+    },
+    {
+      "word": "Cynical",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Alaycı"
+        ]
+      }
+    },
+    {
+      "word": "Pragmatic",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Pragmatik"
+        ]
+      }
+    },
+    {
+      "word": "Idealistic",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "İdealist"
+        ]
+      }
+    },
+    {
+      "word": "Empathetic",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Empatik"
+        ]
+      }
+    },
+    {
+      "word": "Resilient",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Dirençli"
+        ]
+      }
+    },
+    {
+      "word": "Diligent",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Çalışkan"
+        ]
+      }
+    },
+    {
+      "word": "Meticulous",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Titiz"
+        ]
+      }
+    },
+    {
+      "word": "Scrupulous",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Vicdanlı"
+        ]
+      }
+    },
+    {
+      "word": "Ingenious",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Usta"
+        ]
+      }
+    },
+    {
+      "word": "Innovative",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Yenilikçi"
+        ]
+      }
+    },
+    {
+      "word": "Unprecedented",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Eşi görülmemiş"
+        ]
+      }
+    },
+    {
+      "word": "Inevitable",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kaçınılmaz"
+        ]
+      }
+    },
+    {
+      "word": "Irreversible",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Geri alınamaz"
+        ]
+      }
+    },
+    {
+      "word": "Contingent",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Koşullu"
+        ]
+      }
+    },
+    {
+      "word": "Arbitrary",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Keyfi"
+        ]
+      }
+    },
+    {
+      "word": "Subjective",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Öznel"
+        ]
+      }
+    },
+    {
+      "word": "Objective",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Nesnel"
+        ]
+      }
+    },
+    {
+      "word": "Intrinsic",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "İçsel"
+        ]
+      }
+    },
+    {
+      "word": "Extrinsic",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Dışsal"
+        ]
+      }
+    },
+    {
+      "word": "Ubiquitous",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Her yerde bulunan"
+        ]
+      }
+    },
+    {
+      "word": "Pervasive",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Yaygın"
+        ]
+      }
+    },
+    {
+      "word": "Prevalent",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Hakim"
+        ]
+      }
+    },
+    {
+      "word": "Scarce",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kıt"
+        ]
+      }
+    },
+    {
+      "word": "Obsolete",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Eski"
+        ]
+      }
+    },
+    {
+      "word": "Redundant",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Gereksiz"
+        ]
+      }
+    },
+    {
+      "word": "Superfluous",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Fazlalık"
+        ]
+      }
+    },
+    {
+      "word": "Integral",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Ayrılmaz"
+        ]
+      }
+    },
+    {
+      "word": "Paramount",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "En önemli"
+        ]
+      }
+    },
+    {
+      "word": "Pivotal",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kritik"
+        ]
+      }
+    },
+    {
+      "word": "Catalyst",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Katalizör"
+        ]
+      }
+    },
+    {
+      "word": "Stimulus",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Uyarıcı"
+        ]
+      }
+    },
+    {
+      "word": "Incentive",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Teşvik"
+        ]
+      }
+    },
+    {
+      "word": "Deterrent",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Caydırıcı"
+        ]
+      }
+    },
+    {
+      "word": "Obstacle",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Engel"
+        ]
+      }
+    },
+    {
+      "word": "Constraint",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kısıt"
+        ]
+      }
+    },
+    {
+      "word": "Trade-off",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Ödünleşme"
+        ]
+      }
+    },
+    {
+      "word": "Dilemma",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "İkilem"
+        ]
+      }
+    },
+    {
+      "word": "Stalemate",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Çıkmaz"
+        ]
+      }
+    },
+    {
+      "word": "Breakthrough",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Atılım"
+        ]
+      }
+    },
+    {
+      "word": "Milestone",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Dönüm noktası"
+        ]
+      }
+    },
+    {
+      "word": "Trajectory",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Yörünge"
+        ]
+      }
+    },
+    {
+      "word": "Momentum",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "İvme"
+        ]
+      }
+    },
+    {
+      "word": "Volatility",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Oynaklık"
+        ]
+      }
+    },
+    {
+      "word": "Turbulence",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Türbülans"
+        ]
+      }
+    },
+    {
+      "word": "Disruption",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Bozulma"
+        ]
+      }
+    },
+    {
+      "word": "Transformation",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Dönüşüm"
+        ]
+      }
+    },
+    {
+      "word": "Evolution",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Evrim"
+        ]
+      }
+    },
+    {
+      "word": "Revolution",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Devrim"
+        ]
+      }
+    },
+    {
+      "word": "Renaissance",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Rönesans"
+        ]
+      }
+    },
+    {
+      "word": "Hierarchy",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Hiyerarşi"
+        ]
+      }
+    },
+    {
+      "word": "Bureaucracy",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Bürokrasi"
+        ]
+      }
+    },
+    {
+      "word": "Autonomy",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Özerklik"
+        ]
+      }
+    },
+    {
+      "word": "Sovereignty",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Egemenlik"
+        ]
+      }
+    },
+    {
+      "word": "Jurisdiction",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Yargı yetkisi"
+        ]
+      }
+    },
+    {
+      "word": "Legislation",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Yasama"
+        ]
+      }
+    },
+    {
+      "word": "Litigation",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Dava"
+        ]
+      }
+    },
+    {
+      "word": "Prosecution",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kovuşturma"
+        ]
+      }
+    },
+    {
+      "word": "Acquittal",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Beraat"
+        ]
+      }
+    },
+    {
+      "word": "Indictment",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "İddianame"
+        ]
+      }
+    },
+    {
+      "word": "Accountability",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Hesap verebilirlik"
+        ]
+      }
+    },
+    {
+      "word": "Transparency",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Şeffaflık"
+        ]
+      }
+    },
+    {
+      "word": "Integrity",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Dürüstlük"
+        ]
+      }
+    },
+    {
+      "word": "Corruption",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Yolsuzluk"
+        ]
+      }
+    },
+    {
+      "word": "Nepotism",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kayırmacılık"
+        ]
+      }
+    },
+    {
+      "word": "Propaganda",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Propaganda"
+        ]
+      }
+    },
+    {
+      "word": "Censorship",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Sansür"
+        ]
+      }
+    },
+    {
+      "word": "Surveillance",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Gözetim"
+        ]
+      }
+    },
+    {
+      "word": "Privacy",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Mahremiyet"
+        ]
+      }
+    },
+    {
+      "word": "Consent",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Rıza"
+        ]
+      }
+    },
+    {
+      "word": "Discrimination",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Ayrımcılık"
+        ]
+      }
+    },
+    {
+      "word": "Prejudice",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Önyargı"
+        ]
+      }
+    },
+    {
+      "word": "Stereotype",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kalıpyargı"
+        ]
+      }
+    },
+    {
+      "word": "Marginalize",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Marjinalleştirmek"
+        ]
+      }
+    },
+    {
+      "word": "Empower",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Güçlendirmek"
+        ]
+      }
+    },
+    {
+      "word": "Advocacy",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Savunuculuk"
+        ]
+      }
+    },
+    {
+      "word": "Solidarity",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Dayanışma"
+        ]
+      }
+    },
+    {
+      "word": "Altruism",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Özgecilik"
+        ]
+      }
+    },
+    {
+      "word": "Philanthropy",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Hayırseverlik"
+        ]
+      }
+    },
+    {
+      "word": "Exploitation",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Sömürü"
+        ]
+      }
+    },
+    {
+      "word": "Oppression",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Baskı"
+        ]
+      }
+    },
+    {
+      "word": "Liberation",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Özgürleşme"
+        ]
+      }
+    },
+    {
+      "word": "Emancipation",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kurtuluş"
+        ]
+      }
+    },
+    {
+      "word": "Reparations",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Tazminat"
+        ]
+      }
+    },
+    {
+      "word": "Reconciliation",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Uzlaşma"
+        ]
+      }
+    },
+    {
+      "word": "Geopolitics",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Jeopolitik"
+        ]
+      }
+    },
+    {
+      "word": "Diplomacy",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Diplomasi"
+        ]
+      }
+    },
+    {
+      "word": "Sanction",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Yaptırım"
+        ]
+      }
+    },
+    {
+      "word": "Deterrence",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Caydırıcılık"
+        ]
+      }
+    },
+    {
+      "word": "Escalation",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Tırmanma"
+        ]
+      }
+    },
+    {
+      "word": "Ceasefire",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Ateşkes"
+        ]
+      }
+    },
+    {
+      "word": "Armistice",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Ateşkes"
+        ]
+      }
+    },
+    {
+      "word": "Annexation",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "İlhak"
+        ]
+      }
+    },
+    {
+      "word": "Hegemony",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Hegemonya"
+        ]
+      }
+    },
+    {
+      "word": "Capitalism",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kapitalizm"
+        ]
+      }
+    },
+    {
+      "word": "Socialism",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Sosyalizm"
+        ]
+      }
+    },
+    {
+      "word": "Globalization",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Küreselleşme"
+        ]
+      }
+    },
+    {
+      "word": "Privatization",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Özelleştirme"
+        ]
+      }
+    },
+    {
+      "word": "Deregulation",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Deregülasyon"
+        ]
+      }
+    },
+    {
+      "word": "Inflation",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Enflasyon"
+        ]
+      }
+    },
+    {
+      "word": "Recession",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Durgunluk"
+        ]
+      }
+    },
+    {
+      "word": "Austerity",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kemerkısıt"
+        ]
+      }
+    },
+    {
+      "word": "Subsidy",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Sübvansiyon"
+        ]
+      }
+    },
+    {
+      "word": "Tariff",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Gümrük vergisi"
+        ]
+      }
+    },
+    {
+      "word": "Monopoly",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Tekel"
+        ]
+      }
+    },
+    {
+      "word": "Oligopoly",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Oligopol"
+        ]
+      }
+    },
+    {
+      "word": "Entrepreneurship",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Girişimcilik"
+        ]
+      }
+    },
+    {
+      "word": "Venture",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Girişim"
+        ]
+      }
+    },
+    {
+      "word": "Equity",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Özkaynak"
+        ]
+      }
+    },
+    {
+      "word": "Liquidity",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Likidite"
+        ]
+      }
+    },
+    {
+      "word": "Solvency",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Ödeme gücü"
+        ]
+      }
+    },
+    {
+      "word": "Default",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Temerrüt"
+        ]
+      }
+    },
+    {
+      "word": "Bailout",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kurtarma paketi"
+        ]
+      }
+    },
+    {
+      "word": "Epidemiology",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Epidemiyoloji"
+        ]
+      }
+    },
+    {
+      "word": "Pandemic",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Pandemi"
+        ]
+      }
+    },
+    {
+      "word": "Immunity",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Bağışıklık"
+        ]
+      }
+    },
+    {
+      "word": "Vaccination",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Aşılama"
+        ]
+      }
+    },
+    {
+      "word": "Prognosis",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Prognoz"
+        ]
+      }
+    },
+    {
+      "word": "Diagnosis",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Teşhis"
+        ]
+      }
+    },
+    {
+      "word": "Pathology",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Patoloji"
+        ]
+      }
+    },
+    {
+      "word": "Cognitive",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Bilişsel"
+        ]
+      }
+    },
+    {
+      "word": "Neurological",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Nörolojik"
+        ]
+      }
+    },
+    {
+      "word": "Therapeutic",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Terapötik"
+        ]
+      }
+    },
+    {
+      "word": "Biodiversity",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Biyoçeşitlilik"
+        ]
+      }
+    },
+    {
+      "word": "Ecosystem",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Ekosistem"
+        ]
+      }
+    },
+    {
+      "word": "Deforestation",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Ormansızlaşma"
+        ]
+      }
+    },
+    {
+      "word": "Desertification",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Çölleşme"
+        ]
+      }
+    },
+    {
+      "word": "Emissions",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Emisyonlar"
+        ]
+      }
+    },
+    {
+      "word": "Mitigation",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Azaltma"
+        ]
+      }
+    },
+    {
+      "word": "Adaptation",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Uyumsama"
+        ]
+      }
+    },
+    {
+      "word": "Resilience",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Dayanıklılık"
+        ]
+      }
+    },
+    {
+      "word": "Carbon footprint",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Karbon ayak izi"
+        ]
+      }
+    },
+    {
+      "word": "Renewables",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Yenilenebilirler"
+        ]
+      }
+    },
+    {
+      "word": "Quantum",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kuantum"
+        ]
+      }
+    },
+    {
+      "word": "Algorithm",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Algoritma"
+        ]
+      }
+    },
+    {
+      "word": "Encryption",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Şifreleme"
+        ]
+      }
+    },
+    {
+      "word": "Cybersecurity",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Siber güvenlik"
+        ]
+      }
+    },
+    {
+      "word": "Automation",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Otomasyon"
+        ]
+      }
+    },
+    {
+      "word": "Artificial intelligence",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Yapay zeka"
+        ]
+      }
+    },
+    {
+      "word": "Machine learning",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Makine öğrenmesi"
+        ]
+      }
+    },
+    {
+      "word": "Big data",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Büyük veri"
+        ]
+      }
+    },
+    {
+      "word": "Blockchain",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Blokzincir"
+        ]
+      }
+    },
+    {
+      "word": "Singularity",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Tekillik"
+        ]
+      }
+    },
+    {
+      "word": "Epistemology",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Epistemoloji"
+        ]
+      }
+    },
+    {
+      "word": "Ontology",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Ontoloji"
+        ]
+      }
+    },
+    {
+      "word": "Phenomenology",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Fenomenoloji"
+        ]
+      }
+    },
+    {
+      "word": "Existential",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Varoluşsal"
+        ]
+      }
+    },
+    {
+      "word": "Determinism",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Determinizm"
+        ]
+      }
+    },
+    {
+      "word": "Free will",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Özgür irade"
+        ]
+      }
+    },
+    {
+      "word": "Consciousness",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Bilinç"
+        ]
+      }
+    },
+    {
+      "word": "Perception",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Algı"
+        ]
+      }
+    },
+    {
+      "word": "Cognition",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Biliş"
+        ]
+      }
+    },
+    {
+      "word": "Introspection",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "İçe bakış"
+        ]
+      }
+    },
+    {
+      "word": "Aesthetic",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Estetik"
+        ]
+      }
+    },
+    {
+      "word": "Authenticity",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Özgünlük"
+        ]
+      }
+    },
+    {
+      "word": "Originality",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Özgünlük"
+        ]
+      }
+    },
+    {
+      "word": "Plagiarism",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "İntihal"
+        ]
+      }
+    },
+    {
+      "word": "Attribution",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Atıf"
+        ]
+      }
+    },
+    {
+      "word": "Consolidate",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Sağlamlaştırmak"
+        ]
+      }
+    },
+    {
+      "word": "Synthesize",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Sentezlemek"
+        ]
+      }
+    },
+    {
+      "word": "Extrapolate",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Çıkarım yapmak"
+        ]
+      }
+    },
+    {
+      "word": "Corroborate",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Doğrulamak"
+        ]
+      }
+    },
+    {
+      "word": "Refute",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Çürütmek"
+        ]
+      }
+    },
+    {
+      "word": "Undermine",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Zayıflatmak"
+        ]
+      }
+    },
+    {
+      "word": "Bolster",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Desteklemek"
+        ]
+      }
+    },
+    {
+      "word": "Alleviate",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Hafifletmek"
+        ]
+      }
+    },
+    {
+      "word": "Exacerbate",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kötüleştirmek"
+        ]
+      }
+    },
+    {
+      "word": "Mitigate",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Azaltmak"
+        ]
+      }
+    },
+    {
+      "word": "Facilitate",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kolaylaştırmak"
+        ]
+      }
+    },
+    {
+      "word": "Hinder",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Engellemek"
+        ]
+      }
+    },
+    {
+      "word": "Encompass",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Kapsamak"
+        ]
+      }
+    },
+    {
+      "word": "Transcend",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Aşmak"
+        ]
+      }
+    },
+    {
+      "word": "Reconcile",
+      "phonetic": null,
+      "level": "advanced",
+      "glosses": {
+        "tr": [
+          "Uzlaştırmak"
+        ]
+      }
+    }
+  ]
+}

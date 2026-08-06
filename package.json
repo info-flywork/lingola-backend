@@ -1,0 +1,26 @@
+{
+  "name": "lingola-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lingola API — Express + MySQL",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "dev:tunnel": "bash scripts/dev-tunnel.sh",
+    "db:ping": "node src/scripts/db-ping.js",
+    "migrate": "node src/scripts/migrate.js",
+    "seed:tutors": "node src/scripts/seed-tutors.js",
+    "seed:vocab": "node src/scripts/seed-vocabulary.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jose": "^6.2.4",
+    "mysql2": "^3.23.2"
+  }
+}
