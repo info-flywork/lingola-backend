@@ -1,0 +1,1500 @@
+[
+  {
+    "slug": "a1-greetings",
+    "cefrLevel": "A1",
+    "sortOrder": 0,
+    "titleEn": "Greetings",
+    "titleTr": "Selamlaşma"
+  },
+  {
+    "slug": "a1-introductions-i",
+    "cefrLevel": "A1",
+    "sortOrder": 1,
+    "titleEn": "Introductions I",
+    "titleTr": "Tanışma I"
+  },
+  {
+    "slug": "a1-jobs",
+    "cefrLevel": "A1",
+    "sortOrder": 2,
+    "titleEn": "Jobs",
+    "titleTr": "Meslekler"
+  },
+  {
+    "slug": "a1-a-favorite-room",
+    "cefrLevel": "A1",
+    "sortOrder": 3,
+    "titleEn": "A Favorite Room",
+    "titleTr": "Favori Oda"
+  },
+  {
+    "slug": "a1-daily-routine",
+    "cefrLevel": "A1",
+    "sortOrder": 4,
+    "titleEn": "Daily Routine",
+    "titleTr": "Günlük Rutin"
+  },
+  {
+    "slug": "a1-fruits",
+    "cefrLevel": "A1",
+    "sortOrder": 5,
+    "titleEn": "Fruits",
+    "titleTr": "Meyveler"
+  },
+  {
+    "slug": "a1-advice-1",
+    "cefrLevel": "A1",
+    "sortOrder": 6,
+    "titleEn": "Advice 1",
+    "titleTr": "Tavsiye 1"
+  },
+  {
+    "slug": "a1-family-1",
+    "cefrLevel": "A1",
+    "sortOrder": 7,
+    "titleEn": "Family 1",
+    "titleTr": "Aile 1"
+  },
+  {
+    "slug": "a1-everyday-things",
+    "cefrLevel": "A1",
+    "sortOrder": 8,
+    "titleEn": "Everyday things",
+    "titleTr": "Günlük eşyalar"
+  },
+  {
+    "slug": "a1-hometown",
+    "cefrLevel": "A1",
+    "sortOrder": 9,
+    "titleEn": "Hometown",
+    "titleTr": "Memleket"
+  },
+  {
+    "slug": "a1-house",
+    "cefrLevel": "A1",
+    "sortOrder": 10,
+    "titleEn": "House",
+    "titleTr": "Ev"
+  },
+  {
+    "slug": "a1-food-preferences",
+    "cefrLevel": "A1",
+    "sortOrder": 11,
+    "titleEn": "Food preferences",
+    "titleTr": "Yemek tercihleri"
+  },
+  {
+    "slug": "a1-hobbies-1",
+    "cefrLevel": "A1",
+    "sortOrder": 12,
+    "titleEn": "Hobbies 1",
+    "titleTr": "Hobiler 1"
+  },
+  {
+    "slug": "a1-successful-people",
+    "cefrLevel": "A1",
+    "sortOrder": 13,
+    "titleEn": "Successful people",
+    "titleTr": "Başarılı insanlar"
+  },
+  {
+    "slug": "a1-food-and-drinks",
+    "cefrLevel": "A1",
+    "sortOrder": 14,
+    "titleEn": "Food and drinks",
+    "titleTr": "Yiyecek ve içecekler"
+  },
+  {
+    "slug": "a1-ordering-at-a-restaurant",
+    "cefrLevel": "A1",
+    "sortOrder": 15,
+    "titleEn": "Ordering at a restaurant",
+    "titleTr": "Restoranda sipariş"
+  },
+  {
+    "slug": "a1-pets",
+    "cefrLevel": "A1",
+    "sortOrder": 16,
+    "titleEn": "Pets",
+    "titleTr": "Evcil hayvanlar"
+  },
+  {
+    "slug": "a1-health-and-fitness",
+    "cefrLevel": "A1",
+    "sortOrder": 17,
+    "titleEn": "Health and fitness",
+    "titleTr": "Sağlık ve fitness"
+  },
+  {
+    "slug": "a1-weather",
+    "cefrLevel": "A1",
+    "sortOrder": 18,
+    "titleEn": "Weather",
+    "titleTr": "Hava durumu"
+  },
+  {
+    "slug": "a1-new-lifestyle",
+    "cefrLevel": "A1",
+    "sortOrder": 19,
+    "titleEn": "New lifestyle",
+    "titleTr": "Yeni yaşam tarzı"
+  },
+  {
+    "slug": "a1-getting-better",
+    "cefrLevel": "A1",
+    "sortOrder": 20,
+    "titleEn": "Getting better",
+    "titleTr": "İyileşmek"
+  },
+  {
+    "slug": "a1-hobbies-2",
+    "cefrLevel": "A1",
+    "sortOrder": 21,
+    "titleEn": "Hobbies 2",
+    "titleTr": "Hobiler 2"
+  },
+  {
+    "slug": "a1-questions-about-places",
+    "cefrLevel": "A1",
+    "sortOrder": 22,
+    "titleEn": "Questions about places",
+    "titleTr": "Yerler hakkında sorular"
+  },
+  {
+    "slug": "a1-possession",
+    "cefrLevel": "A1",
+    "sortOrder": 23,
+    "titleEn": "Possession",
+    "titleTr": "Sahiplik"
+  },
+  {
+    "slug": "a1-shopping-1",
+    "cefrLevel": "A1",
+    "sortOrder": 24,
+    "titleEn": "Shopping 1",
+    "titleTr": "Alışveriş 1"
+  },
+  {
+    "slug": "a1-telling-the-time",
+    "cefrLevel": "A1",
+    "sortOrder": 25,
+    "titleEn": "Telling the time",
+    "titleTr": "Saati söylemek"
+  },
+  {
+    "slug": "a1-directions-1",
+    "cefrLevel": "A1",
+    "sortOrder": 26,
+    "titleEn": "Directions 1",
+    "titleTr": "Yol tarifi 1"
+  },
+  {
+    "slug": "a1-shopping-2",
+    "cefrLevel": "A1",
+    "sortOrder": 27,
+    "titleEn": "Shopping 2",
+    "titleTr": "Alışveriş 2"
+  },
+  {
+    "slug": "a1-getting-to-know-you",
+    "cefrLevel": "A1",
+    "sortOrder": 28,
+    "titleEn": "Getting to know you",
+    "titleTr": "Seni tanımak"
+  },
+  {
+    "slug": "a1-places-of-objects",
+    "cefrLevel": "A1",
+    "sortOrder": 29,
+    "titleEn": "Places of objects",
+    "titleTr": "Nesnelerin yerleri"
+  },
+  {
+    "slug": "a1-appearances",
+    "cefrLevel": "A1",
+    "sortOrder": 30,
+    "titleEn": "Appearances",
+    "titleTr": "Görünüş"
+  },
+  {
+    "slug": "a1-directions-2",
+    "cefrLevel": "A1",
+    "sortOrder": 31,
+    "titleEn": "Directions 2",
+    "titleTr": "Yol tarifi 2"
+  },
+  {
+    "slug": "a2-family-2",
+    "cefrLevel": "A2",
+    "sortOrder": 0,
+    "titleEn": "Family 2",
+    "titleTr": "Family 2"
+  },
+  {
+    "slug": "a2-people-and-places",
+    "cefrLevel": "A2",
+    "sortOrder": 1,
+    "titleEn": "People and places",
+    "titleTr": "People and places"
+  },
+  {
+    "slug": "a2-family-3",
+    "cefrLevel": "A2",
+    "sortOrder": 2,
+    "titleEn": "Family 3",
+    "titleTr": "Family 3"
+  },
+  {
+    "slug": "a2-describing-objects",
+    "cefrLevel": "A2",
+    "sortOrder": 3,
+    "titleEn": "Describing objects",
+    "titleTr": "Describing objects"
+  },
+  {
+    "slug": "a2-city",
+    "cefrLevel": "A2",
+    "sortOrder": 4,
+    "titleEn": "City",
+    "titleTr": "City"
+  },
+  {
+    "slug": "a2-the-building-project",
+    "cefrLevel": "A2",
+    "sortOrder": 5,
+    "titleEn": "The building project",
+    "titleTr": "The building project"
+  },
+  {
+    "slug": "a2-home-sweet-home",
+    "cefrLevel": "A2",
+    "sortOrder": 6,
+    "titleEn": "Home sweet home",
+    "titleTr": "Home sweet home"
+  },
+  {
+    "slug": "a2-what-time-is-it",
+    "cefrLevel": "A2",
+    "sortOrder": 7,
+    "titleEn": "What time is it",
+    "titleTr": "What time is it"
+  },
+  {
+    "slug": "a2-daily-routine-2",
+    "cefrLevel": "A2",
+    "sortOrder": 8,
+    "titleEn": "Daily routine 2",
+    "titleTr": "Daily routine 2"
+  },
+  {
+    "slug": "a2-free-time",
+    "cefrLevel": "A2",
+    "sortOrder": 9,
+    "titleEn": "Free time",
+    "titleTr": "Free time"
+  },
+  {
+    "slug": "a2-food-and-nutrition",
+    "cefrLevel": "A2",
+    "sortOrder": 10,
+    "titleEn": "Food and nutrition",
+    "titleTr": "Food and nutrition"
+  },
+  {
+    "slug": "a2-shopping-and-consumer",
+    "cefrLevel": "A2",
+    "sortOrder": 11,
+    "titleEn": "Shopping and consumer",
+    "titleTr": "Shopping and consumer"
+  },
+  {
+    "slug": "a2-holidays",
+    "cefrLevel": "A2",
+    "sortOrder": 12,
+    "titleEn": "Holidays",
+    "titleTr": "Holidays"
+  },
+  {
+    "slug": "a2-weekend-plans",
+    "cefrLevel": "A2",
+    "sortOrder": 13,
+    "titleEn": "Weekend plans",
+    "titleTr": "Weekend plans"
+  },
+  {
+    "slug": "a2-formal-or-casual",
+    "cefrLevel": "A2",
+    "sortOrder": 14,
+    "titleEn": "Formal or casual",
+    "titleTr": "Formal or casual"
+  },
+  {
+    "slug": "a2-fashion",
+    "cefrLevel": "A2",
+    "sortOrder": 15,
+    "titleEn": "Fashion",
+    "titleTr": "Fashion"
+  },
+  {
+    "slug": "a2-shopping-3",
+    "cefrLevel": "A2",
+    "sortOrder": 16,
+    "titleEn": "Shopping 3",
+    "titleTr": "Shopping 3"
+  },
+  {
+    "slug": "a2-advice-2",
+    "cefrLevel": "A2",
+    "sortOrder": 17,
+    "titleEn": "Advice 2",
+    "titleTr": "Advice 2"
+  },
+  {
+    "slug": "a2-you-can-do-it",
+    "cefrLevel": "A2",
+    "sortOrder": 18,
+    "titleEn": "You can do it",
+    "titleTr": "You can do it"
+  },
+  {
+    "slug": "a2-shopping-4",
+    "cefrLevel": "A2",
+    "sortOrder": 19,
+    "titleEn": "Shopping 4",
+    "titleTr": "Shopping 4"
+  },
+  {
+    "slug": "a2-small-talk",
+    "cefrLevel": "A2",
+    "sortOrder": 20,
+    "titleEn": "Small talk",
+    "titleTr": "Small talk"
+  },
+  {
+    "slug": "a2-one-latte-please",
+    "cefrLevel": "A2",
+    "sortOrder": 21,
+    "titleEn": "One latte please",
+    "titleTr": "One latte please"
+  },
+  {
+    "slug": "a2-food",
+    "cefrLevel": "A2",
+    "sortOrder": 22,
+    "titleEn": "Food",
+    "titleTr": "Food"
+  },
+  {
+    "slug": "a2-getting-around",
+    "cefrLevel": "A2",
+    "sortOrder": 23,
+    "titleEn": "Getting around",
+    "titleTr": "Getting around"
+  },
+  {
+    "slug": "a2-ready-for-a-trip",
+    "cefrLevel": "A2",
+    "sortOrder": 24,
+    "titleEn": "Ready for a trip",
+    "titleTr": "Ready for a trip"
+  },
+  {
+    "slug": "a2-travel-1",
+    "cefrLevel": "A2",
+    "sortOrder": 25,
+    "titleEn": "Travel 1",
+    "titleTr": "Travel 1"
+  },
+  {
+    "slug": "a2-urban-escapes",
+    "cefrLevel": "A2",
+    "sortOrder": 26,
+    "titleEn": "Urban escapes",
+    "titleTr": "Urban escapes"
+  },
+  {
+    "slug": "a2-travel-2",
+    "cefrLevel": "A2",
+    "sortOrder": 27,
+    "titleEn": "Travel 2",
+    "titleTr": "Travel 2"
+  },
+  {
+    "slug": "a2-a-place-to-stay",
+    "cefrLevel": "A2",
+    "sortOrder": 28,
+    "titleEn": "A place to stay",
+    "titleTr": "A place to stay"
+  },
+  {
+    "slug": "a2-so-exciting",
+    "cefrLevel": "A2",
+    "sortOrder": 29,
+    "titleEn": "So exciting",
+    "titleTr": "So exciting"
+  },
+  {
+    "slug": "a2-the-right-person",
+    "cefrLevel": "A2",
+    "sortOrder": 30,
+    "titleEn": "The right person",
+    "titleTr": "The right person"
+  },
+  {
+    "slug": "a2-school",
+    "cefrLevel": "A2",
+    "sortOrder": 31,
+    "titleEn": "School",
+    "titleTr": "School"
+  },
+  {
+    "slug": "a2-music-preferences",
+    "cefrLevel": "A2",
+    "sortOrder": 32,
+    "titleEn": "Music preferences",
+    "titleTr": "Music preferences"
+  },
+  {
+    "slug": "a2-sports",
+    "cefrLevel": "A2",
+    "sortOrder": 33,
+    "titleEn": "Sports",
+    "titleTr": "Sports"
+  },
+  {
+    "slug": "a2-rules-of-the-race",
+    "cefrLevel": "A2",
+    "sortOrder": 34,
+    "titleEn": "Rules of the race",
+    "titleTr": "Rules of the race"
+  },
+  {
+    "slug": "a2-leave-a-message",
+    "cefrLevel": "A2",
+    "sortOrder": 35,
+    "titleEn": "Leave a message",
+    "titleTr": "Leave a message"
+  },
+  {
+    "slug": "a2-requests",
+    "cefrLevel": "A2",
+    "sortOrder": 36,
+    "titleEn": "Requests",
+    "titleTr": "Requests"
+  },
+  {
+    "slug": "a2-invitations",
+    "cefrLevel": "A2",
+    "sortOrder": 37,
+    "titleEn": "Invitations",
+    "titleTr": "Invitations"
+  },
+  {
+    "slug": "a2-travel-experiences",
+    "cefrLevel": "A2",
+    "sortOrder": 38,
+    "titleEn": "Travel experiences",
+    "titleTr": "Travel experiences"
+  },
+  {
+    "slug": "a2-past-tense-1",
+    "cefrLevel": "A2",
+    "sortOrder": 39,
+    "titleEn": "Past tense 1",
+    "titleTr": "Past tense 1"
+  },
+  {
+    "slug": "a2-past-tense-2",
+    "cefrLevel": "A2",
+    "sortOrder": 40,
+    "titleEn": "Past tense 2",
+    "titleTr": "Past tense 2"
+  },
+  {
+    "slug": "a2-past-tense-3",
+    "cefrLevel": "A2",
+    "sortOrder": 41,
+    "titleEn": "Past tense 3",
+    "titleTr": "Past tense 3"
+  },
+  {
+    "slug": "a2-questions-about-the-past",
+    "cefrLevel": "A2",
+    "sortOrder": 42,
+    "titleEn": "Questions about the past",
+    "titleTr": "Questions about the past"
+  },
+  {
+    "slug": "a2-you-are-never-too-old",
+    "cefrLevel": "A2",
+    "sortOrder": 43,
+    "titleEn": "You are never too old",
+    "titleTr": "You are never too old"
+  },
+  {
+    "slug": "a2-childhood-memories",
+    "cefrLevel": "A2",
+    "sortOrder": 44,
+    "titleEn": "Childhood memories",
+    "titleTr": "Childhood memories"
+  },
+  {
+    "slug": "a2-compliments",
+    "cefrLevel": "A2",
+    "sortOrder": 45,
+    "titleEn": "Compliments",
+    "titleTr": "Compliments"
+  },
+  {
+    "slug": "a2-excuses",
+    "cefrLevel": "A2",
+    "sortOrder": 46,
+    "titleEn": "Excuses",
+    "titleTr": "Excuses"
+  },
+  {
+    "slug": "a2-its-so-annoying",
+    "cefrLevel": "A2",
+    "sortOrder": 47,
+    "titleEn": "It's so annoying!",
+    "titleTr": "It's so annoying!"
+  },
+  {
+    "slug": "a2-a-digital-world",
+    "cefrLevel": "A2",
+    "sortOrder": 48,
+    "titleEn": "A digital world",
+    "titleTr": "A digital world"
+  },
+  {
+    "slug": "a2-work-life",
+    "cefrLevel": "A2",
+    "sortOrder": 49,
+    "titleEn": "Work life",
+    "titleTr": "Work life"
+  },
+  {
+    "slug": "a2-i-did-not-get-that",
+    "cefrLevel": "A2",
+    "sortOrder": 50,
+    "titleEn": "I did not get that",
+    "titleTr": "I did not get that"
+  },
+  {
+    "slug": "a2-save-or-spend",
+    "cefrLevel": "A2",
+    "sortOrder": 51,
+    "titleEn": "Save or spend?",
+    "titleTr": "Save or spend?"
+  },
+  {
+    "slug": "a2-say-sorry",
+    "cefrLevel": "A2",
+    "sortOrder": 52,
+    "titleEn": "Say sorry",
+    "titleTr": "Say sorry"
+  },
+  {
+    "slug": "b1-cultural-traditions",
+    "cefrLevel": "B1",
+    "sortOrder": 0,
+    "titleEn": "Cultural traditions",
+    "titleTr": "Cultural traditions"
+  },
+  {
+    "slug": "b1-celebrities",
+    "cefrLevel": "B1",
+    "sortOrder": 1,
+    "titleEn": "Celebrities",
+    "titleTr": "Celebrities"
+  },
+  {
+    "slug": "b1-art-and-creativity",
+    "cefrLevel": "B1",
+    "sortOrder": 2,
+    "titleEn": "Art and creativity",
+    "titleTr": "Art and creativity"
+  },
+  {
+    "slug": "b1-future-plans",
+    "cefrLevel": "B1",
+    "sortOrder": 3,
+    "titleEn": "Future plans",
+    "titleTr": "Future plans"
+  },
+  {
+    "slug": "b1-planning-events",
+    "cefrLevel": "B1",
+    "sortOrder": 4,
+    "titleEn": "Planning events",
+    "titleTr": "Planning events"
+  },
+  {
+    "slug": "b1-goals-and-plans",
+    "cefrLevel": "B1",
+    "sortOrder": 5,
+    "titleEn": "Goals and plans",
+    "titleTr": "Goals and plans"
+  },
+  {
+    "slug": "b1-historical-events",
+    "cefrLevel": "B1",
+    "sortOrder": 6,
+    "titleEn": "Historical events",
+    "titleTr": "Historical events"
+  },
+  {
+    "slug": "b1-technology",
+    "cefrLevel": "B1",
+    "sortOrder": 7,
+    "titleEn": "Technology",
+    "titleTr": "Technology"
+  },
+  {
+    "slug": "b1-never-ever",
+    "cefrLevel": "B1",
+    "sortOrder": 8,
+    "titleEn": "Never ever",
+    "titleTr": "Never ever"
+  },
+  {
+    "slug": "b1-what-is-on",
+    "cefrLevel": "B1",
+    "sortOrder": 9,
+    "titleEn": "What is on",
+    "titleTr": "What is on"
+  },
+  {
+    "slug": "b1-dream-vacation",
+    "cefrLevel": "B1",
+    "sortOrder": 10,
+    "titleEn": "Dream vacation",
+    "titleTr": "Dream vacation"
+  },
+  {
+    "slug": "b1-social-media",
+    "cefrLevel": "B1",
+    "sortOrder": 11,
+    "titleEn": "Social media",
+    "titleTr": "Social media"
+  },
+  {
+    "slug": "b1-book-recommendations",
+    "cefrLevel": "B1",
+    "sortOrder": 12,
+    "titleEn": "Book recommendations",
+    "titleTr": "Book recommendations"
+  },
+  {
+    "slug": "b1-one-of-those-days",
+    "cefrLevel": "B1",
+    "sortOrder": 13,
+    "titleEn": "One of those days",
+    "titleTr": "One of those days"
+  },
+  {
+    "slug": "b1-special-photos",
+    "cefrLevel": "B1",
+    "sortOrder": 14,
+    "titleEn": "Special photos",
+    "titleTr": "Special photos"
+  },
+  {
+    "slug": "b1-personal-achievements",
+    "cefrLevel": "B1",
+    "sortOrder": 15,
+    "titleEn": "Personal achievements",
+    "titleTr": "Personal achievements"
+  },
+  {
+    "slug": "b1-favourite-movies",
+    "cefrLevel": "B1",
+    "sortOrder": 16,
+    "titleEn": "Favourite movies",
+    "titleTr": "Favourite movies"
+  },
+  {
+    "slug": "b1-news-flash",
+    "cefrLevel": "B1",
+    "sortOrder": 17,
+    "titleEn": "News flash",
+    "titleTr": "News flash"
+  },
+  {
+    "slug": "b1-happiness",
+    "cefrLevel": "B1",
+    "sortOrder": 18,
+    "titleEn": "Happiness",
+    "titleTr": "Happiness"
+  },
+  {
+    "slug": "b1-a-busy-week",
+    "cefrLevel": "B1",
+    "sortOrder": 19,
+    "titleEn": "A busy week",
+    "titleTr": "A busy week"
+  },
+  {
+    "slug": "b1-where-i-grew-up",
+    "cefrLevel": "B1",
+    "sortOrder": 20,
+    "titleEn": "Where I grew up",
+    "titleTr": "Where I grew up"
+  },
+  {
+    "slug": "b1-school-days",
+    "cefrLevel": "B1",
+    "sortOrder": 21,
+    "titleEn": "School days",
+    "titleTr": "School days"
+  },
+  {
+    "slug": "b1-profiles",
+    "cefrLevel": "B1",
+    "sortOrder": 22,
+    "titleEn": "Profiles",
+    "titleTr": "Profiles"
+  },
+  {
+    "slug": "b1-life-maps",
+    "cefrLevel": "B1",
+    "sortOrder": 23,
+    "titleEn": "Life maps",
+    "titleTr": "Life maps"
+  },
+  {
+    "slug": "b1-everyday",
+    "cefrLevel": "B1",
+    "sortOrder": 24,
+    "titleEn": "Everyday",
+    "titleTr": "Everyday"
+  },
+  {
+    "slug": "b1-what-is-next",
+    "cefrLevel": "B1",
+    "sortOrder": 25,
+    "titleEn": "What is next",
+    "titleTr": "What is next"
+  },
+  {
+    "slug": "b1-suggestion-making",
+    "cefrLevel": "B1",
+    "sortOrder": 26,
+    "titleEn": "Suggestion making",
+    "titleTr": "Suggestion making"
+  },
+  {
+    "slug": "b1-what-happened",
+    "cefrLevel": "B1",
+    "sortOrder": 27,
+    "titleEn": "What happened",
+    "titleTr": "What happened"
+  },
+  {
+    "slug": "b1-memories",
+    "cefrLevel": "B1",
+    "sortOrder": 28,
+    "titleEn": "Memories",
+    "titleTr": "Memories"
+  },
+  {
+    "slug": "b1-culture-shock",
+    "cefrLevel": "B1",
+    "sortOrder": 29,
+    "titleEn": "Culture shock",
+    "titleTr": "Culture shock"
+  },
+  {
+    "slug": "b1-interest-phrases",
+    "cefrLevel": "B1",
+    "sortOrder": 30,
+    "titleEn": "Interest phrases",
+    "titleTr": "Interest phrases"
+  },
+  {
+    "slug": "b1-job-interviews",
+    "cefrLevel": "B1",
+    "sortOrder": 31,
+    "titleEn": "Job interviews",
+    "titleTr": "Job interviews"
+  },
+  {
+    "slug": "b1-bucket-lists",
+    "cefrLevel": "B1",
+    "sortOrder": 32,
+    "titleEn": "Bucket lists",
+    "titleTr": "Bucket lists"
+  },
+  {
+    "slug": "b1-my-kind-of-town",
+    "cefrLevel": "B1",
+    "sortOrder": 33,
+    "titleEn": "My kind of town",
+    "titleTr": "My kind of town"
+  },
+  {
+    "slug": "b1-the-internet-generation",
+    "cefrLevel": "B1",
+    "sortOrder": 34,
+    "titleEn": "The internet generation",
+    "titleTr": "The internet generation"
+  },
+  {
+    "slug": "b1-popular-brands",
+    "cefrLevel": "B1",
+    "sortOrder": 35,
+    "titleEn": "Popular brands",
+    "titleTr": "Popular brands"
+  },
+  {
+    "slug": "b1-opinion-phrases",
+    "cefrLevel": "B1",
+    "sortOrder": 36,
+    "titleEn": "Opinion phrases",
+    "titleTr": "Opinion phrases"
+  },
+  {
+    "slug": "b1-how-does-it-look",
+    "cefrLevel": "B1",
+    "sortOrder": 37,
+    "titleEn": "How does it look",
+    "titleTr": "How does it look"
+  },
+  {
+    "slug": "b1-living-space",
+    "cefrLevel": "B1",
+    "sortOrder": 38,
+    "titleEn": "Living space",
+    "titleTr": "Living space"
+  },
+  {
+    "slug": "b1-eating-well",
+    "cefrLevel": "B1",
+    "sortOrder": 39,
+    "titleEn": "Eating well",
+    "titleTr": "Eating well"
+  },
+  {
+    "slug": "b1-unusual-hobbies",
+    "cefrLevel": "B1",
+    "sortOrder": 40,
+    "titleEn": "Unusual hobbies",
+    "titleTr": "Unusual hobbies"
+  },
+  {
+    "slug": "b1-a-difficult-choice",
+    "cefrLevel": "B1",
+    "sortOrder": 41,
+    "titleEn": "A difficult choice",
+    "titleTr": "A difficult choice"
+  },
+  {
+    "slug": "b1-take-action",
+    "cefrLevel": "B1",
+    "sortOrder": 42,
+    "titleEn": "Take action",
+    "titleTr": "Take action"
+  },
+  {
+    "slug": "b1-new-skills",
+    "cefrLevel": "B1",
+    "sortOrder": 43,
+    "titleEn": "New skills",
+    "titleTr": "New skills"
+  },
+  {
+    "slug": "b1-making-a-complaint",
+    "cefrLevel": "B1",
+    "sortOrder": 44,
+    "titleEn": "Making a complaint",
+    "titleTr": "Making a complaint"
+  },
+  {
+    "slug": "b1-education",
+    "cefrLevel": "B1",
+    "sortOrder": 45,
+    "titleEn": "Education",
+    "titleTr": "Education"
+  },
+  {
+    "slug": "b1-green-cities",
+    "cefrLevel": "B1",
+    "sortOrder": 46,
+    "titleEn": "Green cities",
+    "titleTr": "Green cities"
+  },
+  {
+    "slug": "b1-what-is-in-a-job",
+    "cefrLevel": "B1",
+    "sortOrder": 47,
+    "titleEn": "What is in a job",
+    "titleTr": "What is in a job"
+  },
+  {
+    "slug": "b1-personal-challenges",
+    "cefrLevel": "B1",
+    "sortOrder": 48,
+    "titleEn": "Personal challenges",
+    "titleTr": "Personal challenges"
+  },
+  {
+    "slug": "b1-interview-phrases",
+    "cefrLevel": "B1",
+    "sortOrder": 49,
+    "titleEn": "Interview phrases",
+    "titleTr": "Interview phrases"
+  },
+  {
+    "slug": "b1-polite-endings",
+    "cefrLevel": "B1",
+    "sortOrder": 50,
+    "titleEn": "Polite endings",
+    "titleTr": "Polite endings"
+  },
+  {
+    "slug": "b1-headline-news",
+    "cefrLevel": "B1",
+    "sortOrder": 51,
+    "titleEn": "Headline news",
+    "titleTr": "Headline news"
+  },
+  {
+    "slug": "b1-small-changes",
+    "cefrLevel": "B1",
+    "sortOrder": 52,
+    "titleEn": "Small changes",
+    "titleTr": "Small changes"
+  },
+  {
+    "slug": "b1-apologies-excuses",
+    "cefrLevel": "B1",
+    "sortOrder": 53,
+    "titleEn": "Apologies excuses",
+    "titleTr": "Apologies excuses"
+  },
+  {
+    "slug": "b1-phone-etiquette",
+    "cefrLevel": "B1",
+    "sortOrder": 54,
+    "titleEn": "Phone etiquette",
+    "titleTr": "Phone etiquette"
+  },
+  {
+    "slug": "b1-sorry-to-interrupt",
+    "cefrLevel": "B1",
+    "sortOrder": 55,
+    "titleEn": "Sorry to interrupt…",
+    "titleTr": "Sorry to interrupt…"
+  },
+  {
+    "slug": "b1-complaint-responses",
+    "cefrLevel": "B1",
+    "sortOrder": 56,
+    "titleEn": "Complaint responses",
+    "titleTr": "Complaint responses"
+  },
+  {
+    "slug": "b2-personalities",
+    "cefrLevel": "B2",
+    "sortOrder": 0,
+    "titleEn": "Personalities",
+    "titleTr": "Personalities"
+  },
+  {
+    "slug": "b2-great-leads",
+    "cefrLevel": "B2",
+    "sortOrder": 1,
+    "titleEn": "Great leads",
+    "titleTr": "Great leads"
+  },
+  {
+    "slug": "b2-healthy-lifestyle",
+    "cefrLevel": "B2",
+    "sortOrder": 2,
+    "titleEn": "Healthy lifestyle",
+    "titleTr": "Healthy lifestyle"
+  },
+  {
+    "slug": "b2-what-is-the-truth",
+    "cefrLevel": "B2",
+    "sortOrder": 3,
+    "titleEn": "What is the truth?",
+    "titleTr": "What is the truth?"
+  },
+  {
+    "slug": "b2-personal-growth",
+    "cefrLevel": "B2",
+    "sortOrder": 4,
+    "titleEn": "Personal growth",
+    "titleTr": "Personal growth"
+  },
+  {
+    "slug": "b2-speaking-out",
+    "cefrLevel": "B2",
+    "sortOrder": 5,
+    "titleEn": "Speaking out",
+    "titleTr": "Speaking out"
+  },
+  {
+    "slug": "b2-acting-out",
+    "cefrLevel": "B2",
+    "sortOrder": 6,
+    "titleEn": "Acting out?",
+    "titleTr": "Acting out?"
+  },
+  {
+    "slug": "b2-i-remember",
+    "cefrLevel": "B2",
+    "sortOrder": 7,
+    "titleEn": "I remember...",
+    "titleTr": "I remember..."
+  },
+  {
+    "slug": "b2-social-feedback",
+    "cefrLevel": "B2",
+    "sortOrder": 8,
+    "titleEn": "Social feedback",
+    "titleTr": "Social feedback"
+  },
+  {
+    "slug": "b2-crime-scene",
+    "cefrLevel": "B2",
+    "sortOrder": 9,
+    "titleEn": "Crime scene",
+    "titleTr": "Crime scene"
+  },
+  {
+    "slug": "b2-polite-trouble",
+    "cefrLevel": "B2",
+    "sortOrder": 10,
+    "titleEn": "Polite trouble",
+    "titleTr": "Polite trouble"
+  },
+  {
+    "slug": "b2-conflict-resolution",
+    "cefrLevel": "B2",
+    "sortOrder": 11,
+    "titleEn": "Conflict resolution",
+    "titleTr": "Conflict resolution"
+  },
+  {
+    "slug": "b2-love-it-or-loathe-it",
+    "cefrLevel": "B2",
+    "sortOrder": 12,
+    "titleEn": "Love it or loathe it?",
+    "titleTr": "Love it or loathe it?"
+  },
+  {
+    "slug": "b2-environmental-issues",
+    "cefrLevel": "B2",
+    "sortOrder": 13,
+    "titleEn": "Environmental issues",
+    "titleTr": "Environmental issues"
+  },
+  {
+    "slug": "b2-we-can-work-it-out",
+    "cefrLevel": "B2",
+    "sortOrder": 14,
+    "titleEn": "We can work it out",
+    "titleTr": "We can work it out"
+  },
+  {
+    "slug": "b2-mysteries-and-crimes",
+    "cefrLevel": "B2",
+    "sortOrder": 15,
+    "titleEn": "Mysteries and crimes",
+    "titleTr": "Mysteries and crimes"
+  },
+  {
+    "slug": "b2-possible-futures",
+    "cefrLevel": "B2",
+    "sortOrder": 16,
+    "titleEn": "Possible futures",
+    "titleTr": "Possible futures"
+  },
+  {
+    "slug": "b2-business-plans",
+    "cefrLevel": "B2",
+    "sortOrder": 17,
+    "titleEn": "Business plans",
+    "titleTr": "Business plans"
+  },
+  {
+    "slug": "b2-meeting-decisions",
+    "cefrLevel": "B2",
+    "sortOrder": 18,
+    "titleEn": "Meeting decisions",
+    "titleTr": "Meeting decisions"
+  },
+  {
+    "slug": "b2-its-so-predictable",
+    "cefrLevel": "B2",
+    "sortOrder": 19,
+    "titleEn": "It's so predictable...",
+    "titleTr": "It's so predictable..."
+  },
+  {
+    "slug": "b2-on-the-job",
+    "cefrLevel": "B2",
+    "sortOrder": 20,
+    "titleEn": "On the job",
+    "titleTr": "On the job"
+  },
+  {
+    "slug": "b2-science-and-technology",
+    "cefrLevel": "B2",
+    "sortOrder": 21,
+    "titleEn": "Science and technology",
+    "titleTr": "Science and technology"
+  },
+  {
+    "slug": "b2-time-management",
+    "cefrLevel": "B2",
+    "sortOrder": 22,
+    "titleEn": "Time management",
+    "titleTr": "Time management"
+  },
+  {
+    "slug": "b2-human-rights",
+    "cefrLevel": "B2",
+    "sortOrder": 23,
+    "titleEn": "Human rights",
+    "titleTr": "Human rights"
+  },
+  {
+    "slug": "c1-cultural-norms",
+    "cefrLevel": "C1",
+    "sortOrder": 0,
+    "titleEn": "Cultural norms",
+    "titleTr": "Cultural norms"
+  },
+  {
+    "slug": "c1-social-media-influence",
+    "cefrLevel": "C1",
+    "sortOrder": 1,
+    "titleEn": "Social media influence",
+    "titleTr": "Social media influence"
+  },
+  {
+    "slug": "c1-career-choices",
+    "cefrLevel": "C1",
+    "sortOrder": 2,
+    "titleEn": "Career choices",
+    "titleTr": "Career choices"
+  },
+  {
+    "slug": "c1-accelerate-performance",
+    "cefrLevel": "C1",
+    "sortOrder": 3,
+    "titleEn": "Accelerate performance",
+    "titleTr": "Accelerate performance"
+  },
+  {
+    "slug": "c1-inventions",
+    "cefrLevel": "C1",
+    "sortOrder": 4,
+    "titleEn": "Inventions",
+    "titleTr": "Inventions"
+  },
+  {
+    "slug": "c1-time-travel",
+    "cefrLevel": "C1",
+    "sortOrder": 5,
+    "titleEn": "Time travel",
+    "titleTr": "Time travel"
+  },
+  {
+    "slug": "c1-possessions",
+    "cefrLevel": "C1",
+    "sortOrder": 6,
+    "titleEn": "Possessions",
+    "titleTr": "Possessions"
+  },
+  {
+    "slug": "c1-job-skills",
+    "cefrLevel": "C1",
+    "sortOrder": 7,
+    "titleEn": "Job skills",
+    "titleTr": "Job skills"
+  },
+  {
+    "slug": "c1-historical-changes",
+    "cefrLevel": "C1",
+    "sortOrder": 8,
+    "titleEn": "Historical changes",
+    "titleTr": "Historical changes"
+  },
+  {
+    "slug": "c1-review-writing",
+    "cefrLevel": "C1",
+    "sortOrder": 9,
+    "titleEn": "Review writing",
+    "titleTr": "Review writing"
+  },
+  {
+    "slug": "c1-mysteries",
+    "cefrLevel": "C1",
+    "sortOrder": 10,
+    "titleEn": "Mysteries",
+    "titleTr": "Mysteries"
+  },
+  {
+    "slug": "c1-strange-theories",
+    "cefrLevel": "C1",
+    "sortOrder": 11,
+    "titleEn": "Strange theories",
+    "titleTr": "Strange theories"
+  },
+  {
+    "slug": "c1-celebrity",
+    "cefrLevel": "C1",
+    "sortOrder": 12,
+    "titleEn": "Celebrity",
+    "titleTr": "Celebrity"
+  },
+  {
+    "slug": "c1-global-politics",
+    "cefrLevel": "C1",
+    "sortOrder": 13,
+    "titleEn": "Global politics",
+    "titleTr": "Global politics"
+  },
+  {
+    "slug": "c1-product-boom",
+    "cefrLevel": "C1",
+    "sortOrder": 14,
+    "titleEn": "Product boom",
+    "titleTr": "Product boom"
+  },
+  {
+    "slug": "c1-will-be-happy",
+    "cefrLevel": "C1",
+    "sortOrder": 15,
+    "titleEn": "Will be happy?",
+    "titleTr": "Will be happy?"
+  },
+  {
+    "slug": "c1-maybe-later",
+    "cefrLevel": "C1",
+    "sortOrder": 16,
+    "titleEn": "Maybe later...",
+    "titleTr": "Maybe later..."
+  },
+  {
+    "slug": "c1-new-solutions",
+    "cefrLevel": "C1",
+    "sortOrder": 17,
+    "titleEn": "New solutions",
+    "titleTr": "New solutions"
+  },
+  {
+    "slug": "c1-contextual-influence",
+    "cefrLevel": "C1",
+    "sortOrder": 18,
+    "titleEn": "Contextual influence",
+    "titleTr": "Contextual influence"
+  },
+  {
+    "slug": "c1-a-lost-logo",
+    "cefrLevel": "C1",
+    "sortOrder": 19,
+    "titleEn": "A lost logo",
+    "titleTr": "A lost logo"
+  },
+  {
+    "slug": "c1-kind-acts",
+    "cefrLevel": "C1",
+    "sortOrder": 20,
+    "titleEn": "Kind acts",
+    "titleTr": "Kind acts"
+  },
+  {
+    "slug": "c1-what-a-movie",
+    "cefrLevel": "C1",
+    "sortOrder": 21,
+    "titleEn": "What a movie",
+    "titleTr": "What a movie"
+  },
+  {
+    "slug": "c1-how-annoying",
+    "cefrLevel": "C1",
+    "sortOrder": 22,
+    "titleEn": "How annoying",
+    "titleTr": "How annoying"
+  },
+  {
+    "slug": "c1-in-the-news",
+    "cefrLevel": "C1",
+    "sortOrder": 23,
+    "titleEn": "In the news",
+    "titleTr": "In the news"
+  },
+  {
+    "slug": "c2-globalization",
+    "cefrLevel": "C2",
+    "sortOrder": 0,
+    "titleEn": "Globalization",
+    "titleTr": "Globalization"
+  },
+  {
+    "slug": "c2-natural-disasters",
+    "cefrLevel": "C2",
+    "sortOrder": 1,
+    "titleEn": "Natural disasters",
+    "titleTr": "Natural disasters"
+  },
+  {
+    "slug": "c2-reacting-to-information",
+    "cefrLevel": "C2",
+    "sortOrder": 2,
+    "titleEn": "Reacting to information",
+    "titleTr": "Reacting to information"
+  },
+  {
+    "slug": "c2-work-life-balance",
+    "cefrLevel": "C2",
+    "sortOrder": 3,
+    "titleEn": "Work-life balance",
+    "titleTr": "Work-life balance"
+  },
+  {
+    "slug": "c2-remote-work",
+    "cefrLevel": "C2",
+    "sortOrder": 4,
+    "titleEn": "Remote work",
+    "titleTr": "Remote work"
+  },
+  {
+    "slug": "c2-family-issues",
+    "cefrLevel": "C2",
+    "sortOrder": 5,
+    "titleEn": "Family issues",
+    "titleTr": "Family issues"
+  },
+  {
+    "slug": "c2-basic-human-anatomy",
+    "cefrLevel": "C2",
+    "sortOrder": 6,
+    "titleEn": "Basic human anatomy",
+    "titleTr": "Basic human anatomy"
+  },
+  {
+    "slug": "c2-health-predictions",
+    "cefrLevel": "C2",
+    "sortOrder": 7,
+    "titleEn": "Health predictions",
+    "titleTr": "Health predictions"
+  },
+  {
+    "slug": "c2-healthcare-access",
+    "cefrLevel": "C2",
+    "sortOrder": 8,
+    "titleEn": "Healthcare access",
+    "titleTr": "Healthcare access"
+  },
+  {
+    "slug": "c2-global-travel-experience",
+    "cefrLevel": "C2",
+    "sortOrder": 9,
+    "titleEn": "Global travel experience",
+    "titleTr": "Global travel experience"
+  },
+  {
+    "slug": "c2-superpowers",
+    "cefrLevel": "C2",
+    "sortOrder": 10,
+    "titleEn": "Superpowers",
+    "titleTr": "Superpowers"
+  },
+  {
+    "slug": "c2-team-building",
+    "cefrLevel": "C2",
+    "sortOrder": 11,
+    "titleEn": "Team building",
+    "titleTr": "Team building"
+  },
+  {
+    "slug": "c2-biofluorescence",
+    "cefrLevel": "C2",
+    "sortOrder": 12,
+    "titleEn": "Biofluorescence",
+    "titleTr": "Biofluorescence"
+  },
+  {
+    "slug": "c2-dilemmas",
+    "cefrLevel": "C2",
+    "sortOrder": 13,
+    "titleEn": "Dilemmas",
+    "titleTr": "Dilemmas"
+  },
+  {
+    "slug": "c2-social-enthusiasm",
+    "cefrLevel": "C2",
+    "sortOrder": 14,
+    "titleEn": "Social enthusiasm",
+    "titleTr": "Social enthusiasm"
+  },
+  {
+    "slug": "c2-changes",
+    "cefrLevel": "C2",
+    "sortOrder": 15,
+    "titleEn": "Changes",
+    "titleTr": "Changes"
+  },
+  {
+    "slug": "c2-work-work-work",
+    "cefrLevel": "C2",
+    "sortOrder": 16,
+    "titleEn": "Work, work, work",
+    "titleTr": "Work, work, work"
+  },
+  {
+    "slug": "c2-local-issues",
+    "cefrLevel": "C2",
+    "sortOrder": 17,
+    "titleEn": "Local issues",
+    "titleTr": "Local issues"
+  },
+  {
+    "slug": "c2-problems-problems",
+    "cefrLevel": "C2",
+    "sortOrder": 18,
+    "titleEn": "Problems, problems",
+    "titleTr": "Problems, problems"
+  },
+  {
+    "slug": "c2-fact-or-fiction",
+    "cefrLevel": "C2",
+    "sortOrder": 19,
+    "titleEn": "Fact or fiction?",
+    "titleTr": "Fact or fiction?"
+  },
+  {
+    "slug": "c2-sightseeing",
+    "cefrLevel": "C2",
+    "sortOrder": 20,
+    "titleEn": "Sightseeing",
+    "titleTr": "Sightseeing"
+  },
+  {
+    "slug": "c2-volunteering",
+    "cefrLevel": "C2",
+    "sortOrder": 21,
+    "titleEn": "Volunteering",
+    "titleTr": "Volunteering"
+  },
+  {
+    "slug": "c2-the-minds-eye",
+    "cefrLevel": "C2",
+    "sortOrder": 22,
+    "titleEn": "The mind's eye",
+    "titleTr": "The mind's eye"
+  },
+  {
+    "slug": "c2-media-consumption",
+    "cefrLevel": "C2",
+    "sortOrder": 23,
+    "titleEn": "Media consumption",
+    "titleTr": "Media consumption"
+  }
+]

@@ -276,11 +276,22 @@ async function reactivate(req, res, next) {
   }
 }
 
+async function streak(req, res, next) {
+  try {
+    const { getStreakForUser } = require('../services/streak.service');
+    const streakData = await getStreakForUser(req.user.id);
+    res.json({ ok: true, ...streakData });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   guest,
   google,
   apple,
   me,
+  streak,
   refresh,
   updateMe,
   updateNotifications,

@@ -6,6 +6,17 @@ const { requireAuth } = require('../middlewares/auth');
 
 const router = Router();
 
+router.post('/preview/sessions', tutorChatController.openPreviewSession);
+router.post(
+  '/preview/sessions/:sessionId/messages',
+  tutorChatController.postPreviewMessage,
+);
+router.post(
+  '/preview/sessions/:sessionId/claim',
+  requireAuth,
+  tutorChatController.claimPreviewSession,
+);
+
 router.post('/sessions', requireAuth, tutorChatController.openSession);
 router.get('/sessions', requireAuth, tutorChatController.listSessions);
 router.get(

@@ -4,6 +4,24 @@ const { pool } = require('../config/db');
 const { uuid } = require('../utils/auth');
 const { env } = require('../config/env');
 const { mapTutor } = require('./tutor.service');
+const streak = require('./streak.service');
+const {
+  characterBlurb,
+  characterLockRule,
+  flavorRule,
+  naturalEnglishRule,
+} = require('./tutor-personality');
+const { rolePlaySystemPrompt } = require('./roleplay-prompt');
+
+const PREVIEW_TTL_MS = 1000 * 60 * 30;
+const previewSessions = new Map();
+
+function prunePreviewSessions() {
+  const now = Date.now();
+  for (const [id, session] of previewSessions.entries()) {
+    if (session.expiresAt <= now) previewSessions.delete(id);
+  }
+}
 
 async function findTutorById(tutorId) {
   const [rows] = await pool.query(
@@ -35,28 +53,57 @@ async function resolveTutor({ tutorId, tutorSlug }) {
   throw err;
 }
 
-async function getOrCreateSession(userId, { tutorId, tutorSlug } = {}) {
+async function getOrCreateSession(
+  userId,
+  {
+    tutorId,
+    tutorSlug,
+    forceNew = false,
+    title,
+    openingMessage,
+    lessonSlug,
+    kind = 'chat',
+  } = {},
+) {
   const tutor = await resolveTutor({ tutorId, tutorSlug });
   tutorId = tutor.id;
+  const sessionKind = ['chat', 'lesson', 'practice'].includes(kind)
+    ? kind
+    : 'chat';
 
-  const [existing] = await pool.query(
-    `SELECT * FROM tutor_chat_sessions
-     WHERE user_id = ? AND tutor_id = ?
-     ORDER BY COALESCE(last_message_at, created_at) DESC
-     LIMIT 1`,
-    [userId, tutorId],
-  );
+  if (!forceNew) {
+    const [existing] = await pool.query(
+      `SELECT * FROM tutor_chat_sessions
+       WHERE user_id = ? AND tutor_id = ?
+       ORDER BY COALESCE(last_message_at, created_at) DESC
+       LIMIT 1`,
+      [userId, tutorId],
+    );
 
-  if (existing.length) {
-    return { session: mapSession(existing[0]), tutor, created: false };
+    if (existing.length) {
+      return { session: mapSession(existing[0]), tutor, created: false };
+    }
   }
 
   const id = uuid();
+  const sessionTitle =
+    (title && String(title).trim()) || tutor.nameKey || tutor.slug;
   await pool.query(
-    `INSERT INTO tutor_chat_sessions (id, user_id, tutor_id, title)
-     VALUES (?, ?, ?, ?)`,
-    [id, userId, tutorId, tutor.nameKey || tutor.slug],
+    `INSERT INTO tutor_chat_sessions
+       (id, user_id, tutor_id, title, lesson_slug, kind)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [id, userId, tutorId, sessionTitle, lessonSlug || null, sessionKind],
   );
+
+  const opening = openingMessage && String(openingMessage).trim();
+  if (opening) {
+    await insertMessage({
+      sessionId: id,
+      role: 'assistant',
+      content: opening,
+    });
+  }
+
   const [rows] = await pool.query(
     'SELECT * FROM tutor_chat_sessions WHERE id = ? LIMIT 1',
     [id],
@@ -70,6 +117,8 @@ function mapSession(row) {
     userId: row.user_id,
     tutorId: row.tutor_id,
     title: row.title,
+    lessonSlug: row.lesson_slug || null,
+    kind: row.kind || 'chat',
     lastMessageAt: row.last_message_at,
     createdAt: row.created_at,
   };
@@ -176,15 +225,63 @@ function displayTutorName(tutor) {
   return raw.charAt(0).toUpperCase() + raw.slice(1);
 }
 
-function tutorSystemPrompt(tutor) {
+function tutorSystemPrompt(tutor, session) {
   const name = displayTutorName(tutor);
-  return `You are ${name}, a friendly English tutor inside the Lingola language-learning app.
+  const title = String(session?.title || '');
+  if (/onboarding preview/i.test(title)) {
+    return `You are Lingola, a friendly robot English tutor in the Lingola app.
+${characterBlurb(tutor)}
+${characterLockRule(tutor)}
+${flavorRule(tutor)}
+${naturalEnglishRule('A1')}
+This is a short onboarding preview before sign-up. The learner is trying Lingola for the first time.
 Rules:
-- Stay in character as ${name}.
-- Speak simple clear English (A1–B1 unless the learner writes more advanced English).
+- Greet warmly in English: welcome them to Lingola.
+- Stay in character as a curious, playful robot tutor only (no elves/orcs/forests).
 - Keep replies short: 1–3 sentences.
-- Gently correct mistakes by modeling a better phrase.
+- Teach natural everyday phrases with 2–3 variants (e.g. Hi / Hey / Hello; I'm good / Not bad / Pretty good).
+- Gently correct by modeling natural spoken English.
+- Ask one easy follow-up question.
+- No markdown, no bullet lists.`;
+  }
+  if (title.startsWith('Role Play:')) {
+    return rolePlaySystemPrompt(title);
+  }
+  if (title.startsWith('Lesson:') || title.startsWith('Practice:')) {
+    const isPractice = title.startsWith('Practice:');
+    const topic =
+      title.replace(/^(Lesson|Practice):\s*/i, '').trim() || 'everyday English';
+    return `You are ${name}, a friendly English tutor in the Lingola app.
+${characterBlurb(tutor)}
+${characterLockRule(tutor)}
+${flavorRule(tutor)}
+${naturalEnglishRule('A1')}
+Lesson topic: "${topic}".
+${isPractice ? 'This is extra practice on the same topic — more repetition, simpler prompts.' : 'Teach a few key everyday phrases, then practice them in a short conversation.'}
+Rules:
+- Stay in this character only. Keep your tone consistent.
+- Stay on this topic.
+- Keep replies short: 1–3 sentences.
+- For each idea, show 2–3 natural variants, then ask the learner to try one.
+- Gently correct toward natural spoken English.
+- Ask one short follow-up question.
+- If the learner is silent or shy, give a short in-character nudge (one sentence). Never a long pep talk.
+- After several good exchanges, recap the real-life variants they can use.
+- No markdown, no bullet lists.`;
+  }
+  return `You are ${name}, a friendly English tutor inside the Lingola language-learning app.
+${characterBlurb(tutor)}
+${characterLockRule(tutor)}
+${flavorRule(tutor)}
+${naturalEnglishRule('A1')}
+Rules:
+- Stay in character as ${name} only.
+- Speak simple clear natural English (A1–B1 unless the learner writes more advanced English).
+- Keep replies short: 1–3 sentences.
+- Prefer everyday variants over one school-book phrase.
+- Gently correct mistakes by modeling a better natural phrase.
 - Ask one short follow-up question to keep practice going.
+- If the learner is silent or shy, give a short nudge (one sentence). Never a long pep talk.
 - No markdown, no bullet lists.`;
 }
 
@@ -211,7 +308,7 @@ async function callOpenAi({ system, history, userMessage }) {
     body: JSON.stringify({
       model: env.openai.model || 'gpt-4o-mini',
       temperature: 0.7,
-      max_tokens: 180,
+      max_tokens: 220,
       messages,
     }),
   });
@@ -254,6 +351,7 @@ async function sendMessage({ userId, sessionId, content }) {
     role: 'user',
     content: text,
   });
+  await streak.recordActivity(userId, 'chat');
 
   const { messages: history } = await listMessages(sessionId, userId);
   const prior = history
@@ -263,7 +361,7 @@ async function sendMessage({ userId, sessionId, content }) {
   let replyText;
   try {
     replyText = await callOpenAi({
-      system: tutorSystemPrompt(tutor),
+      system: tutorSystemPrompt(tutor, session),
       history: prior,
       userMessage: text,
     });
@@ -285,10 +383,157 @@ async function sendMessage({ userId, sessionId, content }) {
   };
 }
 
+function mapPreviewSession(session) {
+  return {
+    id: session.id,
+    tutorId: session.tutor.id,
+    title: session.title,
+    kind: session.kind,
+    createdAt: session.createdAt,
+    expiresAt: new Date(session.expiresAt).toISOString(),
+  };
+}
+
+function mapPreviewMessage(message) {
+  return {
+    id: message.id,
+    sessionId: message.sessionId,
+    role: message.role,
+    content: message.content,
+    createdAt: message.createdAt,
+  };
+}
+
+async function openPreviewSession({
+  tutorId,
+  tutorSlug,
+  title,
+  openingMessage,
+  kind = 'chat',
+}) {
+  prunePreviewSessions();
+  const tutor = await resolveTutor({ tutorId, tutorSlug });
+  const id = uuid();
+  const sessionTitle =
+    (title && String(title).trim()) || tutor.nameKey || tutor.slug;
+  const createdAt = new Date().toISOString();
+  const session = {
+    id,
+    tutor,
+    title: sessionTitle,
+    kind: ['chat', 'lesson', 'practice'].includes(kind) ? kind : 'chat',
+    createdAt,
+    expiresAt: Date.now() + PREVIEW_TTL_MS,
+    messages: [],
+  };
+  const opening = String(openingMessage || '').trim();
+  if (opening) {
+    session.messages.push({
+      id: uuid(),
+      sessionId: id,
+      role: 'assistant',
+      content: opening,
+      createdAt,
+    });
+  }
+  previewSessions.set(id, session);
+  return {
+    session: mapPreviewSession(session),
+    tutor,
+    created: true,
+    messages: session.messages.map(mapPreviewMessage),
+  };
+}
+
+function getPreviewSessionOrThrow(sessionId) {
+  prunePreviewSessions();
+  const session = previewSessions.get(sessionId);
+  if (!session) {
+    const err = new Error('Preview chat session not found or expired');
+    err.status = 404;
+    throw err;
+  }
+  session.expiresAt = Date.now() + PREVIEW_TTL_MS;
+  return session;
+}
+
+async function sendPreviewMessage({ sessionId, content }) {
+  const text = String(content || '').trim();
+  if (!text) {
+    const err = new Error('Message content is required');
+    err.status = 400;
+    throw err;
+  }
+  const session = getPreviewSessionOrThrow(sessionId);
+  const userMessage = {
+    id: uuid(),
+    sessionId,
+    role: 'user',
+    content: text,
+    createdAt: new Date().toISOString(),
+  };
+  session.messages.push(userMessage);
+
+  const prior = session.messages
+    .filter((m) => m.id !== userMessage.id && m.role !== 'system')
+    .slice(-16)
+    .map((m) => ({ role: m.role, content: m.content }));
+  const replyText = await callOpenAi({
+    system: tutorSystemPrompt(session.tutor, {
+      id: session.id,
+      title: session.title,
+      kind: session.kind,
+    }),
+    history: prior,
+    userMessage: text,
+  });
+  const assistantMessage = {
+    id: uuid(),
+    sessionId,
+    role: 'assistant',
+    content: replyText,
+    createdAt: new Date().toISOString(),
+  };
+  session.messages.push(assistantMessage);
+
+  return {
+    session: mapPreviewSession(session),
+    userMessage: mapPreviewMessage(userMessage),
+    assistantMessage: mapPreviewMessage(assistantMessage),
+  };
+}
+
+async function claimPreviewSession({ userId, previewSessionId }) {
+  const preview = getPreviewSessionOrThrow(previewSessionId);
+  const result = await getOrCreateSession(userId, {
+    tutorId: preview.tutor.id,
+    forceNew: true,
+    title: preview.title,
+    kind: preview.kind,
+  });
+  for (const message of preview.messages) {
+    await insertMessage({
+      sessionId: result.session.id,
+      role: message.role === 'user' ? 'user' : 'assistant',
+      content: message.content,
+    });
+  }
+  previewSessions.delete(previewSessionId);
+  return {
+    session: result.session,
+    tutor: result.tutor,
+    transferredMessages: preview.messages.length,
+  };
+}
+
 module.exports = {
   getOrCreateSession,
   listSessionsForUser,
   listMessages,
   sendMessage,
+  openPreviewSession,
+  sendPreviewMessage,
+  claimPreviewSession,
   findTutorById,
+  insertMessage,
 };

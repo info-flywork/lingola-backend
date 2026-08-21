@@ -39,6 +39,9 @@ const env = {
     apiKey: process.env.OPENAI_API_KEY || '',
     model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
   },
+  revenueCat: {
+    secretKey: process.env.REVENUECAT_SECRET_KEY || '',
+  },
 };
 
 module.exports = { env };

@@ -11,6 +11,7 @@ router.post('/google', authController.google);
 router.post('/apple', authController.apple);
 router.post('/refresh', authController.refresh);
 router.get('/me', requireAuth, authController.me);
+router.get('/me/streak', requireAuth, authController.streak);
 router.patch('/me', requireAuth, authController.updateMe);
 router.patch('/me/notifications', requireAuth, authController.updateNotifications);
 router.post('/me/avatar', requireAuth, authController.uploadAvatar);

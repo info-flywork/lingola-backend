@@ -10,6 +10,7 @@ const {
   mapWordRow,
   WORD_SELECT_COLUMNS,
 } = require('./word_bank.service');
+const streak = require('./streak.service');
 
 // Words already shown within this window are pushed to the back of the queue
 // so a session keeps rotating through the bank.
@@ -62,6 +63,7 @@ async function recordEncounters(userId, wordIds) {
        last_seen_at = UTC_TIMESTAMP(3)`,
     params,
   );
+  await streak.recordActivity(userId, 'practice');
 }
 
 async function getPracticeCardsForUser(user, { count = 5 } = {}) {

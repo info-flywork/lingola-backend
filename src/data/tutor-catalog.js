@@ -4,7 +4,7 @@
  * Stable keys for i18n (frontend maps slug → text.tutors.*, tag → text.tags.*).
  * local paths kept for Flutter asset fallback — do not delete assets.
  */
-const FRONTEND_ROOT = require('path').join(__dirname, '../../../lingola-frontend');
+const FRONTEND_ROOT = require('path').join(__dirname, '../../../lingola');
 
 const MALE_VOICE = 'sJ8GED3d0sN1d0bmD6mH';
 
@@ -13,9 +13,10 @@ const tutors = [
     slug: 'lingola',
     nameKey: 'lingola',
     tagKeys: ['analytic', 'curious'],
-    voiceId: null,
+    voiceId: MALE_VOICE,
     localImage: 'assets/images/tutors/hero.png',
-    localRive: null,
+    localRive: 'assets/riv/Female/lingola_robot.riv',
+    flagAsset: 'assets/images/home/flag_icon.svg',
     sortOrder: 1,
   },
   {
@@ -25,6 +26,7 @@ const tutors = [
     voiceId: null,
     localImage: 'assets/images/profilIcons/tutor/elena.png',
     localRive: 'assets/riv/Female/avatar3.riv',
+    flagAsset: 'assets/images/flags/en.svg',
     sortOrder: 2,
   },
   {
@@ -34,7 +36,7 @@ const tutors = [
     voiceId: MALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/kenji.png',
     localRive: 'assets/riv/Male/avatar4.riv',
-    flagAsset: 'assets/images/home/flag_cn.svg',
+    flagAsset: 'assets/images/flags/jp.svg',
     sortOrder: 3,
   },
   {
@@ -44,6 +46,7 @@ const tutors = [
     voiceId: null,
     localImage: 'assets/images/profilIcons/tutor/freya.png',
     localRive: 'assets/riv/Female/avatar5.riv',
+    flagAsset: 'assets/images/flags/german.svg',
     sortOrder: 4,
   },
   {
@@ -53,6 +56,7 @@ const tutors = [
     voiceId: null,
     localImage: 'assets/images/profilIcons/tutor/camila.png',
     localRive: 'assets/riv/Female/avatar6.riv',
+    flagAsset: 'assets/images/flags/spanish_icon.svg',
     sortOrder: 5,
   },
   {
@@ -62,6 +66,7 @@ const tutors = [
     voiceId: MALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/marco.png',
     localRive: 'assets/riv/Male/avatar2.riv',
+    flagAsset: 'assets/images/flags/italian.svg',
     sortOrder: 6,
   },
   {
@@ -71,6 +76,7 @@ const tutors = [
     voiceId: MALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/julian.png',
     localRive: 'assets/riv/Male/avatar1.riv',
+    flagAsset: 'assets/images/flags/french.svg',
     sortOrder: 7,
   },
   {
@@ -80,6 +86,7 @@ const tutors = [
     voiceId: null,
     localImage: 'assets/images/profilIcons/tutor/ines.png',
     localRive: 'assets/riv/Female/avatar2.riv',
+    flagAsset: 'assets/images/flags/po.svg',
     sortOrder: 8,
   },
   {
@@ -89,6 +96,7 @@ const tutors = [
     voiceId: MALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/felix.png',
     localRive: 'assets/riv/Male/avatar7.riv',
+    flagAsset: 'assets/images/flags/german.svg',
     sortOrder: 9,
   },
   {
@@ -98,6 +106,7 @@ const tutors = [
     voiceId: MALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/diego.png',
     localRive: 'assets/riv/Male/avatar6.riv',
+    flagAsset: 'assets/images/flags/spanish_icon.svg',
     sortOrder: 10,
   },
   {
@@ -107,6 +116,7 @@ const tutors = [
     voiceId: null,
     localImage: 'assets/images/profilIcons/tutor/amara.png',
     localRive: 'assets/riv/Female/avatar1.riv',
+    flagAsset: 'assets/images/flags/hi.svg',
     sortOrder: 11,
   },
   {
@@ -116,6 +126,7 @@ const tutors = [
     voiceId: MALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/erik.png',
     localRive: 'assets/riv/Male/avatar3.riv',
+    flagAsset: 'assets/images/flags/german.svg',
     sortOrder: 12,
   },
   {
@@ -125,6 +136,7 @@ const tutors = [
     voiceId: null,
     localImage: 'assets/riv/Female/kaite.png',
     localRive: 'assets/riv/Female/kaite.riv',
+    flagAsset: 'assets/images/flags/en.svg',
     sortOrder: 13,
   },
   {
@@ -134,6 +146,7 @@ const tutors = [
     voiceId: MALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/morgan.png',
     localRive: 'assets/riv/Male/morgan.riv',
+    flagAsset: 'assets/images/flags/en.svg',
     sortOrder: 14,
   },
   {

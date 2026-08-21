@@ -17,5 +17,6 @@ router.use('/practice', practiceRoutes);
 router.use('/quiz', quizRoutes);
 router.use('/dictionary', dictionaryRoutes);
 router.use('/chat', require('./tutor_chat.routes'));
+router.use('/lessons', require('./lesson.routes'));
 
 module.exports = router;

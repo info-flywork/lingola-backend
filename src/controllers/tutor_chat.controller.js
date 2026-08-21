@@ -14,6 +14,11 @@ async function openSession(req, res, next) {
     const result = await chat.getOrCreateSession(req.user.id, {
       tutorId,
       tutorSlug,
+      forceNew: Boolean(req.body?.forceNew),
+      title: req.body?.title,
+      openingMessage: req.body?.openingMessage,
+      lessonSlug: req.body?.lessonSlug,
+      kind: req.body?.kind,
     });
     res.json({
       ok: true,
@@ -59,9 +64,58 @@ async function postMessage(req, res, next) {
   }
 }
 
+async function openPreviewSession(req, res, next) {
+  try {
+    const tutorId = req.body?.tutorId;
+    const tutorSlug = req.body?.tutorSlug;
+    if (!tutorId && !tutorSlug) {
+      const err = new Error('tutorId or tutorSlug is required');
+      err.status = 400;
+      throw err;
+    }
+    const result = await chat.openPreviewSession({
+      tutorId,
+      tutorSlug,
+      title: req.body?.title,
+      openingMessage: req.body?.openingMessage,
+      kind: req.body?.kind,
+    });
+    res.json({ ok: true, ...result });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function postPreviewMessage(req, res, next) {
+  try {
+    const payload = await chat.sendPreviewMessage({
+      sessionId: req.params.sessionId,
+      content: req.body?.content ?? req.body?.message,
+    });
+    res.json({ ok: true, ...payload });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function claimPreviewSession(req, res, next) {
+  try {
+    const payload = await chat.claimPreviewSession({
+      userId: req.user.id,
+      previewSessionId: req.params.sessionId,
+    });
+    res.json({ ok: true, ...payload });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   openSession,
   listSessions,
   getMessages,
   postMessage,
+  openPreviewSession,
+  postPreviewMessage,
+  claimPreviewSession,
 };

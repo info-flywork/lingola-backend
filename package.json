@@ -11,7 +11,9 @@
     "db:ping": "node src/scripts/db-ping.js",
     "migrate": "node src/scripts/migrate.js",
     "seed:tutors": "node src/scripts/seed-tutors.js",
-    "seed:vocab": "node src/scripts/seed-vocabulary.js"
+    "seed:vocab": "node src/scripts/seed-vocabulary.js",
+    "seed:lessons": "node src/scripts/seed-lessons.js",
+    "seed:words": "node src/scripts/seed-word-table.js"
   },
   "engines": {
     "node": ">=18"
