@@ -24,6 +24,21 @@ async function start(req, res, next) {
   }
 }
 
+async function saveProgress(req, res, next) {
+  try {
+    const lesson = await lessons.saveLessonProgress(req.user, req.params.slug, {
+      tutorId: req.body?.tutorId,
+      sessionId: req.body?.sessionId || req.body?.chatSessionId,
+      transcript: req.body?.transcript,
+      elapsedSeconds: req.body?.elapsedSeconds,
+      addElapsedSeconds: req.body?.addElapsedSeconds,
+    });
+    res.json({ ok: true, lesson });
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function complete(req, res, next) {
   try {
     const notes = await lessons.completeLesson(req.user, req.params.slug, {
@@ -31,6 +46,8 @@ async function complete(req, res, next) {
       sessionId: req.body?.sessionId || req.body?.chatSessionId,
       transcript: req.body?.transcript,
       kind: req.body?.kind,
+      elapsedSeconds: req.body?.elapsedSeconds,
+      addElapsedSeconds: req.body?.addElapsedSeconds,
     });
     res.json({ ok: true, ...notes });
   } catch (err) {
@@ -59,6 +76,7 @@ async function deleteNotes(req, res, next) {
 module.exports = {
   getPath,
   start,
+  saveProgress,
   complete,
   getNotes,
   deleteNotes,

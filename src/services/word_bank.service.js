@@ -1,11 +1,70 @@
 'use strict';
 
 const { pool } = require('../config/db');
+const { resolveContentNativeLang, normalizeLangCode } = require('../utils/locale');
 
 const LEVEL_MAP = {
   beginner: ['A1', 'A2'],
   intermediate: ['B1', 'B2'],
   advanced: ['C1', 'C2'],
+};
+
+const NATIVE_COLUMN_MAP = {
+  en: {
+    translateCol: 'translate_en',
+    sentenceCol: 'sentence_en',
+    pronunciationCol: 'pronunciation_en',
+  },
+  tr: {
+    translateCol: 'translate_tr',
+    sentenceCol: 'sentence_tr',
+    pronunciationCol: 'pronunciation_tr',
+  },
+  de: {
+    translateCol: 'translate_de',
+    sentenceCol: 'sentence_de',
+    pronunciationCol: 'pronunciation_de',
+  },
+  ja: {
+    translateCol: 'translate_ja',
+    sentenceCol: 'sentence_ja',
+    pronunciationCol: 'pronunciation_ja',
+  },
+  fr: {
+    translateCol: 'translate_fr',
+    sentenceCol: 'sentence_fr',
+    pronunciationCol: 'pronunciation_fr',
+  },
+  es: {
+    translateCol: 'translate_es',
+    sentenceCol: 'sentence_es',
+    pronunciationCol: 'pronunciation_es',
+  },
+  ru: {
+    translateCol: 'translate_ru',
+    sentenceCol: 'sentence_ru',
+    pronunciationCol: 'pronunciation_ru',
+  },
+  hi: {
+    translateCol: 'translate_hi',
+    sentenceCol: 'sentence_hi',
+    pronunciationCol: 'pronunciation_hi',
+  },
+  pt: {
+    translateCol: 'translate_pt',
+    sentenceCol: 'sentence_pt',
+    pronunciationCol: 'pronunciation_pt',
+  },
+  zh: {
+    translateCol: 'translate_zh',
+    sentenceCol: 'sentence_zh',
+    pronunciationCol: 'pronunciation_zh',
+  },
+  it: {
+    translateCol: 'translate_it',
+    sentenceCol: 'sentence_it',
+    pronunciationCol: 'pronunciation_it',
+  },
 };
 
 function normalizeAppLevel(level) {
@@ -14,30 +73,9 @@ function normalizeAppLevel(level) {
 }
 
 function nativeFields(nativeLang) {
-  const code = (nativeLang || 'tr').toLowerCase().split(/[-_]/)[0];
-  if (code === 'de') {
-    return {
-      code,
-      translateCol: 'translate_de',
-      sentenceCol: 'sentence_de',
-      pronunciationCol: 'pronunciation_de',
-    };
-  }
-  if (code === 'en') {
-    return {
-      code,
-      translateCol: 'translate_en',
-      sentenceCol: 'sentence_en',
-      pronunciationCol: 'pronunciation_en',
-    };
-  }
-  // Default: Turkish (and any unsupported native falls back to TR glosses).
-  return {
-    code: code === 'tr' ? 'tr' : code,
-    translateCol: 'translate_tr',
-    sentenceCol: 'sentence_tr',
-    pronunciationCol: 'pronunciation_tr',
-  };
+  const code = normalizeLangCode(nativeLang, 'tr');
+  const cols = NATIVE_COLUMN_MAP[code] || NATIVE_COLUMN_MAP.tr;
+  return { code, ...cols };
 }
 
 function splitGlosses(raw) {
@@ -48,8 +86,6 @@ function splitGlosses(raw) {
     .filter(Boolean);
 }
 
-/// Column list shared by every `Word` query so callers always get the same
-/// row shape that `mapWordRow` expects.
 function WORD_SELECT_COLUMNS(native, alias = 'w') {
   const p = alias ? `${alias}.` : '';
   return `
@@ -83,6 +119,19 @@ function mapWordRow(row, native) {
   };
 }
 
+function mapRowsForNative(rows, nativeLang) {
+  const native = nativeFields(nativeLang);
+  return rows.map((row) => {
+    const mapped = mapWordRow(row, native);
+    return { ...mapped, nativeLang: native.code };
+  });
+}
+
+function nativeContentClause(native, alias = 'w') {
+  return ` AND ${alias}.${native.translateCol} IS NOT NULL
+      AND TRIM(${alias}.${native.translateCol}) <> ''`;
+}
+
 async function pickRandomWords({
   levels,
   nativeLang,
@@ -94,44 +143,37 @@ async function pickRandomWords({
   const max = Math.min(Math.max(Number(limit) || 10, 1), 30);
 
   const sentenceClause = requireSentence
-    ? ` AND sentence_en IS NOT NULL AND TRIM(sentence_en) <> ''
-        AND ${native.sentenceCol} IS NOT NULL AND TRIM(${native.sentenceCol}) <> ''`
+    ? ` AND w.sentence_en IS NOT NULL AND TRIM(w.sentence_en) <> ''
+        AND w.${native.sentenceCol} IS NOT NULL AND TRIM(w.${native.sentenceCol}) <> ''`
     : '';
 
   const [rows] = await pool.query(
     `
     SELECT
-      id,
-      word,
-      level,
-      translate_en,
-      ${native.translateCol} AS translate_native,
-      pronunciation_en,
-      ${native.pronunciationCol} AS pronunciation_native,
-      sentence_en,
-      ${native.sentenceCol} AS sentence_native
-    FROM Word
-    WHERE level IN (${levels.map(() => '?').join(',')})
-      AND word IS NOT NULL
-      AND TRIM(word) <> ''
+      ${WORD_SELECT_COLUMNS(native, 'w')}
+    FROM Word w
+    WHERE w.level IN (${levels.map(() => '?').join(',')})
+      AND w.word IS NOT NULL
+      AND TRIM(w.word) <> ''
+      ${nativeContentClause(native)}
       ${sentenceClause}
-      ${excludeIds.length ? `AND id NOT IN (${excludeIds.map(() => '?').join(',')})` : ''}
+      ${excludeIds.length ? `AND w.id NOT IN (${excludeIds.map(() => '?').join(',')})` : ''}
     ORDER BY RAND()
     LIMIT ?
     `,
     [...levels, ...excludeIds, max],
   );
 
-  return rows.map((row) => mapWordRow(row, native));
+  return rows;
 }
 
 async function fetchWordsWithFallback(user, { count, excludeIds, requireSentence }) {
   const onboarding = user.onboarding || {};
   const appLevel = normalizeAppLevel(onboarding.level || 'beginner');
-  const nativeLang = onboarding.nativeLanguageCode || 'tr';
+  const nativeLang = resolveContentNativeLang(user);
   let levels = LEVEL_MAP[appLevel] || LEVEL_MAP.beginner;
 
-  let words = await pickRandomWords({
+  let rows = await pickRandomWords({
     levels,
     nativeLang,
     limit: count,
@@ -139,9 +181,9 @@ async function fetchWordsWithFallback(user, { count, excludeIds, requireSentence
     requireSentence,
   });
 
-  if (!words.length && appLevel === 'advanced') {
+  if (!rows.length && appLevel === 'advanced') {
     levels = ['B2', 'B1'];
-    words = await pickRandomWords({
+    rows = await pickRandomWords({
       levels,
       nativeLang,
       limit: count,
@@ -150,8 +192,8 @@ async function fetchWordsWithFallback(user, { count, excludeIds, requireSentence
     });
   }
 
-  if (!words.length) {
-    words = await pickRandomWords({
+  if (!rows.length) {
+    rows = await pickRandomWords({
       levels: ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'],
       nativeLang,
       limit: count,
@@ -160,18 +202,18 @@ async function fetchWordsWithFallback(user, { count, excludeIds, requireSentence
     });
   }
 
-  if (!words.length) {
+  if (!rows.length) {
     const err = new Error('No words available in Word table');
     err.status = 404;
     throw err;
   }
 
   return {
-    nativeLang: (nativeLang || 'tr').toLowerCase().split(/[-_]/)[0],
+    nativeLang: normalizeLangCode(nativeLang),
     targetLang: 'en',
     level: appLevel,
     cefrLevels: levels,
-    cards: words,
+    cards: mapRowsForNative(rows, nativeLang),
   };
 }
 
@@ -225,7 +267,6 @@ function textsMatch(answer, expected) {
   const e = normalizeText(expected);
   if (!a || !e) return false;
   if (a === e) return true;
-  // Allow minor filler words / near equality by containment either way when close in length.
   if (a.includes(e) || e.includes(a)) {
     const ratio = Math.min(a.length, e.length) / Math.max(a.length, e.length);
     return ratio >= 0.7;
@@ -233,27 +274,28 @@ function textsMatch(answer, expected) {
   return false;
 }
 
-/**
- * Paginated dictionary from Word table (all levels).
- * limit defaults to 20 for infinite scroll.
- */
 async function listDictionaryWords(user, {
   limit = 20,
   offset = 0,
   query = '',
 } = {}) {
-  const nativeLang = user.onboarding?.nativeLanguageCode || 'tr';
+  const nativeLang = resolveContentNativeLang(user);
   const native = nativeFields(nativeLang);
   const take = Math.min(Math.max(Number(limit) || 20, 1), 50);
   const skip = Math.max(Number(offset) || 0, 0);
   const q = String(query || '').trim();
 
-  const where = ['word IS NOT NULL', "TRIM(word) <> ''"];
+  const where = [
+    'w.word IS NOT NULL',
+    "TRIM(w.word) <> ''",
+    `w.${native.translateCol} IS NOT NULL`,
+    `TRIM(w.${native.translateCol}) <> ''`,
+  ];
   const params = [];
 
   if (q) {
     where.push(
-      `(word LIKE ? OR ${native.translateCol} LIKE ? OR translate_en LIKE ?)`,
+      `(w.word LIKE ? OR w.${native.translateCol} LIKE ? OR w.translate_en LIKE ?)`,
     );
     const like = `%${q}%`;
     params.push(like, like, like);
@@ -262,27 +304,19 @@ async function listDictionaryWords(user, {
   const whereSql = where.join(' AND ');
 
   const [[{ c: total }]] = await pool.query(
-    `SELECT COUNT(*) AS c FROM Word WHERE ${whereSql}`,
+    `SELECT COUNT(*) AS c FROM Word w WHERE ${whereSql}`,
     params,
   );
 
   const [rows] = await pool.query(
     `
     SELECT
-      id,
-      word,
-      level,
-      translate_en,
-      ${native.translateCol} AS translate_native,
-      pronunciation_en,
-      ${native.pronunciationCol} AS pronunciation_native,
-      sentence_en,
-      ${native.sentenceCol} AS sentence_native
-    FROM Word
+      ${WORD_SELECT_COLUMNS(native, 'w')}
+    FROM Word w
     WHERE ${whereSql}
     ORDER BY
-      ${q ? 'CASE WHEN LOWER(word) = LOWER(?) THEN 0 WHEN LOWER(word) LIKE LOWER(?) THEN 1 ELSE 2 END,' : ''}
-      word ASC
+      ${q ? 'CASE WHEN LOWER(w.word) = LOWER(?) THEN 0 WHEN LOWER(w.word) LIKE LOWER(?) THEN 1 ELSE 2 END,' : ''}
+      w.word ASC
     LIMIT ? OFFSET ?
     `,
     [
@@ -293,20 +327,18 @@ async function listDictionaryWords(user, {
     ],
   );
 
-  const items = rows.map((row) => {
-    const mapped = mapWordRow(row, native);
-    return {
-      id: mapped.id,
-      word: mapped.word,
-      translation: mapped.translations[0] || '',
-      translations: mapped.translations,
-      level: mapped.level,
-      phonetic: mapped.phonetic,
-    };
-  });
+  const mapped = mapRowsForNative(rows, nativeLang);
+  const items = mapped.map((row) => ({
+    id: row.id,
+    word: row.word,
+    translation: row.translations[0] || '',
+    translations: row.translations,
+    level: row.level,
+    phonetic: row.phonetic,
+  }));
 
   return {
-    nativeLang: native.code,
+    nativeLang: normalizeLangCode(nativeLang),
     count: Number(total),
     limit: take,
     offset: skip,
@@ -323,9 +355,7 @@ async function searchDictionaryWords(user, {
   const q = String(query || '').trim();
   if (!q) {
     return {
-      nativeLang: (user.onboarding?.nativeLanguageCode || 'tr')
-        .toLowerCase()
-        .split(/[-_]/)[0],
+      nativeLang: normalizeLangCode(resolveContentNativeLang(user)),
       count: 0,
       limit: Math.min(Math.max(Number(limit) || 20, 1), 50),
       offset: Math.max(Number(offset) || 0, 0),
@@ -350,4 +380,6 @@ module.exports = {
   nativeFields,
   mapWordRow,
   WORD_SELECT_COLUMNS,
+  mapRowsForNative,
+  NATIVE_COLUMN_MAP,
 };

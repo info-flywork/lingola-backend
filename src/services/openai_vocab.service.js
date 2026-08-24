@@ -21,8 +21,11 @@ const LANG_NAMES = {
   pt: 'Portuguese',
   ko: 'Korean',
   zh: 'Chinese',
+  ja: 'Japanese',
+  jp: 'Japanese',
   ar: 'Arabic',
   hi: 'Hindi',
+  ru: 'Russian',
 };
 
 function langName(code) {

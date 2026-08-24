@@ -155,6 +155,26 @@ function openingFor(lesson, tutor, kind) {
   );
 }
 
+/**
+ * When the learner switches tutors mid-lesson, welcome them with prior context.
+ */
+function handoffOpening(lesson, tutor, { previousTutorName, summary, kind } = {}) {
+  const topic = lesson.title_en;
+  const level = lesson.cefr_level;
+  const name = String(tutor?.nameKey || tutor?.slug || 'Tutor');
+  const display = name.charAt(0).toUpperCase() + name.slice(1);
+  const prev = String(previousTutorName || 'your previous tutor').trim();
+  const learned = String(summary || '').trim();
+  const learnedBit = learned
+    ? ` With ${prev} you worked on: ${learned.slice(0, 220)}${learned.length > 220 ? '…' : ''}.`
+    : ` You already started "${topic}" with ${prev}.`;
+
+  if (kind === 'practice') {
+    return `Hi! I'm ${display}. Welcome back.${learnedBit} Let's keep practicing "${topic}" (${level}) from where you left off. Ready?`;
+  }
+  return `Hi! I'm ${display}. Nice to meet you.${learnedBit} Let's continue "${topic}" (${level}) from where you left off. Shall we start?`;
+}
+
 module.exports = {
   characterBlurb,
   characterLockRule,
@@ -162,4 +182,5 @@ module.exports = {
   naturalEnglishRule,
   lessonTimingRule,
   openingFor,
+  handoffOpening,
 };

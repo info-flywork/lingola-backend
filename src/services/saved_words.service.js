@@ -4,9 +4,10 @@ const { pool } = require('../config/db');
 const { uuid } = require('../utils/auth');
 const {
   nativeFields,
-  mapWordRow,
   WORD_SELECT_COLUMNS,
+  mapRowsForNative,
 } = require('./word_bank.service');
+const { resolveContentNativeLang, normalizeLangCode } = require('../utils/locale');
 
 async function saveWord(userId, wordId) {
   const [words] = await pool.query(
@@ -38,9 +39,7 @@ async function unsaveWord(userId, wordId) {
 }
 
 async function listSavedWords(user, { limit = 200, query = null } = {}) {
-  const nativeLang = (user.onboarding?.nativeLanguageCode || 'tr')
-    .toLowerCase()
-    .split(/[-_]/)[0];
+  const nativeLang = resolveContentNativeLang(user);
   const native = nativeFields(nativeLang);
   const max = Math.min(Math.max(Number(limit) || 200, 1), 500);
   const params = [user.id];
@@ -56,7 +55,7 @@ async function listSavedWords(user, { limit = 200, query = null } = {}) {
     `SELECT
        sw.id AS saved_id,
        sw.created_at AS saved_at,
-       ${WORD_SELECT_COLUMNS(native)}
+       ${WORD_SELECT_COLUMNS(native, 'w')}
      FROM user_saved_words sw
      INNER JOIN Word w ON w.id = sw.word_id
      WHERE ${where}
@@ -65,11 +64,13 @@ async function listSavedWords(user, { limit = 200, query = null } = {}) {
     [...params, max],
   );
 
-  const items = rows.map((row) => {
-    const mapped = mapWordRow(row, native);
+  const hydrated = mapRowsForNative(rows, nativeLang);
+  const savedMeta = new Map(rows.map((row) => [row.id, row]));
+  const items = hydrated.map((mapped) => {
+    const row = savedMeta.get(mapped.id);
     return {
       id: mapped.id,
-      savedId: row.saved_id,
+      savedId: row?.saved_id,
       word: mapped.word,
       phonetic: mapped.phonetic,
       translation: mapped.translations[0] || '',
@@ -78,7 +79,7 @@ async function listSavedWords(user, { limit = 200, query = null } = {}) {
       sentenceTranslation: mapped.sentenceTranslation,
       targetLang: 'en',
       level: mapped.level,
-      savedAt: row.saved_at,
+      savedAt: row?.saved_at,
     };
   });
 
@@ -88,7 +89,7 @@ async function listSavedWords(user, { limit = 200, query = null } = {}) {
   );
 
   return {
-    nativeLang: native.code,
+    nativeLang: normalizeLangCode(nativeLang),
     count: Number(c),
     items,
   };

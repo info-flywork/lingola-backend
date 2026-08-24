@@ -1,0 +1,38 @@
+[
+  {
+    "id": "hobby",
+    "promptEn": "Describe your favorite hobby.",
+    "promptNative": "En sevdiğin hobini anlat.",
+    "keywords": ["hobby", "read", "music", "sport", "movie", "film"]
+  },
+  {
+    "id": "weekend",
+    "promptEn": "Talk about your last weekend.",
+    "promptNative": "Geçen hafta sonunu anlat.",
+    "keywords": ["weekend", "saturday", "sunday", "friend", "home"]
+  },
+  {
+    "id": "happy",
+    "promptEn": "What makes you happy?",
+    "promptNative": "Seni ne mutlu eder?",
+    "keywords": ["happy", "family", "friend", "music", "travel"]
+  },
+  {
+    "id": "food",
+    "promptEn": "Describe your favorite food.",
+    "promptNative": "En sevdiğin yemeği anlat.",
+    "keywords": ["food", "eat", "pizza", "pasta", "rice", "soup"]
+  },
+  {
+    "id": "travel",
+    "promptEn": "Where do you want to travel?",
+    "promptNative": "Nereye seyahat etmek istersin?",
+    "keywords": ["travel", "visit", "country", "city", "beach"]
+  },
+  {
+    "id": "friend",
+    "promptEn": "Tell me about your best friend.",
+    "promptNative": "En iyi arkadaşını anlat.",
+    "keywords": ["friend", "kind", "funny", "meet", "together"]
+  }
+]

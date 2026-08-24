@@ -155,6 +155,11 @@ async function normalizeUserPath(userId) {
 }
 
 function mapLesson(row, progress) {
+  const elapsedSeconds = Math.max(
+    0,
+    Number(progress?.elapsed_seconds ?? row.elapsed_seconds ?? 0) || 0,
+  );
+  const segmentSeconds = 15 * 60;
   return {
     id: row.id,
     slug: row.slug,
@@ -162,12 +167,17 @@ function mapLesson(row, progress) {
     sortOrder: row.sort_order,
     titleEn: row.title_en,
     titleTr: row.title_tr,
-    status: progress?.status || 'locked',
-    needsPractice: Boolean(progress?.needs_practice),
-    hasNotes: Boolean(progress?.has_notes),
-    tutorId: progress?.tutor_id || null,
-    chatSessionId: progress?.chat_session_id || null,
-    completedAt: progress?.completed_at || null,
+    status: progress?.status || row.status || 'locked',
+    needsPractice: Boolean(progress?.needs_practice ?? row.needs_practice),
+    hasNotes: Boolean(progress?.has_notes ?? row.has_notes),
+    tutorId: progress?.tutor_id || row.tutor_id || null,
+    tutorSlug: progress?.tutor_slug || row.tutor_slug || null,
+    tutorNameKey: progress?.tutor_name_key || row.tutor_name_key || null,
+    chatSessionId: progress?.chat_session_id || row.chat_session_id || null,
+    startedAt: progress?.started_at || row.started_at || null,
+    completedAt: progress?.completed_at || row.completed_at || null,
+    elapsedSeconds,
+    remainingSeconds: Math.max(0, segmentSeconds - elapsedSeconds),
   };
 }
 
@@ -182,10 +192,15 @@ async function getPath(user) {
        p.tutor_id,
        p.chat_session_id,
        p.completed_at,
+       p.started_at,
+       p.elapsed_seconds,
+       t.slug AS tutor_slug,
+       t.name_key AS tutor_name_key,
        (n.id IS NOT NULL) AS has_notes
      FROM lessons l
      LEFT JOIN user_lesson_progress p
        ON p.lesson_id = l.id AND p.user_id = ?
+     LEFT JOIN tutors t ON t.id = p.tutor_id
      LEFT JOIN user_lesson_notes n
        ON n.lesson_id = l.id AND n.user_id = ?
      ORDER BY FIELD(l.cefr_level, 'A1','A2','B1','B2','C1','C2'), l.sort_order ASC`,
@@ -260,6 +275,51 @@ function openingFor(lesson, tutor, kind) {
   return require('./tutor-personality').openingFor(lesson, tutor, kind);
 }
 
+function handoffOpening(lesson, tutor, opts) {
+  return require('./tutor-personality').handoffOpening(lesson, tutor, opts);
+}
+
+function displayTutorLabel(tutor) {
+  const raw = String(tutor?.nameKey || tutor?.slug || 'Tutor');
+  return raw.charAt(0).toUpperCase() + raw.slice(1);
+}
+
+async function loadHandoffSummary(userId, lessonId, previousTutorId) {
+  const [noteRows] = await pool.query(
+    `SELECT spoken_summary
+     FROM user_lesson_notes
+     WHERE user_id = ? AND lesson_id = ?
+     LIMIT 1`,
+    [userId, lessonId],
+  );
+  const fromNotes = String(noteRows[0]?.spoken_summary || '').trim();
+  if (fromNotes) return fromNotes;
+
+  const [msgRows] = await pool.query(
+    `SELECT m.content
+     FROM tutor_chat_messages m
+     INNER JOIN tutor_chat_sessions s ON s.id = m.session_id
+     INNER JOIN user_lesson_progress p
+       ON p.chat_session_id = s.id AND p.user_id = s.user_id
+     WHERE s.user_id = ? AND p.lesson_id = ? AND m.role = 'assistant'
+     ORDER BY m.created_at DESC
+     LIMIT 3`,
+    [userId, lessonId],
+  );
+  if (msgRows.length) {
+    return msgRows
+      .map((r) => String(r.content || '').trim())
+      .filter(Boolean)
+      .reverse()
+      .join(' ');
+  }
+
+  if (previousTutorId) {
+    return `some phrases from this lesson`;
+  }
+  return '';
+}
+
 async function startLesson(user, slug, { tutorId, tutorSlug, kind = 'lesson' } = {}) {
   const sessionKind = kind === 'practice' ? 'practice' : 'lesson';
   const { lesson, progress } = await assertLessonAccess(user, slug);
@@ -267,6 +327,12 @@ async function startLesson(user, slug, { tutorId, tutorSlug, kind = 'lesson' } =
     const err = new Error('Lesson is locked');
     err.status = 403;
     throw err;
+  }
+
+  const previousTutorId = progress?.tutor_id || null;
+  let previousTutor = null;
+  if (previousTutorId) {
+    previousTutor = await chat.findTutorById(previousTutorId);
   }
 
   const result = await chat.getOrCreateSession(user.id, {
@@ -281,7 +347,30 @@ async function startLesson(user, slug, { tutorId, tutorSlug, kind = 'lesson' } =
     kind: sessionKind,
   });
 
-  const opening = openingFor(lesson, result.tutor, sessionKind);
+  const switchingTutor =
+    Boolean(previousTutorId) &&
+    previousTutorId !== result.tutor.id &&
+    Number(progress?.elapsed_seconds || 0) > 0;
+
+  let opening;
+  if (switchingTutor) {
+    const summary = await loadHandoffSummary(
+      user.id,
+      lesson.id,
+      previousTutorId,
+    );
+    opening = handoffOpening(lesson, result.tutor, {
+      previousTutorName: displayTutorLabel(previousTutor || { nameKey: 'your previous tutor' }),
+      summary,
+      kind: sessionKind,
+    });
+  } else if (Number(progress?.elapsed_seconds || 0) > 0) {
+    const display = displayTutorLabel(result.tutor);
+    opening = `Welcome back! I'm ${display}. Let's continue "${lesson.title_en}" (${lesson.cefr_level}) from where we left off. Ready?`;
+  } else {
+    opening = openingFor(lesson, result.tutor, sessionKind);
+  }
+
   await chat.insertMessage({
     sessionId: result.session.id,
     role: 'assistant',
@@ -290,19 +379,89 @@ async function startLesson(user, slug, { tutorId, tutorSlug, kind = 'lesson' } =
 
   await pool.query(
     `UPDATE user_lesson_progress
-     SET tutor_id = ?, chat_session_id = ?, started_at = COALESCE(started_at, UTC_TIMESTAMP(3))
+     SET tutor_id = ?,
+         chat_session_id = ?,
+         started_at = COALESCE(started_at, UTC_TIMESTAMP(3)),
+         status = CASE WHEN status = 'locked' THEN status ELSE 'available' END
      WHERE user_id = ? AND lesson_id = ?`,
     [result.tutor.id, result.session.id, user.id, lesson.id],
   );
 
+  const elapsedSeconds = Math.max(0, Number(progress?.elapsed_seconds || 0) || 0);
+
   return {
-    lesson: mapLesson(lesson, { ...progress, tutor_id: result.tutor.id, chat_session_id: result.session.id }),
+    lesson: mapLesson(lesson, {
+      ...progress,
+      tutor_id: result.tutor.id,
+      chat_session_id: result.session.id,
+      elapsed_seconds: elapsedSeconds,
+    }),
     session: result.session,
     tutor: result.tutor,
     openingMessage: opening,
     kind: sessionKind,
-    systemPrompt: lessonSystemPrompt(result.tutor, lesson, sessionKind),
+    systemPrompt: lessonSystemPrompt(result.tutor, lesson, sessionKind, {
+      handoff: switchingTutor,
+      previousTutorName: previousTutor
+        ? displayTutorLabel(previousTutor)
+        : null,
+      elapsedSeconds,
+    }),
+    elapsedSeconds,
+    remainingSeconds: Math.max(0, 15 * 60 - elapsedSeconds),
+    resumed: elapsedSeconds > 0,
+    handoff: switchingTutor,
   };
+}
+
+async function saveLessonProgress(
+  user,
+  slug,
+  { tutorId, sessionId, transcript = [], elapsedSeconds, addElapsedSeconds } = {},
+) {
+  const { lesson, progress } = await assertLessonAccess(user, slug);
+  const chatSessionId = sessionId || progress?.chat_session_id || null;
+
+  if (chatSessionId && Array.isArray(transcript) && transcript.length) {
+    await persistTranscript(chatSessionId, user.id, transcript);
+  }
+
+  let nextElapsed = Math.max(0, Number(progress?.elapsed_seconds || 0) || 0);
+  if (addElapsedSeconds != null && Number.isFinite(Number(addElapsedSeconds))) {
+    nextElapsed += Math.max(0, Math.floor(Number(addElapsedSeconds)));
+  } else if (elapsedSeconds != null && Number.isFinite(Number(elapsedSeconds))) {
+    nextElapsed = Math.max(nextElapsed, Math.floor(Number(elapsedSeconds)));
+  }
+  nextElapsed = Math.min(nextElapsed, 15 * 60);
+
+  const tutor =
+    (tutorId && (await chat.findTutorById(tutorId))) ||
+    (progress?.tutor_id && (await chat.findTutorById(progress.tutor_id))) ||
+    null;
+
+  await pool.query(
+    `UPDATE user_lesson_progress
+     SET elapsed_seconds = ?,
+         started_at = COALESCE(started_at, UTC_TIMESTAMP(3)),
+         tutor_id = COALESCE(?, tutor_id),
+         chat_session_id = COALESCE(?, chat_session_id),
+         status = CASE WHEN status = 'completed' THEN status ELSE 'available' END
+     WHERE user_id = ? AND lesson_id = ?`,
+    [
+      nextElapsed,
+      tutor?.id || null,
+      chatSessionId || null,
+      user.id,
+      lesson.id,
+    ],
+  );
+
+  const updated = await getProgress(user.id, lesson.id);
+  return mapLesson(lesson, {
+    ...updated,
+    tutor_slug: tutor?.slug || null,
+    tutor_name_key: tutor?.nameKey || tutor?.name_key || null,
+  });
 }
 
 function displayName(tutor) {
@@ -310,7 +469,7 @@ function displayName(tutor) {
   return raw.charAt(0).toUpperCase() + raw.slice(1);
 }
 
-function lessonSystemPrompt(tutor, lesson, kind) {
+function lessonSystemPrompt(tutor, lesson, kind, opts = {}) {
   const name = displayName(tutor);
   const topic = lesson.title_en;
   const level = lesson.cefr_level;
@@ -318,6 +477,11 @@ function lessonSystemPrompt(tutor, lesson, kind) {
     kind === 'practice'
       ? 'This is extra practice on the same topic because the learner needs more repetition.'
       : 'This is a structured lesson. Teach a few key phrases, then practice them in conversation.';
+  const handoffBit = opts.handoff
+    ? `The learner switched from ${opts.previousTutorName || 'another tutor'}. Acknowledge briefly what they already practiced, then continue the lesson — do not restart from zero.`
+    : opts.elapsedSeconds > 0
+      ? `The learner is resuming this lesson (about ${Math.floor(opts.elapsedSeconds / 60)} minutes already done of 15). Continue from where they left off.`
+      : '';
   return `You are ${name}, a friendly English tutor in the Lingola app.
 ${characterBlurb(tutor)}
 ${characterLockRule(tutor)}
@@ -326,6 +490,7 @@ ${naturalEnglishRule(level)}
 ${lessonTimingRule()}
 Lesson topic: "${topic}". CEFR level: ${level}.
 ${mode}
+${handoffBit}
 Rules:
 - Stay in this character only. Keep your tone consistent.
 - Stay on this topic. Do not switch to unrelated subjects.
@@ -538,7 +703,18 @@ async function unlockNext(userId) {
   return nextRows[0].id;
 }
 
-async function completeLesson(user, slug, { tutorId, sessionId, transcript = [], kind = 'lesson' } = {}) {
+async function completeLesson(
+  user,
+  slug,
+  {
+    tutorId,
+    sessionId,
+    transcript = [],
+    kind = 'lesson',
+    elapsedSeconds,
+    addElapsedSeconds,
+  } = {},
+) {
   const { lesson, progress } = await assertLessonAccess(user, slug);
   let tutor = null;
   if (tutorId) tutor = await chat.findTutorById(tutorId);
@@ -553,6 +729,14 @@ async function completeLesson(user, slug, { tutorId, sessionId, transcript = [],
   if (chatSessionId && transcript.length) {
     await persistTranscript(chatSessionId, user.id, transcript);
   }
+
+  let nextElapsed = Math.max(0, Number(progress?.elapsed_seconds || 0) || 0);
+  if (addElapsedSeconds != null && Number.isFinite(Number(addElapsedSeconds))) {
+    nextElapsed += Math.max(0, Math.floor(Number(addElapsedSeconds)));
+  } else if (elapsedSeconds != null && Number.isFinite(Number(elapsedSeconds))) {
+    nextElapsed = Math.max(nextElapsed, Math.floor(Number(elapsedSeconds)));
+  }
+  nextElapsed = Math.min(nextElapsed, 15 * 60);
 
   const [prevRows] = await pool.query(
     `SELECT n.score, n.attempt_count, p.best_score
@@ -620,9 +804,19 @@ async function completeLesson(user, slug, { tutorId, sessionId, transcript = [],
          best_score = ?,
          tutor_id = ?,
          chat_session_id = COALESCE(?, chat_session_id),
+         elapsed_seconds = ?,
          completed_at = UTC_TIMESTAMP(3)
      WHERE user_id = ? AND lesson_id = ?`,
-    [needsPractice, review.score, bestScore, tutor.id, chatSessionId, user.id, lesson.id],
+    [
+      needsPractice,
+      review.score,
+      bestScore,
+      tutor.id,
+      chatSessionId,
+      nextElapsed,
+      user.id,
+      lesson.id,
+    ],
   );
 
   if (progress.status !== 'completed') {
@@ -709,6 +903,7 @@ async function deleteNotes(user, slug) {
 module.exports = {
   getPath,
   startLesson,
+  saveLessonProgress,
   completeLesson,
   getNotes,
   deleteNotes,

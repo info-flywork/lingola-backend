@@ -6,6 +6,7 @@ const {
   textsMatch,
   normalizeText,
 } = require('./word_bank.service');
+const { resolveContentNativeLang } = require('../utils/locale');
 
 function stripDataUrl(base64) {
   const raw = String(base64 || '');
@@ -64,7 +65,7 @@ async function transcribeAudio({ audioBase64, contentType = 'audio/m4a' }) {
 }
 
 async function evaluateWritingText({ user, wordId, answer }) {
-  const nativeLang = user.onboarding?.nativeLanguageCode || 'tr';
+  const nativeLang = resolveContentNativeLang(user);
   const row = await findWordSentenceById(wordId, nativeLang);
   if (!row || !row.sentence_en) {
     const err = new Error('Writing prompt not found');
@@ -89,7 +90,7 @@ async function evaluateWritingAudio({
   audioBase64,
   contentType,
 }) {
-  const nativeLang = user.onboarding?.nativeLanguageCode || 'tr';
+  const nativeLang = resolveContentNativeLang(user);
   const row = await findWordSentenceById(wordId, nativeLang);
   if (!row || !row.sentence_en) {
     const err = new Error('Writing prompt not found');

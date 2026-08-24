@@ -7,13 +7,13 @@ const {
   LEVEL_MAP,
   normalizeAppLevel,
   nativeFields,
-  mapWordRow,
   WORD_SELECT_COLUMNS,
+  mapRowsForNative,
+  nativeContentClause,
 } = require('./word_bank.service');
 const streak = require('./streak.service');
+const { resolveContentNativeLang, normalizeLangCode } = require('../utils/locale');
 
-// Words already shown within this window are pushed to the back of the queue
-// so a session keeps rotating through the bank.
 const RECENT_DAYS = 3;
 
 async function pickPracticeWords({ userId, levels, nativeLang, limit }) {
@@ -24,7 +24,7 @@ async function pickPracticeWords({ userId, levels, nativeLang, limit }) {
   const [rows] = await pool.query(
     `
     SELECT
-      ${WORD_SELECT_COLUMNS(native)}
+      ${WORD_SELECT_COLUMNS(native, 'w')}
     FROM Word w
     LEFT JOIN user_word_encounters ue
       ON ue.word_id = w.id AND ue.user_id = ?
@@ -33,6 +33,7 @@ async function pickPracticeWords({ userId, levels, nativeLang, limit }) {
       AND TRIM(w.word) <> ''
       AND w.sentence_en IS NOT NULL
       AND TRIM(w.sentence_en) <> ''
+      ${nativeContentClause(native)}
     ORDER BY
       (
         ue.last_seen_at IS NOT NULL
@@ -45,7 +46,7 @@ async function pickPracticeWords({ userId, levels, nativeLang, limit }) {
     [userId, ...levels, max],
   );
 
-  return rows.map((row) => mapWordRow(row, native));
+  return rows;
 }
 
 async function recordEncounters(userId, wordIds) {
@@ -68,23 +69,21 @@ async function recordEncounters(userId, wordIds) {
 
 async function getPracticeCardsForUser(user, { count = 5 } = {}) {
   const onboarding = user.onboarding || {};
-  const nativeLang = (onboarding.nativeLanguageCode || 'tr')
-    .toLowerCase()
-    .split(/[-_]/)[0];
+  const nativeLang = resolveContentNativeLang(user);
   const appLevel = normalizeAppLevel(onboarding.level || 'beginner');
   const limit = Math.min(Math.max(Number(count) || 5, 1), 10);
 
   let levels = LEVEL_MAP[appLevel] || LEVEL_MAP.beginner;
-  let words = await pickPracticeWords({
+  let rows = await pickPracticeWords({
     userId: user.id,
     levels,
     nativeLang,
     limit,
   });
 
-  if (!words.length) {
+  if (!rows.length) {
     levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
-    words = await pickPracticeWords({
+    rows = await pickPracticeWords({
       userId: user.id,
       levels,
       nativeLang,
@@ -92,11 +91,13 @@ async function getPracticeCardsForUser(user, { count = 5 } = {}) {
     });
   }
 
-  if (!words.length) {
+  if (!rows.length) {
     const err = new Error('No words available in Word table');
     err.status = 404;
     throw err;
   }
+
+  const words = mapRowsForNative(rows, nativeLang);
 
   const savedIds = await getSavedWordIds(
     user.id,
@@ -114,7 +115,7 @@ async function getPracticeCardsForUser(user, { count = 5 } = {}) {
   );
 
   return {
-    nativeLang,
+    nativeLang: normalizeLangCode(nativeLang),
     targetLang: 'en',
     level: appLevel,
     cefrLevels: levels,

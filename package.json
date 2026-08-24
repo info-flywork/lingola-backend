@@ -13,7 +13,8 @@
     "seed:tutors": "node src/scripts/seed-tutors.js",
     "seed:vocab": "node src/scripts/seed-vocabulary.js",
     "seed:lessons": "node src/scripts/seed-lessons.js",
-    "seed:words": "node src/scripts/seed-word-table.js"
+    "seed:words": "node src/scripts/seed-word-table.js",
+    "seed:translations": "node src/scripts/seed-word-translations.js"
   },
   "engines": {
     "node": ">=18"

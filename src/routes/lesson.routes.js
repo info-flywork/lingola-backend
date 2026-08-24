@@ -8,6 +8,7 @@ const router = Router();
 
 router.get('/path', requireAuth, lessonController.getPath);
 router.post('/:slug/start', requireAuth, lessonController.start);
+router.post('/:slug/progress', requireAuth, lessonController.saveProgress);
 router.post('/:slug/complete', requireAuth, lessonController.complete);
 router.get('/:slug/notes', requireAuth, lessonController.getNotes);
 router.delete('/:slug/notes', requireAuth, lessonController.deleteNotes);
