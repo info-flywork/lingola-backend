@@ -262,14 +262,132 @@ function normalizeText(value) {
     .trim();
 }
 
+/** Yazma testi: günlük/every day, kısaltmalar, yakın eşanlamlılar. */
+const WRITING_PHRASE_EQUIVALENTS = [
+  [/\bevery\s+day\b/g, 'daily'],
+  [/\beveryday\b/g, 'daily'],
+  [/\beach\s+day\b/g, 'daily'],
+];
+
+const WRITING_WORD_GROUPS = [
+  ['children', 'kids', 'kid'],
+  ['mother', 'mom', 'mum'],
+  ['father', 'dad', 'daddy'],
+  ['large', 'big'],
+  ['small', 'little', 'tiny'],
+  ['quick', 'fast', 'rapid'],
+  ['start', 'begin'],
+  ['finish', 'end'],
+  ['purchase', 'buy'],
+  ['automobile', 'car'],
+  ['television', 'tv'],
+  ['hello', 'hi'],
+  ['thanks', 'thank', 'thankyou'],
+];
+
+function expandWritingContractions(text) {
+  return text
+    .replace(/\bdon t\b/g, 'do not')
+    .replace(/\bdoesn t\b/g, 'does not')
+    .replace(/\bdidn t\b/g, 'did not')
+    .replace(/\bcan t\b/g, 'cannot')
+    .replace(/\bwon t\b/g, 'will not')
+    .replace(/\bisn t\b/g, 'is not')
+    .replace(/\baren t\b/g, 'are not')
+    .replace(/\bwasn t\b/g, 'was not')
+    .replace(/\bweren t\b/g, 'were not')
+    .replace(/\bhasn t\b/g, 'has not')
+    .replace(/\bhaven t\b/g, 'have not')
+    .replace(/\bhadn t\b/g, 'had not')
+    .replace(/\bi m\b/g, 'i am')
+    .replace(/\byou re\b/g, 'you are')
+    .replace(/\bhe s\b/g, 'he is')
+    .replace(/\bshe s\b/g, 'she is')
+    .replace(/\bit s\b/g, 'it is')
+    .replace(/\bwe re\b/g, 'we are')
+    .replace(/\bthey re\b/g, 'they are')
+    .replace(/\bi ve\b/g, 'i have')
+    .replace(/\byou ve\b/g, 'you have')
+    .replace(/\bwe ve\b/g, 'we have')
+    .replace(/\bthey ve\b/g, 'they have')
+    .replace(/\bi ll\b/g, 'i will')
+    .replace(/\byou ll\b/g, 'you will')
+    .replace(/\bhe ll\b/g, 'he will')
+    .replace(/\bshe ll\b/g, 'she will')
+    .replace(/\bwe ll\b/g, 'we will')
+    .replace(/\bthey ll\b/g, 'they will');
+}
+
+function canonicalWritingWord(word) {
+  const w = String(word || '').toLowerCase();
+  for (const group of WRITING_WORD_GROUPS) {
+    if (group.includes(w)) return group[0];
+  }
+  return w;
+}
+
+function normalizeWritingText(value) {
+  let text = normalizeText(value);
+  text = expandWritingContractions(text);
+  for (const [pattern, replacement] of WRITING_PHRASE_EQUIVALENTS) {
+    text = text.replace(pattern, replacement);
+  }
+  return text
+    .split(' ')
+    .map((token) => canonicalWritingWord(token))
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function levenshtein(a, b) {
+  const rows = a.length + 1;
+  const cols = b.length + 1;
+  const matrix = Array.from({ length: rows }, () => Array(cols).fill(0));
+  for (let i = 0; i < rows; i += 1) matrix[i][0] = i;
+  for (let j = 0; j < cols; j += 1) matrix[0][j] = j;
+  for (let i = 1; i < rows; i += 1) {
+    for (let j = 1; j < cols; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + cost,
+      );
+    }
+  }
+  return matrix[a.length][b.length];
+}
+
+function writingTokensEquivalent(a, b) {
+  if (a === b) return true;
+  if (canonicalWritingWord(a) === canonicalWritingWord(b)) return true;
+  if (a.length >= 4 && b.length >= 4 && levenshtein(a, b) <= 1) return true;
+  return false;
+}
+
 function textsMatch(answer, expected) {
-  const a = normalizeText(answer);
-  const e = normalizeText(expected);
+  const a = normalizeWritingText(answer);
+  const e = normalizeWritingText(expected);
   if (!a || !e) return false;
   if (a === e) return true;
+
+  const aTokens = a.split(' ').filter(Boolean);
+  const eTokens = e.split(' ').filter(Boolean);
+
+  if (aTokens.length === eTokens.length && aTokens.length > 0) {
+    let mismatches = 0;
+    for (let i = 0; i < aTokens.length; i += 1) {
+      if (!writingTokensEquivalent(aTokens[i], eTokens[i])) mismatches += 1;
+    }
+    if (mismatches === 0) return true;
+    // Uzun cümlede tek kelimelik yazım farkına tolerans.
+    if (mismatches === 1 && aTokens.length >= 5) return true;
+  }
+
   if (a.includes(e) || e.includes(a)) {
     const ratio = Math.min(a.length, e.length) / Math.max(a.length, e.length);
-    return ratio >= 0.7;
+    return ratio >= 0.85;
   }
   return false;
 }
@@ -381,5 +499,6 @@ module.exports = {
   mapWordRow,
   WORD_SELECT_COLUMNS,
   mapRowsForNative,
+  nativeContentClause,
   NATIVE_COLUMN_MAP,
 };

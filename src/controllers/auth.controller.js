@@ -36,6 +36,9 @@ async function guest(req, res, next) {
       expiresAt: result.expiresAt,
       user: result.user,
     });
+    console.log(
+      `[auth] guest ok user=${result.user?.id} locale=${appLocale}`,
+    );
   } catch (err) {
     next(err);
   }
@@ -87,6 +90,9 @@ async function providerLogin(req, res, next, expectedProvider) {
       expiresAt: result.expiresAt,
       user: result.user,
     });
+    console.log(
+      `[auth] ${expectedProvider} ok user=${result.user?.id} locale=${appLocale}`,
+    );
   } catch (err) {
     if (!err.status) err.status = 401;
     next(err);
