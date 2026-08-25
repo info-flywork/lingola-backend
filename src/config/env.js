@@ -39,6 +39,10 @@ const env = {
     apiKey: process.env.OPENAI_API_KEY || '',
     model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
   },
+  elevenlabs: {
+    apiKey: process.env.ELEVENLABS_API_KEY || '',
+    voiceId: process.env.ELEVENLABS_VOICE_ID || 'WZlYpi1yf6zJhNWXih74',
+  },
   revenueCat: {
     secretKey: process.env.REVENUECAT_SECRET_KEY || '',
   },
