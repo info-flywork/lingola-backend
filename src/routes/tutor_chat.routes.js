@@ -29,5 +29,10 @@ router.post(
   requireAuth,
   tutorChatController.postMessage,
 );
+router.delete(
+  '/sessions/:sessionId',
+  requireAuth,
+  tutorChatController.deleteSession,
+);
 
 module.exports = router;

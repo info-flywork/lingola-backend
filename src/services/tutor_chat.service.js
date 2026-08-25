@@ -198,6 +198,18 @@ async function assertSessionOwner(sessionId, userId) {
   return mapSession(rows[0]);
 }
 
+async function deleteSession(sessionId, userId) {
+  await assertSessionOwner(sessionId, userId);
+  await pool.query('DELETE FROM tutor_chat_messages WHERE session_id = ?', [
+    sessionId,
+  ]);
+  await pool.query(
+    'DELETE FROM tutor_chat_sessions WHERE id = ? AND user_id = ?',
+    [sessionId, userId],
+  );
+  return { deleted: true, sessionId };
+}
+
 async function insertMessage({ sessionId, role, content }) {
   const id = uuid();
   await pool.query(
@@ -531,6 +543,7 @@ module.exports = {
   listSessionsForUser,
   listMessages,
   sendMessage,
+  deleteSession,
   openPreviewSession,
   sendPreviewMessage,
   claimPreviewSession,

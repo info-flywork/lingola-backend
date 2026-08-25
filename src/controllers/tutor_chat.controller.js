@@ -64,6 +64,15 @@ async function postMessage(req, res, next) {
   }
 }
 
+async function deleteSession(req, res, next) {
+  try {
+    const payload = await chat.deleteSession(req.params.sessionId, req.user.id);
+    res.json({ ok: true, ...payload });
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function openPreviewSession(req, res, next) {
   try {
     const tutorId = req.body?.tutorId;
@@ -115,6 +124,7 @@ module.exports = {
   listSessions,
   getMessages,
   postMessage,
+  deleteSession,
   openPreviewSession,
   postPreviewMessage,
   claimPreviewSession,
