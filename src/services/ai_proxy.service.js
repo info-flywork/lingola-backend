@@ -218,29 +218,52 @@ async function synthesizeTts({ text, voiceId, modelId }) {
   return { audioBase64, visemes: [] };
 }
 
+function visemeForChar(raw) {
+  if (!raw || !/\S/.test(raw)) return 0;
+  const c = String(raw).toLowerCase();
+  if ('.,!?;:\'"-—…'.includes(c)) return 0;
+
+  if ('bmp'.includes(c)) return 2;
+  if ('fv'.includes(c)) return 10;
+  if ('eéê'.includes(c)) return 10;
+  if ('aáàâä'.includes(c)) return 6;
+  if ('oóòôöuúùûüw'.includes(c)) return 14;
+  if ('iíìîıy'.includes(c)) return 14;
+  if ('tdnl'.includes(c)) return 6;
+  if ('szcj'.includes(c)) return 10;
+  if ('kgqh'.includes(c)) return 6;
+  if (c === 'r') return 6;
+  return 6;
+}
+
 function visemesFromAlignment({ characters, starts, ends }) {
   const cues = [];
   const n = Math.min(characters.length, starts.length, ends.length);
+  let pending = null;
+
+  function flush() {
+    if (pending) cues.push(pending);
+    pending = null;
+  }
+
   for (let i = 0; i < n; i += 1) {
-    const ch = characters[i];
-    if (!ch || !/\S/.test(ch)) continue;
     const startSec = Number(starts[i]) || 0;
     const endSec = Number(ends[i]) || startSec;
-    const code = ch.toLowerCase().charCodeAt(0);
-    let visemeNum = 0;
-    if ('aáàâä'.includes(ch.toLowerCase())) visemeNum = 1;
-    else if ('eéèêë'.includes(ch.toLowerCase())) visemeNum = 2;
-    else if ('iíìîï'.includes(ch.toLowerCase())) visemeNum = 3;
-    else if ('oóòôö'.includes(ch.toLowerCase())) visemeNum = 4;
-    else if ('uúùûü'.includes(ch.toLowerCase())) visemeNum = 5;
-    else if ('bp'.includes(ch.toLowerCase())) visemeNum = 6;
-    else if ('fv'.includes(ch.toLowerCase())) visemeNum = 7;
-    else if ('td'.includes(ch.toLowerCase())) visemeNum = 8;
-    else if ('kg'.includes(ch.toLowerCase())) visemeNum = 9;
-    else if ('sz'.includes(ch.toLowerCase())) visemeNum = 10;
-    else visemeNum = code % 11;
-    cues.push({ s: startSec, e: endSec, v: visemeNum });
+    if (endSec <= startSec) continue;
+
+    const v = visemeForChar(characters[i]);
+    if (
+      pending &&
+      pending.v === v &&
+      startSec - pending.e < 0.08
+    ) {
+      pending = { s: pending.s, e: endSec, v };
+    } else {
+      flush();
+      pending = { s: startSec, e: endSec, v };
+    }
   }
+  flush();
   return cues;
 }
 
