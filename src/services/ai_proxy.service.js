@@ -200,22 +200,67 @@ async function elevenLabsTts({ text, voiceId, modelId }) {
   return buffer.toString('base64');
 }
 
+/** Alignment yokken metinden yaklaşık viseme timeline üret (Rive: 0/2/6/10/14). */
+function heuristicVisemesFromText(text, durationSec = null) {
+  const chars = String(text || '')
+    .split('')
+    .filter((c) => c !== '\r');
+  if (chars.length === 0) return [];
+
+  const estimated =
+    durationSec && durationSec > 0.2
+      ? durationSec
+      : Math.max(0.8, chars.length * 0.055);
+  const step = estimated / chars.length;
+  const cues = [];
+  let pending = null;
+
+  function flush() {
+    if (pending) cues.push(pending);
+    pending = null;
+  }
+
+  for (let i = 0; i < chars.length; i += 1) {
+    const s = i * step;
+    const e = (i + 1) * step;
+    const v = visemeForChar(chars[i]);
+    if (pending && pending.v === v && s - pending.e < 0.08) {
+      pending = { s: pending.s, e, v };
+    } else {
+      flush();
+      pending = { s, e, v };
+    }
+  }
+  flush();
+  return cues;
+}
+
 async function synthesizeTts({ text, voiceId, modelId }) {
+  const body = String(text || '').trim();
   if (env.elevenlabs.apiKey) {
     try {
-      const audioBase64 = await elevenLabsTts({ text, voiceId, modelId });
-      return { audioBase64, visemes: [] };
+      const audioBase64 = await elevenLabsTts({ text: body, voiceId, modelId });
+      return {
+        audioBase64,
+        visemes: heuristicVisemesFromText(body),
+      };
     } catch (err) {
       if (env.openai.apiKey) {
-        const audioBase64 = await openAiTts(text);
-        return { audioBase64, visemes: [] };
+        const audioBase64 = await openAiTts(body);
+        return {
+          audioBase64,
+          visemes: heuristicVisemesFromText(body),
+        };
       }
       throw err;
     }
   }
 
-  const audioBase64 = await openAiTts(text);
-  return { audioBase64, visemes: [] };
+  const audioBase64 = await openAiTts(body);
+  return {
+    audioBase64,
+    visemes: heuristicVisemesFromText(body),
+  };
 }
 
 function visemeForChar(raw) {
@@ -313,9 +358,19 @@ async function synthesizeTtsWithLipsync({ text, voiceId, modelId }) {
         ends: alignment.character_end_times_seconds || [],
       });
     }
+    if (!visemes.length) {
+      console.warn(
+        '[tts/lipsync] alignment empty — heuristic visemes from text',
+      );
+      visemes = heuristicVisemesFromText(text);
+    }
 
     return { audioBase64, visemes };
-  } catch (_) {
+  } catch (err) {
+    console.warn(
+      '[tts/lipsync] with-timestamps failed, fallback TTS:',
+      err?.message || err,
+    );
     return synthesizeTts({ text, voiceId, modelId });
   }
 }
