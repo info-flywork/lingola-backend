@@ -12,7 +12,7 @@ async function listTutors(_req, res, next) {
     );
     for (const t of tutors.slice(0, 8)) {
       console.log(
-        `[tutors] ${t.slug} local=${t.localRivePath || '-'} cdn=${t.riveCdnUrl ? 'yes' : 'no'} voice=${t.voiceId || '-'}`,
+        `[tutors] ${t.slug} local=${t.localRivePath || '-'} cdn=${t.riveCdnUrl || '-'} voice=${t.voiceId || '-'}`,
       );
     }
     if (tutors.length > 8) {
