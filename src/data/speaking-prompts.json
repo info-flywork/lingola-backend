@@ -3,36 +3,42 @@
     "id": "hobby",
     "promptEn": "Describe your favorite hobby.",
     "promptNative": "En sevdiğin hobini anlat.",
+    "exampleAnswerEn": "My favorite hobby is reading. I usually read novels at night and also listen to music when I relax.",
     "keywords": ["hobby", "read", "music", "sport", "movie", "film"]
   },
   {
     "id": "weekend",
     "promptEn": "Talk about your last weekend.",
     "promptNative": "Geçen hafta sonunu anlat.",
+    "exampleAnswerEn": "Last weekend I stayed home on Saturday and met a friend on Sunday. We watched a movie together.",
     "keywords": ["weekend", "saturday", "sunday", "friend", "home"]
   },
   {
     "id": "happy",
     "promptEn": "What makes you happy?",
     "promptNative": "Seni ne mutlu eder?",
+    "exampleAnswerEn": "Spending time with my family makes me happy. I also feel happy when I listen to music or travel.",
     "keywords": ["happy", "family", "friend", "music", "travel"]
   },
   {
     "id": "food",
     "promptEn": "Describe your favorite food.",
     "promptNative": "En sevdiğin yemeği anlat.",
+    "exampleAnswerEn": "My favorite food is pizza. I also love pasta and a warm bowl of soup on cold days.",
     "keywords": ["food", "eat", "pizza", "pasta", "rice", "soup"]
   },
   {
     "id": "travel",
     "promptEn": "Where do you want to travel?",
     "promptNative": "Nereye seyahat etmek istersin?",
+    "exampleAnswerEn": "I want to travel to Italy and visit Rome. I also dream of a quiet beach city by the sea.",
     "keywords": ["travel", "visit", "country", "city", "beach"]
   },
   {
     "id": "friend",
     "promptEn": "Tell me about your best friend.",
     "promptNative": "En iyi arkadaşını anlat.",
+    "exampleAnswerEn": "My best friend is kind and funny. We meet every week and always have a good time together.",
     "keywords": ["friend", "kind", "funny", "meet", "together"]
   }
 ]

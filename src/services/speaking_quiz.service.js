@@ -37,6 +37,7 @@ function listPrompts({ count = 6 } = {}) {
     id: row.id,
     promptEn: row.promptEn,
     promptNative: row.promptNative,
+    exampleAnswerEn: row.exampleAnswerEn || '',
     keywords: Array.isArray(row.keywords) ? row.keywords : [],
     sortOrder: row.sortOrder ?? 0,
   }));
