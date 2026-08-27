@@ -7,6 +7,8 @@
 const FRONTEND_ROOT = require('path').join(__dirname, '../../../lingola');
 
 const MALE_VOICE = 'sJ8GED3d0sN1d0bmD6mH';
+const FEMALE_VOICE = 'WZlYpi1yf6zJhNWXih74';
+const DIEGO_VOICE = 'PIGsltMj3gFMR34aFDI3';
 
 const tutors = [
   {
@@ -23,7 +25,7 @@ const tutors = [
     slug: 'elena',
     nameKey: 'elena',
     tagKeys: ['adaptive', 'calm'],
-    voiceId: null,
+    voiceId: FEMALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/elena.png',
     localRive: 'assets/riv/Female/avatar3.riv',
     flagAsset: 'assets/images/flags/en.svg',
@@ -43,7 +45,7 @@ const tutors = [
     slug: 'freya',
     nameKey: 'freya',
     tagKeys: ['calm', 'attentive'],
-    voiceId: null,
+    voiceId: FEMALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/freya.png',
     localRive: 'assets/riv/Female/avatar5.riv',
     flagAsset: 'assets/images/flags/german.svg',
@@ -53,7 +55,7 @@ const tutors = [
     slug: 'camila',
     nameKey: 'camila',
     tagKeys: ['adaptive', 'relaxed'],
-    voiceId: null,
+    voiceId: FEMALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/camila.png',
     localRive: 'assets/riv/Female/avatar6.riv',
     flagAsset: 'assets/images/flags/spanish_icon.svg',
@@ -83,7 +85,7 @@ const tutors = [
     slug: 'ines',
     nameKey: 'ines',
     tagKeys: ['patient', 'attentive'],
-    voiceId: null,
+    voiceId: FEMALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/ines.png',
     localRive: 'assets/riv/Female/avatar2.riv',
     flagAsset: 'assets/images/flags/po.svg',
@@ -103,7 +105,7 @@ const tutors = [
     slug: 'diego',
     nameKey: 'diego',
     tagKeys: ['methodical', 'calm'],
-    voiceId: MALE_VOICE,
+    voiceId: DIEGO_VOICE,
     localImage: 'assets/images/profilIcons/tutor/diego.png',
     localRive: 'assets/riv/Male/avatar6.riv',
     flagAsset: 'assets/images/flags/spanish_icon.svg',
@@ -113,7 +115,7 @@ const tutors = [
     slug: 'amara',
     nameKey: 'amara',
     tagKeys: ['adaptive', 'patient'],
-    voiceId: null,
+    voiceId: FEMALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/amara.png',
     localRive: 'assets/riv/Female/avatar1.riv',
     flagAsset: 'assets/images/flags/hi.svg',
@@ -133,7 +135,7 @@ const tutors = [
     slug: 'katie',
     nameKey: 'katie',
     tagKeys: ['disciplined', 'decisive'],
-    voiceId: null,
+    voiceId: FEMALE_VOICE,
     localImage: 'assets/riv/Female/kaite.png',
     localRive: 'assets/riv/Female/kaite.riv',
     flagAsset: 'assets/images/flags/en.svg',
@@ -183,7 +185,7 @@ const tutors = [
     slug: 'vaelen',
     nameKey: 'vaelen',
     tagKeys: ['calm', 'ancientKnowledge'],
-    voiceId: null,
+    voiceId: FEMALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/vaelen.png',
     localRive: 'assets/riv/vaelen.riv',
     theme: {

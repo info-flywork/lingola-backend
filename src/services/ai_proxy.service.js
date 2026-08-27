@@ -137,8 +137,18 @@ async function translateToTurkish(text) {
   });
 }
 
-async function openAiTts(text) {
+async function openAiTts(text, { voiceId } = {}) {
   const apiKey = requireOpenAi();
+  const maleIds = new Set([
+    'sJ8GED3d0sN1d0bmD6mH',
+    'PIGsltMj3gFMR34aFDI3',
+    'uDsPstFWFBUXjIBimV7s',
+    'wXvR48IpOq9HACltTmt7',
+    'TsHrPyMlNFuIYnbODF01',
+  ]);
+  const resolved = resolveVoiceId(voiceId);
+  const openAiVoice = maleIds.has(resolved) ? 'onyx' : 'nova';
+  console.warn(`[tts] OpenAI fallback voice=${openAiVoice} for eleven=${resolved}`);
   const res = await fetch('https://api.openai.com/v1/audio/speech', {
     method: 'POST',
     headers: {
@@ -147,7 +157,7 @@ async function openAiTts(text) {
     },
     body: JSON.stringify({
       model: 'tts-1',
-      voice: 'nova',
+      voice: openAiVoice,
       input: String(text || '').trim(),
     }),
   });
@@ -172,6 +182,7 @@ async function elevenLabsTts({ text, voiceId, modelId }) {
   }
 
   const id = resolveVoiceId(voiceId);
+  console.log(`[tts] elevenLabs voice=${id} model=${modelId || 'default'} len=${String(text || '').trim().length}`);
   const res = await fetch(
     `https://api.elevenlabs.io/v1/text-to-speech/${id}?output_format=mp3_44100_128`,
     {
@@ -307,7 +318,7 @@ async function synthesizeTts({ text, voiceId, modelId }) {
       };
     } catch (err) {
       if (env.openai.apiKey) {
-        const audioBase64 = await openAiTts(body);
+        const audioBase64 = await openAiTts(body, { voiceId });
         return {
           audioBase64,
           visemes: heuristicVisemesFromText(body),
@@ -317,7 +328,7 @@ async function synthesizeTts({ text, voiceId, modelId }) {
     }
   }
 
-  const audioBase64 = await openAiTts(body);
+  const audioBase64 = await openAiTts(body, { voiceId });
   return {
     audioBase64,
     visemes: heuristicVisemesFromText(body),
@@ -392,6 +403,7 @@ async function synthesizeTtsWithLipsync({ text, voiceId, modelId }) {
   }
 
   const id = resolveVoiceId(voiceId);
+  console.log(`[tts/lipsync] elevenLabs voice=${id}`);
   try {
     const res = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${id}/with-timestamps`,
