@@ -195,11 +195,18 @@ async function ensureAvailableLesson(userId, maxCefr = 'A2') {
 
   const maxIdx = cefrIndex(maxCefr);
   let focus =
-    rows.find(
-      (row) =>
-        row.status !== 'completed' &&
-        (row.started_at || Number(row.elapsed_seconds || 0) > 0),
-    ) ||
+    rows
+      .filter(
+        (row) =>
+          row.status !== 'completed' &&
+          (row.started_at || Number(row.elapsed_seconds || 0) > 0),
+      )
+      .sort((a, b) => {
+        const ta = a.started_at ? new Date(a.started_at).getTime() : 0;
+        const tb = b.started_at ? new Date(b.started_at).getTime() : 0;
+        if (tb !== ta) return tb - ta;
+        return Number(b.elapsed_seconds || 0) - Number(a.elapsed_seconds || 0);
+      })[0] ||
     rows.find(
       (row) =>
         row.status !== 'completed' && cefrIndex(row.cefr_level) <= maxIdx,
@@ -269,6 +276,7 @@ async function getPath(user) {
        p.completed_at,
        p.started_at,
        p.elapsed_seconds,
+       p.updated_at,
        t.slug AS tutor_slug,
        t.name_key AS tutor_name_key,
        (n.id IS NOT NULL) AS has_notes
@@ -287,7 +295,7 @@ async function getPath(user) {
     byLevel[cefr.toLowerCase()] = [];
   }
 
-  let currentSlug = null;
+  const mappedRows = [];
   for (const row of rows) {
     const key = String(row.cefr_level).toLowerCase();
     const display = resolveDisplayStatus(row, rows, maxCefr);
@@ -297,12 +305,40 @@ async function getPath(user) {
     });
     mapped.lockReason = display.lockReason;
     byLevel[key].push(mapped);
-    if (
-      !currentSlug &&
-      (display.status === 'available' || display.status === 'unlocked')
-    ) {
-      currentSlug = mapped.slug;
-    }
+    mappedRows.push({ row, mapped, display });
+  }
+
+  // Continue = en son girilen / ilerlemesi olan ders (ilk unlocked değil).
+  const engaged = mappedRows
+    .filter(
+      ({ row, display }) =>
+        display.status !== 'completed' &&
+        (row.started_at || Number(row.elapsed_seconds || 0) > 0),
+    )
+    .sort((a, b) => {
+      const ua = a.row.updated_at ? new Date(a.row.updated_at).getTime() : 0;
+      const ub = b.row.updated_at ? new Date(b.row.updated_at).getTime() : 0;
+      if (ub !== ua) return ub - ua;
+      const ta = a.row.started_at ? new Date(a.row.started_at).getTime() : 0;
+      const tb = b.row.started_at ? new Date(b.row.started_at).getTime() : 0;
+      if (tb !== ta) return tb - ta;
+      return (
+        Number(b.row.elapsed_seconds || 0) - Number(a.row.elapsed_seconds || 0)
+      );
+    });
+
+  let currentSlug = engaged[0]?.mapped.slug || null;
+  if (!currentSlug) {
+    const available = mappedRows.find(
+      ({ display }) => display.status === 'available',
+    );
+    currentSlug = available?.mapped.slug || null;
+  }
+  if (!currentSlug) {
+    const unlocked = mappedRows.find(
+      ({ display }) => display.status === 'unlocked',
+    );
+    currentSlug = unlocked?.mapped.slug || null;
   }
 
   const needsPractice = rows.find(
@@ -523,8 +559,8 @@ async function startLesson(user, slug, { tutorId, tutorSlug, kind = 'lesson' } =
     `UPDATE user_lesson_progress
      SET tutor_id = ?,
          chat_session_id = ?,
-         started_at = COALESCE(started_at, UTC_TIMESTAMP(3)),
-         status = CASE WHEN status = 'locked' THEN status ELSE 'available' END
+         started_at = UTC_TIMESTAMP(3),
+         status = CASE WHEN status = 'locked' THEN 'available' ELSE status END
      WHERE user_id = ? AND lesson_id = ?`,
     [result.tutor.id, result.session.id, user.id, lesson.id],
   );
