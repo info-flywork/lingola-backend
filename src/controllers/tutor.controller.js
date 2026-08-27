@@ -1,6 +1,9 @@
 'use strict';
 
-const { listActiveTutors } = require('../services/tutor.service');
+const {
+  listActiveTutors,
+  findActiveTutorBySlug,
+} = require('../services/tutor.service');
 
 async function listTutors(_req, res, next) {
   try {
@@ -25,4 +28,120 @@ async function listTutors(_req, res, next) {
   }
 }
 
-module.exports = { listTutors };
+/**
+ * Görüntülü konuşma ekranı açılınca client bunu çağırır.
+ * DB'deki rive_cdn_url + CDN erişilebilirliği loglanır (pm2 logs).
+ *
+ * GET /tutors/:slug/call-enter
+ */
+async function callEnter(req, res, next) {
+  const slug = String(req.params.slug || '').trim().toLowerCase();
+  const clientRive = String(req.query.riveUrl || req.query.cdn || '').trim();
+  try {
+    console.log(
+      `[call-enter] START slug=${slug || '-'} clientRive=${clientRive || '-'} ua="${req.get('user-agent') || '-'}"`,
+    );
+
+    if (!slug) {
+      console.warn('[call-enter] slug boş');
+      return res.status(400).json({ ok: false, error: 'slug required' });
+    }
+
+    const tutor = await findActiveTutorBySlug(slug);
+    if (!tutor) {
+      console.warn(`[call-enter] tutor YOK slug=${slug}`);
+      return res.status(404).json({ ok: false, error: 'tutor not found', slug });
+    }
+
+    const url = (tutor.riveCdnUrl || clientRive || '').trim();
+    console.log(
+      `[call-enter] DB slug=${tutor.slug} id=${tutor.id}` +
+        ` riveCdn=${tutor.riveCdnUrl || '-'}` +
+        ` localRive=${tutor.localRivePath || '-'}` +
+        ` voice=${tutor.voiceId || '-'}`,
+    );
+
+    if (!url) {
+      console.error(`[call-enter] ❌ rive URL YOK slug=${slug}`);
+      return res.json({
+        ok: false,
+        slug,
+        tutor,
+        rive: { url: null, reachable: false, reason: 'no-url' },
+      });
+    }
+
+    const probe = await probeRiveUrl(url);
+    const tag = probe.reachable ? '✅' : '❌';
+    console.log(
+      `[call-enter] ${tag} CDN slug=${slug}` +
+        ` status=${probe.status} ms=${probe.ms}` +
+        ` magic=${probe.magic} reachable=${probe.reachable}` +
+        ` len=${probe.contentLength || '-'}` +
+        ` url=${url}`,
+    );
+    if (probe.error) {
+      console.error(`[call-enter] CDN error slug=${slug}: ${probe.error}`);
+    }
+
+    res.json({
+      ok: probe.reachable,
+      slug: tutor.slug,
+      tutor: {
+        id: tutor.id,
+        slug: tutor.slug,
+        riveCdnUrl: tutor.riveCdnUrl,
+        localRivePath: tutor.localRivePath,
+        voiceId: tutor.voiceId,
+      },
+      rive: { url, ...probe },
+    });
+  } catch (err) {
+    console.error(`[call-enter] fail slug=${slug}:`, err?.message || err);
+    next(err);
+  }
+}
+
+async function probeRiveUrl(url) {
+  const t0 = Date.now();
+  try {
+    const r = await fetch(url, {
+      method: 'GET',
+      headers: { Range: 'bytes=0-3' },
+    });
+    const ms = Date.now() - t0;
+    const status = r.status;
+    const contentLength =
+      r.headers.get('content-length') || r.headers.get('Content-Length');
+    const contentType = r.headers.get('content-type') || '-';
+
+    let magic = '-';
+    let magicOk = false;
+    if (r.ok || status === 206) {
+      const buf = Buffer.from(await r.arrayBuffer());
+      magic = buf.toString('utf8').slice(0, 4);
+      magicOk = magic === 'RIVE';
+    }
+
+    return {
+      reachable: (r.ok || status === 206) && magicOk,
+      status,
+      ms,
+      contentLength,
+      contentType,
+      magic,
+      magicOk,
+    };
+  } catch (err) {
+    return {
+      reachable: false,
+      status: 0,
+      ms: Date.now() - t0,
+      magic: '-',
+      magicOk: false,
+      error: err?.message || String(err),
+    };
+  }
+}
+
+module.exports = { listTutors, callEnter };

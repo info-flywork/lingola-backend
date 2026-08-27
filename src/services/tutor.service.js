@@ -38,4 +38,17 @@ async function listActiveTutors() {
   return rows.map(mapTutor);
 }
 
-module.exports = { listActiveTutors, mapTutor };
+async function findActiveTutorBySlug(slug) {
+  const key = String(slug || '').trim().toLowerCase();
+  if (!key) return null;
+  const [rows] = await pool.query(
+    `SELECT * FROM tutors
+     WHERE is_active = 1 AND LOWER(slug) = ?
+     LIMIT 1`,
+    [key],
+  );
+  if (!rows.length) return null;
+  return mapTutor(rows[0]);
+}
+
+module.exports = { listActiveTutors, findActiveTutorBySlug, mapTutor };
