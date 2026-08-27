@@ -200,7 +200,59 @@ async function elevenLabsTts({ text, voiceId, modelId }) {
   return buffer.toString('base64');
 }
 
-/** Alignment yokken metinden yaklaşık viseme timeline üret (Rive: 0/2/6/10/14). */
+/** Aynı ağız şekli min tutma — harf-harf titreme olmasın. */
+const MIN_VISEME_HOLD_SEC = 0.14;
+/** Kelime arası sessizlik — ağız kapalı kalsın. */
+const MIN_SILENCE_HOLD_SEC = 0.07;
+
+function coalesceVisemes(cues, minHoldSec = MIN_VISEME_HOLD_SEC) {
+  if (!cues.length) return [];
+  const out = [];
+  let cur = { ...cues[0] };
+  for (let i = 1; i < cues.length; i += 1) {
+    const next = cues[i];
+    if (next.v === 0 && next.e - next.s >= MIN_SILENCE_HOLD_SEC) {
+      if (cur.v !== 0) {
+        out.push({ s: cur.s, e: Math.min(cur.e, next.s), v: cur.v });
+      } else {
+        out.push(cur);
+      }
+      cur = { ...next };
+      continue;
+    }
+    if (cur.v === 0) {
+      out.push(cur);
+      cur = { ...next };
+      continue;
+    }
+    const hold = cur.e - cur.s;
+    const same = next.v === cur.v;
+    const tooSoon = next.s - cur.s < minHoldSec;
+    if (same || (tooSoon && next.v !== 0) || hold < minHoldSec) {
+      cur = {
+        s: cur.s,
+        e: Math.max(cur.e, next.e),
+        v: cur.v,
+      };
+    } else {
+      out.push({
+        s: cur.s,
+        e: Math.max(cur.e, cur.s + minHoldSec),
+        v: cur.v,
+      });
+      const start = Math.max(next.s, cur.s + minHoldSec);
+      cur = {
+        s: start,
+        e: Math.max(next.e, start + minHoldSec * 0.5),
+        v: next.v,
+      };
+    }
+  }
+  out.push(cur);
+  return out;
+}
+
+/** Alignment yokken metinden yaklaşık viseme timeline (Rive: 0/2/6/10/14). */
 function heuristicVisemesFromText(text, durationSec = null) {
   const chars = String(text || '')
     .split('')
@@ -210,7 +262,7 @@ function heuristicVisemesFromText(text, durationSec = null) {
   const estimated =
     durationSec && durationSec > 0.2
       ? durationSec
-      : Math.max(0.8, chars.length * 0.055);
+      : Math.max(1.0, chars.length * 0.12);
   const step = estimated / chars.length;
   const cues = [];
   let pending = null;
@@ -224,15 +276,24 @@ function heuristicVisemesFromText(text, durationSec = null) {
     const s = i * step;
     const e = (i + 1) * step;
     const v = visemeForChar(chars[i]);
-    if (pending && pending.v === v && s - pending.e < 0.08) {
+    if (v === 0) {
+      flush();
+      if (e - s >= MIN_SILENCE_HOLD_SEC) {
+        cues.push({ s, e, v: 0 });
+      }
+      continue;
+    }
+    if (pending && pending.v === v) {
       pending = { s: pending.s, e, v };
+    } else if (pending && s - pending.s < MIN_VISEME_HOLD_SEC) {
+      pending = { s: pending.s, e, v: pending.v };
     } else {
       flush();
       pending = { s, e, v };
     }
   }
   flush();
-  return cues;
+  return coalesceVisemes(cues);
 }
 
 async function synthesizeTts({ text, voiceId, modelId }) {
@@ -299,17 +360,29 @@ function visemesFromAlignment({ characters, starts, ends }) {
     const v = visemeForChar(characters[i]);
     if (
       pending &&
-      pending.v === v &&
-      startSec - pending.e < 0.08
+      pending.v === v
     ) {
       pending = { s: pending.s, e: endSec, v };
+    } else if (
+      pending &&
+      pending.v !== 0 &&
+      v !== 0 &&
+      startSec - pending.s < MIN_VISEME_HOLD_SEC
+    ) {
+      pending = { s: pending.s, e: endSec, v: pending.v };
+    } else if (v === 0) {
+      flush();
+      if (endSec - startSec >= MIN_SILENCE_HOLD_SEC) {
+        cues.push({ s: startSec, e: endSec, v: 0 });
+      }
+      continue;
     } else {
       flush();
       pending = { s: startSec, e: endSec, v };
     }
   }
   flush();
-  return cues;
+  return coalesceVisemes(cues);
 }
 
 async function synthesizeTtsWithLipsync({ text, voiceId, modelId }) {
