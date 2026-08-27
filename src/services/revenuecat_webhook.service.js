@@ -1,6 +1,6 @@
 'use strict';
 
-const pool = require('../db');
+const { pool } = require('../config/db');
 
 /**
  * RevenueCat webhook → users.subscription_status.
