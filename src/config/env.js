@@ -45,6 +45,8 @@ const env = {
   },
   revenueCat: {
     secretKey: process.env.REVENUECAT_SECRET_KEY || '',
+    /** RevenueCat webhook Authorization header ile eşleşmeli. */
+    webhookAuth: process.env.REVENUECAT_WEBHOOK_AUTH || '',
   },
 };
 

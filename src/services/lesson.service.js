@@ -256,6 +256,22 @@ async function assertLessonAccess(user, slug, { allowCompleted = true } = {}) {
     err.status = 404;
     throw err;
   }
+
+  // Free: müfredatta yalnızca ilk 2 ders. Trial/premium → hepsi.
+  const isPremium = String(user.subscriptionStatus || '').toLowerCase() === 'premium';
+  if (!isPremium) {
+    const ordered = await listLessonsOrdered();
+    const index = ordered.findIndex((row) => row.id === lesson.id);
+    if (index >= 2) {
+      const err = new Error(
+        'Premium required — free plan includes the first 2 lessons only',
+      );
+      err.status = 402;
+      err.code = 'PREMIUM_REQUIRED';
+      throw err;
+    }
+  }
+
   const progress = await getProgress(user.id, lesson.id);
   const status = progress?.status || 'locked';
   if (status === 'locked') {

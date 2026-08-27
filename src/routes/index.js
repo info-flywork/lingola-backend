@@ -21,6 +21,7 @@ router.use('/lessons', require('./lesson.routes'));
 router.use('/roleplay', require('./roleplay.routes'));
 router.use('/notifications', require('./notifications.routes'));
 router.use('/ai', require('./ai.routes'));
+router.use('/billing', require('./billing.routes'));
 router.use('/debug', require('./debug.routes'));
 
 module.exports = router;
