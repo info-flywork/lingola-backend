@@ -16,6 +16,65 @@ const {
 
 const CEFR_ORDER = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
+/** Onboarding beginner/intermediate/advanced → açılacak en yüksek CEFR. */
+function maxCefrForUser(user) {
+  const level = String(user?.onboarding?.level || 'beginner').toLowerCase();
+  if (level === 'intermediate') return 'B2';
+  if (level === 'advanced') return 'C1';
+  return 'A2';
+}
+
+function cefrIndex(cefr) {
+  const i = CEFR_ORDER.indexOf(String(cefr || '').toUpperCase());
+  return i < 0 ? 0 : i;
+}
+
+/**
+ * UI status:
+ * - completed: mavi + check
+ * - available: girilmiş / devam — mavi
+ * - unlocked: seviye bandında ama henüz girilmemiş — gri, kilit yok
+ * - locked: seviyenin üstü / önceki tamamlanmamış — kilit
+ */
+function resolveDisplayStatus(row, orderedRows, maxCefr) {
+  if (row.status === 'completed') {
+    return { status: 'completed', lockReason: null };
+  }
+
+  const maxIdx = cefrIndex(maxCefr);
+  const lessonIdx = cefrIndex(row.cefr_level);
+  const orderIndex = orderedRows.findIndex((r) => r.id === row.id);
+  const engaged =
+    Boolean(row.started_at) || Number(row.elapsed_seconds || 0) > 0;
+
+  if (lessonIdx <= maxIdx) {
+    if (engaged || row.status === 'available') {
+      // available in DB but never started → still unlocked (gri)
+      if (!engaged) return { status: 'unlocked', lockReason: null };
+      return { status: 'available', lockReason: null };
+    }
+    return { status: 'unlocked', lockReason: null };
+  }
+
+  const prevDone =
+    orderIndex <= 0 ||
+    orderedRows
+      .slice(0, orderIndex)
+      .every((r) => r.status === 'completed');
+
+  if (prevDone) {
+    if (engaged) return { status: 'available', lockReason: null };
+    return { status: 'unlocked', lockReason: null };
+  }
+
+  return { status: 'locked', lockReason: 'level' };
+}
+
+function canAccessLesson(row, orderedRows, maxCefr) {
+  const { status } = resolveDisplayStatus(row, orderedRows, maxCefr);
+  return status === 'completed' || status === 'available' || status === 'unlocked';
+}
+
 let catalogReady = false;
 
 async function ensureCatalog() {
@@ -119,39 +178,54 @@ async function repairFakeCompletions(userId) {
   );
 }
 
-/** A1'den itibaren ilk bitirilmemiş dersi aç; diğer available'ları kilitle. */
-async function ensureAvailableLesson(userId) {
+/**
+ * Continue kartı için bir odak dersi `available` tut.
+ * Seviye bandındaki diğer dersleri toplu kilitleme — UI unlocked olarak gösterir.
+ */
+async function ensureAvailableLesson(userId, maxCefr = 'A2') {
   const [rows] = await pool.query(
-    `SELECT p.lesson_id, p.status
+    `SELECT p.lesson_id, p.status, p.started_at, p.elapsed_seconds, l.cefr_level
      FROM user_lesson_progress p
      INNER JOIN lessons l ON l.id = p.lesson_id
      WHERE p.user_id = ?
      ORDER BY FIELD(l.cefr_level, 'A1','A2','B1','B2','C1','C2'), l.sort_order ASC`,
     [userId],
   );
-  const firstOpen = rows.find((row) => row.status !== 'completed');
-  if (!firstOpen) return;
+  if (!rows.length) return;
 
-  await pool.query(
-    `UPDATE user_lesson_progress
-     SET status = 'locked'
-     WHERE user_id = ? AND status = 'available' AND lesson_id <> ?`,
-    [userId, firstOpen.lesson_id],
-  );
+  const maxIdx = cefrIndex(maxCefr);
+  let focus =
+    rows.find(
+      (row) =>
+        row.status !== 'completed' &&
+        (row.started_at || Number(row.elapsed_seconds || 0) > 0),
+    ) ||
+    rows.find(
+      (row) =>
+        row.status !== 'completed' && cefrIndex(row.cefr_level) <= maxIdx,
+    );
 
-  if (firstOpen.status === 'available') return;
+  if (!focus) {
+    focus = rows.find((row, index) => {
+      if (row.status === 'completed') return false;
+      return rows.slice(0, index).every((r) => r.status === 'completed');
+    });
+  }
+  if (!focus) return;
 
-  await pool.query(
-    `UPDATE user_lesson_progress
-     SET status = 'available'
-     WHERE user_id = ? AND lesson_id = ? AND status = 'locked'`,
-    [userId, firstOpen.lesson_id],
-  );
+  if (focus.status === 'locked') {
+    await pool.query(
+      `UPDATE user_lesson_progress
+       SET status = 'available'
+       WHERE user_id = ? AND lesson_id = ? AND status = 'locked'`,
+      [userId, focus.lesson_id],
+    );
+  }
 }
 
-async function normalizeUserPath(userId) {
+async function normalizeUserPath(userId, user) {
   await repairFakeCompletions(userId);
-  await ensureAvailableLesson(userId);
+  await ensureAvailableLesson(userId, maxCefrForUser(user));
 }
 
 function mapLesson(row, progress) {
@@ -183,7 +257,8 @@ function mapLesson(row, progress) {
 
 async function getPath(user) {
   await ensureUserPath(user.id, user);
-  await normalizeUserPath(user.id);
+  await normalizeUserPath(user.id, user);
+  const maxCefr = maxCefrForUser(user);
   const [rows] = await pool.query(
     `SELECT
        l.*,
@@ -211,18 +286,33 @@ async function getPath(user) {
   for (const cefr of CEFR_ORDER) {
     byLevel[cefr.toLowerCase()] = [];
   }
+
+  let currentSlug = null;
   for (const row of rows) {
     const key = String(row.cefr_level).toLowerCase();
-    byLevel[key].push(mapLesson(row, row));
+    const display = resolveDisplayStatus(row, rows, maxCefr);
+    const mapped = mapLesson(row, {
+      ...row,
+      status: display.status,
+    });
+    mapped.lockReason = display.lockReason;
+    byLevel[key].push(mapped);
+    if (
+      !currentSlug &&
+      (display.status === 'available' || display.status === 'unlocked')
+    ) {
+      currentSlug = mapped.slug;
+    }
   }
 
-  const current =
-    rows.find((r) => r.status === 'available') ||
-    rows.find((r) => r.status === 'completed' && r.needs_practice) ||
-    null;
+  const needsPractice = rows.find(
+    (r) => r.status === 'completed' && r.needs_practice,
+  );
 
   return {
-    currentLessonSlug: current?.slug || null,
+    currentLessonSlug: currentSlug || needsPractice?.slug || null,
+    userCefrMax: maxCefr,
+    userAppLevel: String(user?.onboarding?.level || 'beginner').toLowerCase(),
     levels: CEFR_ORDER.map((cefr) => ({
       id: cefr.toLowerCase(),
       cefrLevel: cefr,
@@ -249,7 +339,7 @@ async function getProgress(userId, lessonId) {
 
 async function assertLessonAccess(user, slug, { allowCompleted = true } = {}) {
   await ensureUserPath(user.id, user);
-  await normalizeUserPath(user.id);
+  await normalizeUserPath(user.id, user);
   const lesson = await findLessonBySlug(slug);
   if (!lesson) {
     const err = new Error('Lesson not found');
@@ -274,12 +364,52 @@ async function assertLessonAccess(user, slug, { allowCompleted = true } = {}) {
 
   const progress = await getProgress(user.id, lesson.id);
   const status = progress?.status || 'locked';
-  if (status === 'locked') {
-    const err = new Error('Complete the previous lesson to unlock this one');
+  const maxCefr = maxCefrForUser(user);
+  const ordered = await listLessonsOrdered();
+  const [progressRows] = await pool.query(
+    `SELECT p.lesson_id AS id, p.status, p.started_at, p.elapsed_seconds, l.cefr_level
+     FROM user_lesson_progress p
+     INNER JOIN lessons l ON l.id = p.lesson_id
+     WHERE p.user_id = ?
+     ORDER BY FIELD(l.cefr_level, 'A1','A2','B1','B2','C1','C2'), l.sort_order ASC`,
+    [user.id],
+  );
+  const orderedWithProgress = ordered.map((l) => {
+    const p = progressRows.find((r) => r.id === l.id) || {};
+    return {
+      id: l.id,
+      status: p.status || 'locked',
+      started_at: p.started_at || null,
+      elapsed_seconds: p.elapsed_seconds || 0,
+      cefr_level: l.cefr_level,
+    };
+  });
+  const rowForAccess = {
+    id: lesson.id,
+    status,
+    started_at: progress?.started_at || null,
+    elapsed_seconds: progress?.elapsed_seconds || 0,
+    cefr_level: lesson.cefr_level,
+  };
+
+  if (!canAccessLesson(rowForAccess, orderedWithProgress, maxCefr)) {
+    const err = new Error(
+      `Your English level is ${maxCefr}, so you can't open ${lesson.cefr_level} lessons without completing the earlier path.`,
+    );
     err.status = 403;
+    err.code = 'LEVEL_REQUIRED';
+    err.userCefrMax = maxCefr;
+    err.lessonCefr = lesson.cefr_level;
     throw err;
   }
+
   if (!allowCompleted && status !== 'available' && status !== 'completed') {
+    if (
+      status === 'locked' &&
+      canAccessLesson(rowForAccess, orderedWithProgress, maxCefr)
+    ) {
+      return { lesson, progress };
+    }
     const err = new Error('Lesson is not available');
     err.status = 403;
     throw err;
@@ -338,12 +468,8 @@ async function loadHandoffSummary(userId, lessonId, previousTutorId) {
 
 async function startLesson(user, slug, { tutorId, tutorSlug, kind = 'lesson' } = {}) {
   const sessionKind = kind === 'practice' ? 'practice' : 'lesson';
+  // assertLessonAccess: seviye bandı / sıra kontrolü (DB locked olsa bile açılabilir).
   const { lesson, progress } = await assertLessonAccess(user, slug);
-  if (sessionKind === 'lesson' && progress.status === 'locked') {
-    const err = new Error('Lesson is locked');
-    err.status = 403;
-    throw err;
-  }
 
   const previousTutorId = progress?.tutor_id || null;
   let previousTutor = null;

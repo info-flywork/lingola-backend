@@ -29,9 +29,9 @@ function errorHandler(err, req, res, next) {
     error: err.message || 'Internal Server Error',
   };
 
-  if (process.env.NODE_ENV !== 'production' && err.code) {
-    payload.code = err.code;
-  }
+  if (err.code) payload.code = err.code;
+  if (err.userCefrMax) payload.userCefrMax = err.userCefrMax;
+  if (err.lessonCefr) payload.lessonCefr = err.lessonCefr;
 
   res.status(status).json(payload);
 }
