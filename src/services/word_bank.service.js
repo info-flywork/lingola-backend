@@ -446,6 +446,10 @@ async function listDictionaryWords(user, {
   );
 
   const mapped = mapRowsForNative(rows, nativeLang);
+  const wordIds = mapped.map((row) => row.id).filter(Boolean);
+  const { getSavedWordIds } = require('./saved_words.service');
+  const savedIds = await getSavedWordIds(user.id, wordIds);
+
   const items = mapped.map((row) => ({
     id: row.id,
     word: row.word,
@@ -453,6 +457,7 @@ async function listDictionaryWords(user, {
     translations: row.translations,
     level: row.level,
     phonetic: row.phonetic,
+    saved: savedIds.has(row.id),
   }));
 
   return {
