@@ -1,6 +1,7 @@
 'use strict';
 
 const { pool } = require('../config/db');
+const { API_ERROR_CODES, apiError } = require('../utils/api_error_codes');
 const {
   uuid,
   hashToken,
@@ -252,22 +253,25 @@ async function updateUserAvatar(userId, { buffer, contentType }) {
   ]);
   const type = String(contentType || '').toLowerCase();
   if (!allowed.has(type)) {
-    const err = new Error('Only jpeg, png, webp allowed');
-    err.status = 400;
-    throw err;
+    throw apiError('Only jpeg, png, webp allowed', {
+      status: 400,
+      code: API_ERROR_CODES.AVATAR_INVALID_TYPE,
+    });
   }
 
   if (!Buffer.isBuffer(buffer) || buffer.length === 0) {
-    const err = new Error('Empty image');
-    err.status = 400;
-    throw err;
+    throw apiError('Empty image', {
+      status: 400,
+      code: API_ERROR_CODES.AVATAR_EMPTY,
+    });
   }
 
   // ~5 MB hard limit
   if (buffer.length > 5 * 1024 * 1024) {
-    const err = new Error('Image too large (max 5MB)');
-    err.status = 400;
-    throw err;
+    throw apiError('Image too large (max 5MB)', {
+      status: 400,
+      code: API_ERROR_CODES.AVATAR_TOO_LARGE,
+    });
   }
 
   const ext =

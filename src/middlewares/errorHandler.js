@@ -30,6 +30,7 @@ function errorHandler(err, req, res, next) {
   };
 
   if (err.code) payload.code = err.code;
+  else if (status >= 500) payload.code = 'INTERNAL_ERROR';
   if (err.userCefrMax) payload.userCefrMax = err.userCefrMax;
   if (err.lessonCefr) payload.lessonCefr = err.lessonCefr;
 

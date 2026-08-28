@@ -15,6 +15,7 @@ const {
 const {
   resolveIdentity,
 } = require('../services/firebase_token.service');
+const { API_ERROR_CODES, apiError } = require('../utils/api_error_codes');
 
 async function guest(req, res, next) {
   try {
@@ -177,8 +178,10 @@ async function updateNotifications(req, res, next) {
       body.notifications_enabled === undefined &&
       body.enabled === undefined
     ) {
-      const err = new Error('notificationsEnabled is required');
-      err.status = 400;
+      const err = apiError('notificationsEnabled is required', {
+        status: 400,
+        code: API_ERROR_CODES.NOTIFICATIONS_REQUIRED,
+      });
       throw err;
     }
 
@@ -206,9 +209,10 @@ async function uploadAvatar(req, res, next) {
     ).toLowerCase();
     const raw = body.imageBase64 || body.image_base64 || body.data;
     if (!raw || typeof raw !== 'string') {
-      const err = new Error('imageBase64 is required');
-      err.status = 400;
-      throw err;
+      throw apiError('imageBase64 is required', {
+        status: 400,
+        code: API_ERROR_CODES.IMAGE_REQUIRED,
+      });
     }
 
     const base64 = raw.includes(',') ? raw.split(',').pop() : raw;

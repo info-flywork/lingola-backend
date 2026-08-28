@@ -1,5 +1,7 @@
 'use strict';
 
+const { API_ERROR_CODES, apiError } = require('../utils/api_error_codes');
+
 const { findUserBySessionToken } = require('../services/auth.service');
 
 async function requireAuth(req, res, next) {
@@ -7,16 +9,18 @@ async function requireAuth(req, res, next) {
     const header = req.headers.authorization || '';
     const match = /^Bearer\s+(.+)$/i.exec(header);
     if (!match) {
-      const err = new Error('Unauthorized');
-      err.status = 401;
-      throw err;
+      throw apiError('Unauthorized', {
+        status: 401,
+        code: API_ERROR_CODES.UNAUTHORIZED,
+      });
     }
 
     const user = await findUserBySessionToken(match[1].trim());
     if (!user) {
-      const err = new Error('Unauthorized');
-      err.status = 401;
-      throw err;
+      throw apiError('Unauthorized', {
+        status: 401,
+        code: API_ERROR_CODES.UNAUTHORIZED,
+      });
     }
 
     req.user = user;

@@ -1001,6 +1001,9 @@ async function completeLesson(
     await unlockNext(user.id);
   }
 
+  const certificateService = require('./certificate.service');
+  await certificateService.syncCertificatesForUser(user.id);
+
   await streak.recordActivity(user.id, 'lesson');
 
   const notes = await getNotes(user, slug);
