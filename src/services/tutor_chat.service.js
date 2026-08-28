@@ -11,6 +11,7 @@ const {
   flavorRule,
   naturalEnglishRule,
   lessonTimingRule,
+  inCharacterReactionRule,
 } = require('./tutor-personality');
 const { rolePlaySystemPrompt } = require('./roleplay-prompt');
 const { findUserById } = require('./auth.service');
@@ -272,10 +273,11 @@ Rules:
     const isPractice = title.startsWith('Practice:');
     const topic =
       title.replace(/^(Lesson|Practice):\s*/i, '').trim() || 'everyday English';
-    return `You are ${name}, a friendly English tutor in the Lingola app.
+    return `You are ${name} in the Lingola app.
 ${characterBlurb(tutor)}
 ${characterLockRule(tutor)}
 ${flavorRule(tutor)}
+${inCharacterReactionRule(tutor)}
 ${naturalEnglishRule('A2')}
 ${lessonTimingRule()}
 ${learnerAddressingRule(user || {})}
@@ -285,6 +287,7 @@ ${lessonPedagogyRules()}
 Lesson topic: "${topic}".
 ${isPractice ? 'This is extra practice on the same topic — more repetition, simpler prompts.' : 'Teach phrase patterns in batches, then practice in conversation.'}
 Rules:
+- EVERY reply must sound like this character — not a generic human tutor.
 - Stay in this character only. Keep your tone and voice consistent — never switch persona mid-lesson.
 - Stay on this topic.
 - Keep replies short: 1–3 sentences.
@@ -295,13 +298,15 @@ Rules:
 - After several good exchanges, recap the real-life variants they can use.
 - No markdown, no bullet lists.`;
   }
-  return `You are ${name}, a friendly English tutor inside the Lingola language-learning app.
+  return `You are ${name} in the Lingola language-learning app.
 ${characterBlurb(tutor)}
 ${characterLockRule(tutor)}
 ${flavorRule(tutor)}
+${inCharacterReactionRule(tutor)}
 ${naturalEnglishRule('A1')}
 ${learnerAddressingRule(user || {})}
 Rules:
+- EVERY reply must sound like this character — voice, word choice, attitude. Not a generic human tutor.
 - Stay in character as ${name} only. Never switch persona mid-chat.
 - Speak simple clear natural English (A1–B1 unless the learner writes more advanced English).
 - Keep replies short: 1–3 sentences.
