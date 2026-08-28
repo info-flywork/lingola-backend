@@ -122,43 +122,44 @@ function lessonTimingRule() {
 - If they stay silent again: kindly say you can tell they may be tired from the quiet, and end the lesson.`;
 }
 
-function openingFor(lesson, tutor, kind) {
+function openingFor(lesson, tutor, kind, { learnerName } = {}) {
   const topic = lesson.title_en;
   const level = lesson.cefr_level;
   const slug = String(tutor?.slug || tutor?.nameKey || '').toLowerCase();
   const name = String(tutor?.nameKey || tutor?.slug || 'Tutor');
   const display = name.charAt(0).toUpperCase() + name.slice(1);
+  const greet = learnerName ? `Hi ${learnerName}!` : 'Hi!';
 
   if (kind === 'practice') {
     const practice = {
-      zephyrion: `Human, we scan "${topic}" again (${level}). I will not abduct you. Ready?`,
-      ukrath: `Again, "${topic}" (${level}). Humans… I don't love your kind — but you showed up. That takes guts. Try it.`,
-      elrion: `The leaf-path returns to "${topic}" (${level}). Walk it with me?`,
-      vaelen: `The spell of "${topic}" again (${level}). One small word, little spark.`,
-      santa: `Ho ho! More practice: "${topic}" (${level}). Ready, friend?`,
-      lingola: `Systems online. Practice "${topic}" (${level}) again. Ready?`,
+      zephyrion: `${greet} Human, we scan "${topic}" again (${level}). I will not abduct you. Ready?`,
+      ukrath: `${greet} Again, "${topic}" (${level}). Humans… I don't love your kind — but you showed up. That takes guts. Try it.`,
+      elrion: `${greet} The leaf-path returns to "${topic}" (${level}). Walk it with me?`,
+      vaelen: `${greet} The spell of "${topic}" again (${level}). One small word, little spark.`,
+      santa: `${greet} Ho ho! More practice: "${topic}" (${level}). Ready, friend?`,
+      lingola: `${greet} I'm Lingola. Systems online. Practice "${topic}" (${level}) again. Ready?`,
     };
-    return practice[slug] || `Hi! I'm ${display}. Let's practice "${topic}" again at ${level}. I'll keep it simple — ready?`;
+    return practice[slug] || `${greet} I'm ${display}. Let's practice "${topic}" again at ${level}. I'll keep it simple — ready?`;
   }
 
   const lessonOpen = {
-    zephyrion: `I am Zephyrion. Today's Earth lesson is "${topic}" (${level}). We learn human phrases. Shall we start?`,
-    ukrath: `I am Ukrath. Lesson: "${topic}" (${level}). Hello, creature — facing an orc takes courage. I admire that. Shall we start?`,
-    elrion: `I am Elrion of the old woods. Today's lesson is "${topic}" (${level}). A few phrases, like notes in a song. Shall we begin?`,
-    vaelen: `I am Vaelen. Tonight's lesson is "${topic}" (${level}). Simple phrases, a little moonlight. Shall we start?`,
-    santa: `Ho ho! I'm Santa. Today's lesson is "${topic}" (${level}). Warm phrases, short and bright. Shall we start?`,
-    lingola: `Hi! I'm Lingola. Today's lesson is "${topic}" (${level}). We'll learn useful everyday phrases. Shall we start?`,
+    zephyrion: `${greet} I am Zephyrion. Today's Earth lesson is "${topic}" (${level}). We learn human phrases. Shall we start?`,
+    ukrath: `${greet} I am Ukrath. Lesson: "${topic}" (${level}). Hello, creature — facing an orc takes courage. I admire that. Shall we start?`,
+    elrion: `${greet} I am Elrion of the old woods. Today's lesson is "${topic}" (${level}). A few phrases, like notes in a song. Shall we begin?`,
+    vaelen: `${greet} I am Vaelen. Tonight's lesson is "${topic}" (${level}). Simple phrases, a little moonlight. Shall we start?`,
+    santa: `${greet} Ho ho! I'm Santa. Today's lesson is "${topic}" (${level}). Warm phrases, short and bright. Shall we start?`,
+    lingola: `${greet} I'm Lingola. Today's lesson is "${topic}" (${level}). We'll learn useful everyday phrases. Shall we start?`,
   };
   return (
     lessonOpen[slug] ||
-    `Hi! I'm ${display}. Today's lesson is "${topic}" (${level}). We'll learn useful phrases and try them in a short conversation. Shall we start?`
+    `${greet} I'm ${display}. Today's lesson is "${topic}" (${level}). We'll learn useful phrases and try them in a short conversation. Shall we start?`
   );
 }
 
 /**
  * When the learner switches tutors mid-lesson, welcome them with prior context.
  */
-function handoffOpening(lesson, tutor, { previousTutorName, summary, kind } = {}) {
+function handoffOpening(lesson, tutor, { previousTutorName, summary, kind, learnerName } = {}) {
   const topic = lesson.title_en;
   const level = lesson.cefr_level;
   const name = String(tutor?.nameKey || tutor?.slug || 'Tutor');
@@ -168,11 +169,12 @@ function handoffOpening(lesson, tutor, { previousTutorName, summary, kind } = {}
   const learnedBit = learned
     ? ` With ${prev} you worked on: ${learned.slice(0, 220)}${learned.length > 220 ? '…' : ''}.`
     : ` You already started "${topic}" with ${prev}.`;
+  const greet = learnerName ? `Hi ${learnerName}!` : 'Hi!';
 
   if (kind === 'practice') {
-    return `Hi! I'm ${display}. Welcome back.${learnedBit} Let's keep practicing "${topic}" (${level}) from where you left off. Ready?`;
+    return `${greet} I'm ${display}. Welcome back.${learnedBit} Let's keep practicing "${topic}" (${level}) from where you left off. Ready?`;
   }
-  return `Hi! I'm ${display}. Nice to meet you.${learnedBit} Let's continue "${topic}" (${level}) from where you left off. Shall we start?`;
+  return `${greet} I'm ${display}. Nice to meet you.${learnedBit} Let's continue "${topic}" (${level}) from where you left off. Shall we start?`;
 }
 
 module.exports = {

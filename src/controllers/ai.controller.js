@@ -29,8 +29,9 @@ async function chat(req, res, next) {
 
 async function translate(req, res, next) {
   try {
-    const text = await ai.translateToTurkish(req.body?.text);
-    res.json({ ok: true, text });
+    const targetLang = req.body?.targetLang ?? req.body?.nativeLang ?? 'tr';
+    const text = await ai.translateToLanguage(req.body?.text, targetLang);
+    res.json({ ok: true, text, targetLang });
   } catch (err) {
     next(err);
   }

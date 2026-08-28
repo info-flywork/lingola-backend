@@ -20,13 +20,46 @@ function normalizeTranscript(value) {
     .trim();
 }
 
+function similarityRatio(a, b) {
+  if (!a && !b) return 1;
+  if (!a || !b) return 0;
+  const maxLen = Math.max(a.length, b.length);
+  let distance = 0;
+  const matrix = Array.from({ length: a.length + 1 }, () =>
+    Array(b.length + 1).fill(0),
+  );
+  for (let i = 0; i <= a.length; i += 1) matrix[i][0] = i;
+  for (let j = 0; j <= b.length; j += 1) matrix[0][j] = j;
+  for (let i = 1; i <= a.length; i += 1) {
+    for (let j = 1; j <= b.length; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + cost,
+      );
+    }
+  }
+  distance = matrix[a.length][b.length];
+  return 1 - distance / maxLen;
+}
+
+function keywordMatches(normalized, keyword) {
+  const k = normalizeTranscript(keyword);
+  if (!k) return false;
+  if (normalized.includes(k)) return true;
+  if (similarityRatio(normalized, k) >= 0.85) return true;
+  const words = normalized.split(' ').filter(Boolean);
+  return words.some((word) => similarityRatio(word, k) >= 0.85);
+}
+
 function evaluateTranscript(transcript, keywords = []) {
   const normalized = normalizeTranscript(transcript);
   if (!normalized) {
     return { matched: false, transcript: normalized };
   }
   const matched = keywords.some((keyword) =>
-    normalized.includes(String(keyword || '').toLowerCase()),
+    keywordMatches(normalized, keyword),
   );
   return { matched, transcript: normalized };
 }

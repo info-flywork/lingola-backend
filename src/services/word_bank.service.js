@@ -208,12 +208,20 @@ async function fetchWordsWithFallback(user, { count, excludeIds, requireSentence
     throw err;
   }
 
+  const mapped = mapRowsForNative(rows, nativeLang);
+  const wordIds = mapped.map((row) => row.id).filter(Boolean);
+  const { getSavedWordIds } = require('./saved_words.service');
+  const savedIds = await getSavedWordIds(user.id, wordIds);
+
   return {
     nativeLang: normalizeLangCode(nativeLang),
     targetLang: 'en',
     level: appLevel,
     cefrLevels: levels,
-    cards: mapRowsForNative(rows, nativeLang),
+    cards: mapped.map((row) => ({
+      ...row,
+      saved: savedIds.has(row.id),
+    })),
   };
 }
 
@@ -359,6 +367,14 @@ function levenshtein(a, b) {
   return matrix[a.length][b.length];
 }
 
+function similarityRatio(a, b) {
+  if (!a && !b) return 1;
+  if (!a || !b) return 0;
+  const distance = levenshtein(a, b);
+  const maxLen = Math.max(a.length, b.length);
+  return 1 - distance / maxLen;
+}
+
 function writingTokensEquivalent(a, b) {
   if (a === b) return true;
   if (canonicalWritingWord(a) === canonicalWritingWord(b)) return true;
@@ -389,6 +405,19 @@ function textsMatch(answer, expected) {
     const ratio = Math.min(a.length, e.length) / Math.max(a.length, e.length);
     return ratio >= 0.85;
   }
+
+  if (similarityRatio(a, e) >= 0.85) return true;
+
+  if (eTokens.length > 0) {
+    let matched = 0;
+    for (const expected of eTokens) {
+      if (aTokens.some((token) => similarityRatio(token, expected) >= 0.85)) {
+        matched += 1;
+      }
+    }
+    if (matched / eTokens.length >= 0.85) return true;
+  }
+
   return false;
 }
 

@@ -10,8 +10,16 @@ const {
   characterLockRule,
   flavorRule,
   naturalEnglishRule,
+  lessonTimingRule,
 } = require('./tutor-personality');
 const { rolePlaySystemPrompt } = require('./roleplay-prompt');
+const { findUserById } = require('./auth.service');
+const {
+  learnerAddressingRule,
+  goalContext,
+  topicTeachingHints,
+  lessonPedagogyRules,
+} = require('./prompt_helpers');
 
 const PREVIEW_TTL_MS = 1000 * 60 * 30;
 const previewSessions = new Map();
@@ -237,7 +245,7 @@ function displayTutorName(tutor) {
   return raw.charAt(0).toUpperCase() + raw.slice(1);
 }
 
-function tutorSystemPrompt(tutor, session) {
+function tutorSystemPrompt(tutor, session, user) {
   const name = displayTutorName(tutor);
   const title = String(session?.title || '');
   if (/onboarding preview/i.test(title)) {
@@ -246,6 +254,7 @@ ${characterBlurb(tutor)}
 ${characterLockRule(tutor)}
 ${flavorRule(tutor)}
 ${naturalEnglishRule('A1')}
+${learnerAddressingRule(user || {})}
 This is a short onboarding preview before sign-up. The learner is trying Lingola for the first time.
 Rules:
 - Greet warmly in English: welcome them to Lingola.
@@ -257,7 +266,7 @@ Rules:
 - No markdown, no bullet lists.`;
   }
   if (title.startsWith('Role Play:')) {
-    return rolePlaySystemPrompt(title);
+    return rolePlaySystemPrompt(title, { user, tutor });
   }
   if (title.startsWith('Lesson:') || title.startsWith('Practice:')) {
     const isPractice = title.startsWith('Practice:');
@@ -267,16 +276,21 @@ Rules:
 ${characterBlurb(tutor)}
 ${characterLockRule(tutor)}
 ${flavorRule(tutor)}
-${naturalEnglishRule('A1')}
+${naturalEnglishRule('A2')}
+${lessonTimingRule()}
+${learnerAddressingRule(user || {})}
+${goalContext(user || {})}
+${topicTeachingHints(topic)}
+${lessonPedagogyRules()}
 Lesson topic: "${topic}".
-${isPractice ? 'This is extra practice on the same topic — more repetition, simpler prompts.' : 'Teach a few key everyday phrases, then practice them in a short conversation.'}
+${isPractice ? 'This is extra practice on the same topic — more repetition, simpler prompts.' : 'Teach phrase patterns in batches, then practice in conversation.'}
 Rules:
-- Stay in this character only. Keep your tone consistent.
+- Stay in this character only. Keep your tone and voice consistent — never switch persona mid-lesson.
 - Stay on this topic.
 - Keep replies short: 1–3 sentences.
 - For each idea, show 2–3 natural variants, then ask the learner to try one.
-- Gently correct toward natural spoken English.
-- Ask one short follow-up question.
+- Gently correct toward natural spoken English. Give specific praise.
+- Ask one short follow-up that advances the topic (do not repeat the same question).
 - If the learner is silent or shy, give a short in-character nudge (one sentence). Never a long pep talk.
 - After several good exchanges, recap the real-life variants they can use.
 - No markdown, no bullet lists.`;
@@ -286,8 +300,9 @@ ${characterBlurb(tutor)}
 ${characterLockRule(tutor)}
 ${flavorRule(tutor)}
 ${naturalEnglishRule('A1')}
+${learnerAddressingRule(user || {})}
 Rules:
-- Stay in character as ${name} only.
+- Stay in character as ${name} only. Never switch persona mid-chat.
 - Speak simple clear natural English (A1–B1 unless the learner writes more advanced English).
 - Keep replies short: 1–3 sentences.
 - Prefer everyday variants over one school-book phrase.
@@ -297,7 +312,7 @@ Rules:
 - No markdown, no bullet lists.`;
 }
 
-async function callOpenAi({ system, history, userMessage }) {
+async function callOpenAi({ system, history, userMessage, maxTokens = 220 }) {
   const apiKey = env.openai.apiKey;
   if (!apiKey) {
     const err = new Error('OPENAI_API_KEY is not configured');
@@ -320,7 +335,7 @@ async function callOpenAi({ system, history, userMessage }) {
     body: JSON.stringify({
       model: env.openai.model || 'gpt-4o-mini',
       temperature: 0.7,
-      max_tokens: 220,
+      max_tokens: maxTokens,
       messages,
     }),
   });
@@ -358,6 +373,8 @@ async function sendMessage({ userId, sessionId, content }) {
     throw err;
   }
 
+  const user = await findUserById(userId);
+
   const userMsg = await insertMessage({
     sessionId,
     role: 'user',
@@ -370,12 +387,19 @@ async function sendMessage({ userId, sessionId, content }) {
     .filter((m) => m.id !== userMsg.id && m.role !== 'system')
     .slice(-16);
 
+  const title = String(session?.title || '');
+  const richSession =
+    title.startsWith('Role Play:') ||
+    title.startsWith('Lesson:') ||
+    title.startsWith('Practice:');
+
   let replyText;
   try {
     replyText = await callOpenAi({
-      system: tutorSystemPrompt(tutor, session),
+      system: tutorSystemPrompt(tutor, session, user),
       history: prior,
       userMessage: text,
+      maxTokens: richSession ? 320 : 220,
     });
   } catch (err) {
     // Keep user message even if AI fails; surface error to client.
@@ -491,11 +515,15 @@ async function sendPreviewMessage({ sessionId, content }) {
     .slice(-16)
     .map((m) => ({ role: m.role, content: m.content }));
   const replyText = await callOpenAi({
-    system: tutorSystemPrompt(session.tutor, {
-      id: session.id,
-      title: session.title,
-      kind: session.kind,
-    }),
+    system: tutorSystemPrompt(
+      session.tutor,
+      {
+        id: session.id,
+        title: session.title,
+        kind: session.kind,
+      },
+      null,
+    ),
     history: prior,
     userMessage: text,
   });

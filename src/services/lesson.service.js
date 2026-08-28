@@ -13,6 +13,13 @@ const {
   naturalEnglishRule,
   lessonTimingRule,
 } = require('./tutor-personality');
+const {
+  learnerFirstName,
+  learnerAddressingRule,
+  goalContext,
+  topicTeachingHints,
+  lessonPedagogyRules,
+} = require('./prompt_helpers');
 
 const CEFR_ORDER = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
@@ -541,12 +548,16 @@ async function startLesson(user, slug, { tutorId, tutorSlug, kind = 'lesson' } =
       previousTutorName: displayTutorLabel(previousTutor || { nameKey: 'your previous tutor' }),
       summary,
       kind: sessionKind,
+      learnerName: learnerFirstName(user),
     });
   } else if (Number(progress?.elapsed_seconds || 0) > 0) {
     const display = displayTutorLabel(result.tutor);
-    opening = `Welcome back! I'm ${display}. Let's continue "${lesson.title_en}" (${lesson.cefr_level}) from where we left off. Ready?`;
+    const learner = learnerFirstName(user);
+    const hi = learner ? `Welcome back, ${learner}!` : 'Welcome back!';
+    opening = `${hi} I'm ${display}. Let's continue "${lesson.title_en}" (${lesson.cefr_level}) from where we left off. Ready?`;
   } else {
-    opening = openingFor(lesson, result.tutor, sessionKind);
+    const learner = learnerFirstName(user);
+    opening = openingFor(lesson, result.tutor, sessionKind, { learnerName: learner });
   }
 
   await chat.insertMessage({
@@ -584,6 +595,7 @@ async function startLesson(user, slug, { tutorId, tutorSlug, kind = 'lesson' } =
         ? displayTutorLabel(previousTutor)
         : null,
       elapsedSeconds,
+      user,
     }),
     elapsedSeconds,
     remainingSeconds: Math.max(0, 15 * 60 - elapsedSeconds),
@@ -651,10 +663,11 @@ function lessonSystemPrompt(tutor, lesson, kind, opts = {}) {
   const name = displayName(tutor);
   const topic = lesson.title_en;
   const level = lesson.cefr_level;
+  const user = opts.user || null;
   const mode =
     kind === 'practice'
       ? 'This is extra practice on the same topic because the learner needs more repetition.'
-      : 'This is a structured lesson. Teach a few key phrases, then practice them in conversation.';
+      : 'This is a structured lesson. Teach phrase patterns in batches, then practice them in conversation.';
   const handoffBit = opts.handoff
     ? `The learner switched from ${opts.previousTutorName || 'another tutor'}. Acknowledge briefly what they already practiced, then continue the lesson — do not restart from zero.`
     : opts.elapsedSeconds > 0
@@ -666,16 +679,20 @@ ${characterLockRule(tutor)}
 ${flavorRule(tutor)}
 ${naturalEnglishRule(level)}
 ${lessonTimingRule()}
+${learnerAddressingRule(user || {})}
+${goalContext(user || {})}
+${topicTeachingHints(topic)}
+${lessonPedagogyRules()}
 Lesson topic: "${topic}". CEFR level: ${level}.
 ${mode}
 ${handoffBit}
 Rules:
-- Stay in this character only. Keep your tone consistent.
+- Stay in this character only. Keep your tone and voice consistent — never switch persona mid-lesson.
 - Stay on this topic. Do not switch to unrelated subjects.
 - Speak English at ${level} difficulty. Keep replies short: 1–3 sentences.
 - Teach useful everyday phrases: show 2–3 natural variants for the same idea, then ask the learner to try one.
-- Gently correct toward natural spoken English (not stiff school English).
-- Ask one short follow-up question.
+- Gently correct toward natural spoken English (not stiff school English). Praise specific good phrases.
+- Ask one short follow-up question that advances the topic (do not repeat the same question).
 - If the learner is silent or shy, give a short in-character nudge (one sentence). Never a long pep talk.
 - After several good exchanges, recap the variants they can use in real life.
 - No markdown, no bullet lists in spoken replies.`;
@@ -785,11 +802,12 @@ function evaluationFor(participation, slug, { score, previousScore }) {
   return active + delta;
 }
 
-async function generateNotes({ lesson, tutor, transcript, kind }) {
+async function generateNotes({ lesson, tutor, transcript, kind, user }) {
   const name = displayName(tutor);
+  const learner = learnerFirstName(user) || 'Learner';
   const lines = (transcript || [])
     .map((t) => {
-      const role = t.role === 'user' ? 'Learner' : name;
+      const role = t.role === 'user' ? learner : name;
       const text = String(t.content || t.text || '').trim();
       return text ? `${role}: ${text}` : null;
     })
@@ -824,25 +842,29 @@ async function generateNotes({ lesson, tutor, transcript, kind }) {
         messages: [
           {
             role: 'system',
-            content:
-              'You write lesson notes for Lingola, an English-learning app. Reply with JSON only.',
+            content: `You write lesson notes for Lingola, an English-learning app.
+Reply with JSON only. Be specific — quote phrases from the transcript when possible.
+Feedback should feel personal and encouraging. Use the learner's name in spokenSummary when provided.`,
           },
           {
             role: 'user',
             content: `Tutor name: ${name}
+Learner name: ${learner}
 Topic: ${lesson.title_en}
 CEFR: ${lesson.cefr_level}
 Mode: ${kind}
+${goalContext(user || {})}
+${topicTeachingHints(lesson.title_en)}
 Transcript:
 ${lines}
 
 Return JSON:
 {
-  "spokenSummary": "2-4 spoken sentences: what we learned today, warm and specific",
-  "notes": "Markdown lesson notes in English. Sections: What we learned, Natural phrases (for each idea: 2-3 everyday variants + short example + Turkish), Corrections from the chat, Practice tip for real conversation",
+  "spokenSummary": "2-4 spoken sentences addressed to ${learner}: what we learned, specific praise, warm close",
+  "notes": "Markdown lesson notes in English. Sections: What we learned, Natural phrases (for each idea: 2-3 everyday variants + short example + Turkish), Corrections from the chat (quote learner mistakes + better phrase), Real-life practice tip",
   "needsPractice": true or false
 }
-needsPractice=true if the learner spoke very little, made many basic errors, or the session was too short.
+needsPractice=true if the learner spoke very little, repeated the same short answers, or missed key topic phrases.
 Prefer natural spoken English variants over single textbook phrases.`,
           },
         ],
@@ -934,6 +956,7 @@ async function completeLesson(
     tutor,
     transcript,
     kind,
+    user,
   });
   const review = evaluateLearner(transcript, tutor, previousScore);
   const needsPractice = review.needsPractice || generated.needsPractice ? 1 : 0;

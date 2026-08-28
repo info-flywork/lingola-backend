@@ -117,17 +117,35 @@ async function chatComplete({
   return text;
 }
 
-async function translateToTurkish(text) {
+const TRANSLATE_LANG_LABELS = {
+  en: 'English',
+  de: 'German',
+  it: 'Italian',
+  fr: 'French',
+  tr: 'Turkish',
+  ja: 'Japanese',
+  es: 'Spanish',
+  ru: 'Russian',
+  hi: 'Hindi',
+  pt: 'Portuguese',
+  zh: 'Chinese (Simplified)',
+};
+
+async function translateToLanguage(text, targetLang = 'tr') {
   const trimmed = String(text || '').trim();
   if (!trimmed) return '';
+
+  const { normalizeLangCode } = require('../utils/locale');
+  const code = normalizeLangCode(targetLang, 'tr');
+  const langName = TRANSLATE_LANG_LABELS[code] || TRANSLATE_LANG_LABELS.tr;
 
   return chatComplete({
     messages: [
       {
         role: 'system',
         content:
-          'You translate English to Turkish for language learners. '
-          + 'Reply with only the Turkish translation, nothing else. '
+          `You translate English to ${langName} for language learners. `
+          + `Reply with only the ${langName} translation, nothing else. `
           + 'Keep it natural and concise.',
       },
       { role: 'user', content: trimmed },
@@ -135,6 +153,10 @@ async function translateToTurkish(text) {
     temperature: 0.2,
     maxTokens: 200,
   });
+}
+
+async function translateToTurkish(text) {
+  return translateToLanguage(text, 'tr');
 }
 
 async function openAiTts(text, { voiceId } = {}) {
@@ -463,6 +485,7 @@ async function synthesizeTtsWithLipsync({ text, voiceId, modelId }) {
 module.exports = {
   transcribeAudio,
   chatComplete,
+  translateToLanguage,
   translateToTurkish,
   synthesizeTts,
   synthesizeTtsWithLipsync,

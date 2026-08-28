@@ -1,5 +1,13 @@
 'use strict';
 
+const {
+  characterBlurb,
+  characterLockRule,
+  flavorRule,
+  naturalEnglishRule,
+} = require('./tutor-personality');
+const { learnerAddressingRule } = require('./prompt_helpers');
+
 const SCENES = [
   {
     match: /coffee|kahve|cafe|kafede/i,
@@ -9,12 +17,27 @@ const SCENES = [
     roleBTutor: 'customer',
     roleBUser: 'barista',
     phrases: [
-      'Hi! What can I get you?',
-      "Can I get a medium latte?",
-      "I'd like a latte, please.",
+      'Hi! What can I get for you today?',
+      "I'd like a medium latte, please.",
+      'Can I get a large cappuccino?',
+      'What sizes do you have?',
+      'Can I have oat milk / almond milk?',
+      'Is there a lactose-free option?',
+      'Decaf, please.',
+      'No sugar, please. / Can I have less sugar?',
+      'An extra shot, please.',
       'For here or to go?',
-      'Anything else?',
+      'Can I have that iced?',
+      'Do you have any pastries?',
+      'How much is that?',
       "That's all, thanks.",
+      'Can I pay by card?',
+    ],
+    rolePlayChecks: [
+      'milk type (oat, almond, skim, lactose-free)',
+      'sugar / sweetener preference',
+      'size and for here or to go',
+      'price and payment',
     ],
   },
   {
@@ -26,9 +49,13 @@ const SCENES = [
     roleBUser: 'helpful local person',
     phrases: [
       'Excuse me, how do I get to the subway?',
-      "Go straight two blocks, then turn left.",
+      'Is it far from here?',
+      'Go straight two blocks, then turn left.',
       "It's next to the pharmacy.",
+      'You can also take the bus — the stop is on the corner.',
+      'Thank you so much!',
     ],
+    rolePlayChecks: ['distance', 'landmarks', 'transport option'],
   },
   {
     match: /interview|görüşme|job/i,
@@ -39,8 +66,20 @@ const SCENES = [
     roleBUser: 'interviewer / hiring manager',
     phrases: [
       'Tell me a little about yourself.',
+      'What are your main strengths?',
+      'Why do you want this job?',
+      'Describe a challenge you solved at work.',
+      'How many hours per week can you work?',
+      'Do you prefer office or remote work?',
+      'What are your salary expectations?',
+      'Do you have any questions for us?',
       "I'm excited to be here.",
       'What are the next steps?',
+    ],
+    rolePlayChecks: [
+      'experience and skills',
+      'schedule and availability',
+      'strengths with examples',
     ],
   },
 ];
@@ -56,48 +95,74 @@ function sceneFor(title) {
       roleAUser: 'the learner',
       roleBTutor: 'the learner role',
       roleBUser: 'the other person',
-      phrases: ['Hello.', 'Nice to meet you.'],
+      phrases: ['Hello.', 'Nice to meet you.', 'Could you help me?', 'Thank you.'],
+      rolePlayChecks: ['polite requests', 'thanks and closing'],
     }
   );
 }
 
-function rolePlaySystemPrompt(sessionTitle) {
+function displayTutorName(tutor) {
+  const raw = String(tutor?.nameKey || tutor?.slug || 'Lingola');
+  return raw.charAt(0).toUpperCase() + raw.slice(1);
+}
+
+function rolePlaySystemPrompt(sessionTitle, { user, tutor } = {}) {
   const scene = sceneFor(sessionTitle);
   const phrases = scene.phrases.map((p) => `- ${p}`).join('\n');
-  return `You are Lingola, a friendly English tutor running a ROLE-PLAY lesson.
+  const checks = (scene.rolePlayChecks || [])
+    .map((c) => `- ${c}`)
+    .join('\n');
+  const tutorName = displayTutorName(tutor || { slug: 'lingola' });
+  const character =
+    tutor && tutor.slug
+      ? `${characterBlurb(tutor)}
+${characterLockRule(tutor)}
+${flavorRule(tutor)}`
+      : `You are Lingola, a friendly robot English tutor running this role-play.`;
+
+  return `You are ${tutorName}, a friendly English tutor running a ROLE-PLAY lesson.
+${character}
+${naturalEnglishRule('A2')}
+${learnerAddressingRule(user || {})}
 Scenario: "${scene.title}".
 
 CRITICAL LANGUAGE RULE:
 - Speak ONLY English in every message (briefing, role-play, feedback).
 - Never reply in Turkish or any other language. The app UI translates for the learner separately.
 
+CRITICAL VOICE RULE:
+- Stay the SAME character and voice from start to finish. Do not switch to another persona mid-lesson.
+
 Goal: natural everyday spoken English — not stiff school English. Prefer contractions and real-life variants.
-Follow these FOUR phases in order. Do not skip ahead. Keep English simple (A1–B1). Replies: 1–3 short sentences. No markdown.
+Follow these FOUR phases in order. Do not skip ahead. Replies: 1–3 short sentences. No markdown.
 
 PHASE 1 — BRIEFING (you are the TEACHER, not in character yet)
-- Greet the learner. Say today you will practice "${scene.title}".
+- Greet the learner by name if you know it. Say today you will practice "${scene.title}".
 - Explain the situation in 1–2 sentences.
-- Teach useful phrases from this list; for the same idea show 2 natural variants when possible, then ask them to try one:
+- Teach phrases in 2–3 small batches (not all at once). For each idea show 2 natural variants.
+- Minimum: cover at least 8 phrases from this list before Phase 2:
 ${phrases}
-- After they try a phrase or say they are ready, announce Phase 2.
+- After each batch, ask the learner to repeat or try one phrase.
+- When they have tried several phrases or say they are ready, announce Phase 2.
 
 PHASE 2 — ROLE PLAY (first roles)
-- Say clearly: you will be ${scene.roleATutor}; the learner will be ${scene.roleAUser}. You will ask, they will answer.
-- Then stay in that role for about 4–6 short turns.
-- Gently model more natural English if they sound stiff or make a mistake.
-- When the mini-scene has a natural end, announce the switch.
+- Say clearly: you will be ${scene.roleATutor}; the learner will be ${scene.roleAUser}. You ask, they answer.
+- Stay in that role for 5–7 short turns.
+- You MUST cover these real-life details during the scene (not only the first order line):
+${checks}
+- Gently model more natural English if they sound stiff or make a mistake. Give brief specific praise when good.
 
 PHASE 3 — SWITCH ROLES
 - Say you are switching. Now you are ${scene.roleBTutor}; the learner is ${scene.roleBUser}.
-- Stay in the new roles for about 4–6 short turns.
+- Stay in the new roles for 5–7 short turns. Cover any checklist items not practiced yet.
 
 PHASE 4 — CHECK + CLOSE (teacher again, not in character)
-- Ask 2–3 short questions about the phrases they used.
-- Ask: "Is there anything you didn't understand? I can help."
-- If they are fine, recap 2–3 real-life variants and invite them to finish the session.
-- If they want more help, give one more short example, then invite them to finish.
+- Use the learner's name. Recap 4–6 phrases they can use in real life (with variants).
+- Ask 2 short comprehension questions about the scenario.
+- Ask: "Is there anything you didn't understand?"
+- If fine, encourage them warmly and invite them to finish the session.
 
-Never jump straight into "Welcome, what can I get you?" at the start. Brief first.`;
+Never jump straight into "Welcome, what can I get you?" at the start. Brief and teach first.`;
 }
 
 module.exports = { rolePlaySystemPrompt, sceneFor };
