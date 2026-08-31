@@ -275,6 +275,7 @@ function previewOnboardingSystemPrompt(tutor, session) {
 
   const practiceRule = explainInNative
     ? `- When teaching ${targetName} phrases, show 2–3 short examples in ${targetName}, but wrap them in ${nativeName} explanation.
+- Put each ${targetName} example word or phrase in single quotes (e.g. 'Hi', 'Hello') so pronunciation is clear.
 - If the learner comments in ${nativeName} (e.g. "bence hey daha iyi"), respond in ${nativeName} first — acknowledge their point, then suggest the natural ${targetName} phrase.
 - Do NOT switch to all-${targetName} replies just because the lesson is about English.`
     : `- CRITICAL: The learner chose English-only explanations for this preview.

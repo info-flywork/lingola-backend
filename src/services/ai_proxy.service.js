@@ -1,6 +1,10 @@
 'use strict';
 
 const { env } = require('../config/env');
+const {
+  prepareTtsText,
+  looksMixedLanguage,
+} = require('./tts_text_helpers');
 
 function stripDataUrl(base64) {
   const raw = String(base64 || '');
@@ -255,7 +259,23 @@ async function openAiTts(text, { voiceId } = {}) {
   return buffer.toString('base64');
 }
 
-async function elevenLabsTts({ text, voiceId, modelId }) {
+function buildTtsPayload(text, { modelId, nativeLanguageCode, targetLanguageCode }) {
+  const spoken = prepareTtsText(text, {
+    modelId,
+    nativeLanguageCode,
+    targetLanguageCode,
+  });
+  const mixed = looksMixedLanguage(text, nativeLanguageCode);
+  return { spoken, mixed };
+}
+
+async function elevenLabsTts({
+  text,
+  voiceId,
+  modelId,
+  nativeLanguageCode,
+  targetLanguageCode,
+}) {
   const apiKey = env.elevenlabs.apiKey;
   if (!apiKey) {
     const err = new Error('ELEVENLABS_API_KEY is not configured');
@@ -264,7 +284,24 @@ async function elevenLabsTts({ text, voiceId, modelId }) {
   }
 
   const id = resolveVoiceId(voiceId);
-  console.log(`[tts] elevenLabs voice=${id} model=${modelId || 'default'} len=${String(text || '').trim().length}`);
+  const resolvedModel = modelId || 'eleven_multilingual_v2';
+  const { spoken, mixed } = buildTtsPayload(text, {
+    modelId: resolvedModel,
+    nativeLanguageCode,
+    targetLanguageCode,
+  });
+  console.log(
+    `[tts] elevenLabs voice=${id} model=${resolvedModel} len=${spoken.length}` +
+      (spoken !== String(text || '').trim() ? ' (mixed-lang prep)' : ''),
+  );
+  const requestBody = {
+    text: spoken,
+    model_id: resolvedModel,
+    voice_settings: { stability: 0.45, similarity_boost: 0.8 },
+  };
+  if (mixed) {
+    requestBody.language_code = 'auto';
+  }
   const res = await fetch(
     `https://api.elevenlabs.io/v1/text-to-speech/${id}?output_format=mp3_44100_128`,
     {
@@ -274,11 +311,7 @@ async function elevenLabsTts({ text, voiceId, modelId }) {
         'Content-Type': 'application/json',
         Accept: 'audio/mpeg',
       },
-      body: JSON.stringify({
-        text: String(text || '').trim(),
-        model_id: modelId || 'eleven_multilingual_v2',
-        voice_settings: { stability: 0.45, similarity_boost: 0.8 },
-      }),
+      body: JSON.stringify(requestBody),
     },
   );
 
@@ -389,14 +422,31 @@ function heuristicVisemesFromText(text, durationSec = null) {
   return coalesceVisemes(cues);
 }
 
-async function synthesizeTts({ text, voiceId, modelId }) {
+async function synthesizeTts({
+  text,
+  voiceId,
+  modelId,
+  nativeLanguageCode,
+  targetLanguageCode,
+}) {
   const body = String(text || '').trim();
+  const { spoken } = buildTtsPayload(body, {
+    modelId,
+    nativeLanguageCode,
+    targetLanguageCode,
+  });
   if (env.elevenlabs.apiKey) {
     try {
-      const audioBase64 = await elevenLabsTts({ text: body, voiceId, modelId });
+      const audioBase64 = await elevenLabsTts({
+        text: body,
+        voiceId,
+        modelId,
+        nativeLanguageCode,
+        targetLanguageCode,
+      });
       return {
         audioBase64,
-        visemes: heuristicVisemesFromText(body),
+        visemes: heuristicVisemesFromText(spoken),
       };
     } catch (err) {
       if (env.openai.apiKey) {
@@ -478,15 +528,44 @@ function visemesFromAlignment({ characters, starts, ends }) {
   return coalesceVisemes(cues);
 }
 
-async function synthesizeTtsWithLipsync({ text, voiceId, modelId }) {
+async function synthesizeTtsWithLipsync({
+  text,
+  voiceId,
+  modelId,
+  nativeLanguageCode,
+  targetLanguageCode,
+}) {
   const apiKey = env.elevenlabs.apiKey;
   if (!apiKey) {
-    return synthesizeTts({ text, voiceId, modelId });
+    return synthesizeTts({
+      text,
+      voiceId,
+      modelId,
+      nativeLanguageCode,
+      targetLanguageCode,
+    });
   }
 
   const id = resolveVoiceId(voiceId);
-  console.log(`[tts/lipsync] elevenLabs voice=${id}`);
+  const resolvedModel = modelId || 'eleven_multilingual_v2';
+  const { spoken, mixed } = buildTtsPayload(text, {
+    modelId: resolvedModel,
+    nativeLanguageCode,
+    targetLanguageCode,
+  });
+  console.log(
+    `[tts/lipsync] elevenLabs voice=${id}` +
+      (spoken !== String(text || '').trim() ? ' mixed-lang prep' : ''),
+  );
   try {
+    const requestBody = {
+      text: spoken,
+      model_id: resolvedModel,
+      voice_settings: { stability: 0.45, similarity_boost: 0.8 },
+    };
+    if (mixed) {
+      requestBody.language_code = 'auto';
+    }
     const res = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${id}/with-timestamps`,
       {
@@ -496,11 +575,7 @@ async function synthesizeTtsWithLipsync({ text, voiceId, modelId }) {
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
-        body: JSON.stringify({
-          text: String(text || '').trim(),
-          model_id: modelId || 'eleven_multilingual_v2',
-          voice_settings: { stability: 0.45, similarity_boost: 0.8 },
-        }),
+        body: JSON.stringify(requestBody),
       },
     );
 
@@ -529,7 +604,7 @@ async function synthesizeTtsWithLipsync({ text, voiceId, modelId }) {
       console.warn(
         '[tts/lipsync] alignment empty — heuristic visemes from text',
       );
-      visemes = heuristicVisemesFromText(text);
+      visemes = heuristicVisemesFromText(spoken);
     }
 
     return { audioBase64, visemes };
@@ -538,7 +613,13 @@ async function synthesizeTtsWithLipsync({ text, voiceId, modelId }) {
       '[tts/lipsync] with-timestamps failed, fallback TTS:',
       err?.message || err,
     );
-    return synthesizeTts({ text, voiceId, modelId });
+    return synthesizeTts({
+      text,
+      voiceId,
+      modelId,
+      nativeLanguageCode,
+      targetLanguageCode,
+    });
   }
 }
 

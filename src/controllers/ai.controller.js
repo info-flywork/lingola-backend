@@ -51,6 +51,10 @@ async function tts(req, res, next) {
       text: req.body?.text,
       voiceId: req.body?.voiceId,
       modelId: req.body?.modelId,
+      nativeLanguageCode:
+        req.body?.nativeLanguageCode ?? req.body?.native_language_code,
+      targetLanguageCode:
+        req.body?.targetLanguageCode ?? req.body?.target_language_code ?? 'en',
     });
     console.log(
       `[ai:tts] done audio.len=${payload?.audioBase64?.length || 0} visemes=${payload?.visemes?.length || 0}`,
@@ -72,6 +76,10 @@ async function ttsLipsync(req, res, next) {
       text: req.body?.text,
       voiceId: req.body?.voiceId,
       modelId: req.body?.modelId,
+      nativeLanguageCode:
+        req.body?.nativeLanguageCode ?? req.body?.native_language_code,
+      targetLanguageCode:
+        req.body?.targetLanguageCode ?? req.body?.target_language_code ?? 'en',
     });
     const v = payload?.visemes?.length || 0;
     console.log(
