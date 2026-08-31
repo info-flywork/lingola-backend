@@ -6,7 +6,7 @@ const {
   flavorRule,
   naturalEnglishRule,
 } = require('./tutor-personality');
-const { learnerAddressingRule } = require('./prompt_helpers');
+const { learnerAddressingRule, explanationLanguageRule } = require('./prompt_helpers');
 
 const SCENES = [
   {
@@ -119,6 +119,20 @@ function rolePlaySystemPrompt(sessionTitle, { user, tutor } = {}) {
 ${characterLockRule(tutor)}
 ${flavorRule(tutor)}`
       : `You are Lingola, a friendly robot English tutor running this role-play.`;
+  const explainRule = explanationLanguageRule(user, null);
+  const strictEnglishOnly =
+    String(user?.onboarding?.explanationLanguage || 'native').trim().toLowerCase() ===
+    'english';
+
+  const languageRule = strictEnglishOnly
+    ? `CRITICAL LANGUAGE RULE:
+- Speak ONLY English in every message (briefing, role-play, feedback).
+- Never reply in Turkish or any other language. The app UI translates for the learner separately.`
+    : `LANGUAGE RULE:
+- In-character role-play lines stay in English (the scenario dialogue).
+- If the learner asks a question in their native language (grammar, vocabulary, "what does X mean?"), answer that part in their native language — then return to English practice in the same reply.
+- Briefing and feedback phases may use their native language for explanations when helpful.
+${explainRule}`;
 
   return `You are ${tutorName}, a friendly English tutor running a ROLE-PLAY lesson.
 ${character}
@@ -126,9 +140,7 @@ ${naturalEnglishRule('A2')}
 ${learnerAddressingRule(user || {})}
 Scenario: "${scene.title}".
 
-CRITICAL LANGUAGE RULE:
-- Speak ONLY English in every message (briefing, role-play, feedback).
-- Never reply in Turkish or any other language. The app UI translates for the learner separately.
+${languageRule}
 
 CRITICAL VOICE RULE:
 - Stay the SAME character and voice from start to finish. Do not switch to another persona mid-lesson.

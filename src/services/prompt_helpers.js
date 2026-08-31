@@ -1,5 +1,10 @@
 'use strict';
 
+const {
+  normalizeLangCode,
+  languageDisplayName,
+} = require('../utils/locale');
+
 const GOAL_HINTS = {
   career:
     'Learner goal: career English — use workplace examples, meetings, interviews, emails-in-speech when relevant.',
@@ -95,10 +100,87 @@ TEACHING PACE (15-minute segment):
 - Feedback must be specific ("Good — 'I'd like a latte' is natural; you can also say 'Can I get a latte?'").`;
 }
 
+function resolveExplanationLanguage(user, session) {
+  const raw =
+    user?.onboarding?.explanationLanguage ??
+    session?.explanationLanguage ??
+    'native';
+  return String(raw).trim().toLowerCase() === 'english' ? 'english' : 'native';
+}
+
+function explanationLanguageRule(user, session) {
+  const nativeCode = normalizeLangCode(
+    user?.onboarding?.nativeLanguageCode ?? session?.nativeLanguageCode,
+    'tr',
+  );
+  const nativeName = languageDisplayName(nativeCode, nativeCode);
+  const mode = resolveExplanationLanguage(user, session);
+
+  const sttIntentRule = `- Speech-to-text may garble short English attempts (e.g. "hay" for "Hi", "high" for "Hi"). Infer the learner's intended English phrase charitably — never mock or echo offensive mis-transcriptions.
+- When teaching greetings, always show correct spelling: Hi, Hello, Hey — never Hay or homophone misspellings.`;
+
+  if (mode === 'english') {
+    return `- The learner prefers explanations in English only.
+- Even if they write in ${nativeName}, explain in simple clear English (A1–A2).
+- Do not switch to ${nativeName} for explanations or answers.
+${sttIntentRule}`;
+  }
+
+  return `- The learner prefers explanations in their native language (${nativeName}) when they ask in ${nativeName}.
+- If they write in ${nativeName}, reply in ${nativeName} to explain, encourage, or answer — then gently invite them back to English practice in the same reply.
+- For English practice parts, keep using simple spoken English.
+${sttIntentRule}`;
+}
+
+/** Whisper prompt — İngilizce selamlaşma + anadil karışık konuşmayı doğru yazmaya yardım eder. */
+function englishLearnerWhisperPrompt(nativeCode = 'tr') {
+  const nativeName = languageDisplayName(nativeCode, nativeCode);
+  return (
+    'English language learning lesson. Common phrases: Hi, Hello, Hey, Good morning. ' +
+    'I am good. How are you? Nice to meet you. ' +
+    `Learner may also speak ${nativeName} for questions.`
+  );
+}
+
+/** Kısa İngilizce selamlaşmalarda yaygın STT hatalarını düzelt. */
+function normalizeLearnerSpeechTranscript(text) {
+  let t = String(text || '').trim();
+  if (!t) return t;
+
+  const words = t.split(/\s+/);
+  if (words.length === 1) {
+    const solo = t.replace(/[!.?,…]+$/g, '');
+    const lower = solo.toLowerCase();
+    const punct = t.slice(solo.length);
+    if (lower === 'hay' || lower === 'high' || lower === 'helo') {
+      return `Hi${punct || ''}`;
+    }
+    if (lower === 'hallo') return `Hello${punct || ''}`;
+  }
+
+  if (words.length <= 5) {
+    t = t.replace(/\bhay\b/gi, (m) => (m[0] === m[0].toUpperCase() ? 'Hi' : 'hi'));
+    t = t.replace(/\bhigh\b/gi, (m) => (m[0] === m[0].toUpperCase() ? 'Hi' : 'hi'));
+    t = t.replace(/\bhelo\b/gi, (m) =>
+      m[0] === m[0].toUpperCase() ? 'Hello' : 'hello',
+    );
+    // Whisper bazen İngilizce "I am good"u fonetik bozar.
+    t = t.replace(/\b(?:i\s+)?am\s+g[oö]t\b/gi, 'I am good');
+    t = t.replace(/\b(?:i\s+)?am\s+gud\b/gi, 'I am good');
+    t = t.replace(/\bim\s+g[oö]od\b/gi, "I'm good");
+  }
+
+  return t.trim();
+}
+
 module.exports = {
   learnerFirstName,
   learnerAddressingRule,
   goalContext,
   topicTeachingHints,
   lessonPedagogyRules,
+  resolveExplanationLanguage,
+  explanationLanguageRule,
+  englishLearnerWhisperPrompt,
+  normalizeLearnerSpeechTranscript,
 };

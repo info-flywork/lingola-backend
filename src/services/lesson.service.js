@@ -20,6 +20,7 @@ const {
   goalContext,
   topicTeachingHints,
   lessonPedagogyRules,
+  explanationLanguageRule,
 } = require('./prompt_helpers');
 
 const CEFR_ORDER = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
@@ -685,6 +686,7 @@ ${learnerAddressingRule(user || {})}
 ${goalContext(user || {})}
 ${topicTeachingHints(topic)}
 ${lessonPedagogyRules()}
+${explanationLanguageRule(user, null)}
 Lesson topic: "${topic}". CEFR level: ${level}.
 ${mode}
 ${handoffBit}

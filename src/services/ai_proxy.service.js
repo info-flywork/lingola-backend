@@ -32,8 +32,15 @@ async function transcribeAudio({
   audioBase64,
   contentType = 'audio/m4a',
   language,
+  prompt,
+  nativeLanguageCode,
 }) {
   const apiKey = requireOpenAi();
+  const {
+    englishLearnerWhisperPrompt,
+    normalizeLearnerSpeechTranscript,
+  } = require('./prompt_helpers');
+  const { normalizeLangCode } = require('../utils/locale');
 
   const buffer = Buffer.from(stripDataUrl(audioBase64), 'base64');
   if (!buffer.length) {
@@ -62,6 +69,14 @@ async function transcribeAudio({
   if (lang && /^[a-z]{2,3}$/.test(lang)) {
     form.append('language', lang);
   }
+  const whisperPrompt =
+    String(prompt || '').trim() ||
+    englishLearnerWhisperPrompt(
+      normalizeLangCode(nativeLanguageCode, 'tr'),
+    );
+  if (whisperPrompt) {
+    form.append('prompt', whisperPrompt.slice(0, 224));
+  }
   form.append('response_format', 'json');
 
   const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
@@ -78,7 +93,7 @@ async function transcribeAudio({
   }
 
   const json = await res.json();
-  return String(json.text || '').trim();
+  return normalizeLearnerSpeechTranscript(String(json.text || '').trim());
 }
 
 async function chatComplete({

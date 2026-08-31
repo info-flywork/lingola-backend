@@ -8,6 +8,9 @@ async function transcribe(req, res, next) {
       audioBase64: req.body?.audioBase64,
       contentType: req.body?.contentType,
       language: req.body?.language ?? req.body?.languageCode,
+      prompt: req.body?.prompt,
+      nativeLanguageCode:
+        req.body?.nativeLanguageCode ?? req.body?.native_language_code,
     });
     res.json({ ok: true, text });
   } catch (err) {

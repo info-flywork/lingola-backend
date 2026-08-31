@@ -20,6 +20,7 @@ const {
   goalContext,
   topicTeachingHints,
   lessonPedagogyRules,
+  explanationLanguageRule,
 } = require('./prompt_helpers');
 const {
   normalizeLangCode,
@@ -261,33 +262,6 @@ async function insertMessage({ sessionId, role, content }) {
 function displayTutorName(tutor) {
   const raw = String(tutor.nameKey || tutor.slug || 'Tutor');
   return raw.charAt(0).toUpperCase() + raw.slice(1);
-}
-
-function resolveExplanationLanguage(user, session) {
-  const raw =
-    user?.onboarding?.explanationLanguage ??
-    session?.explanationLanguage ??
-    'native';
-  return String(raw).trim().toLowerCase() === 'english' ? 'english' : 'native';
-}
-
-function explanationLanguageRule(user, session) {
-  const nativeCode = normalizeLangCode(
-    user?.onboarding?.nativeLanguageCode ?? session?.nativeLanguageCode,
-    'tr',
-  );
-  const nativeName = languageDisplayName(nativeCode, nativeCode);
-  const mode = resolveExplanationLanguage(user, session);
-
-  if (mode === 'english') {
-    return `- The learner prefers explanations in English only.
-- Even if they write in ${nativeName}, explain in simple clear English (A1–A2).
-- Do not switch to ${nativeName} for explanations or answers.`;
-  }
-
-  return `- The learner prefers explanations in their native language (${nativeName}) when they ask in ${nativeName}.
-- If they write in ${nativeName}, reply in ${nativeName} to explain, encourage, or answer — then gently invite them back to English practice in the same reply.
-- For English practice parts, keep using simple spoken English.`;
 }
 
 function previewOnboardingSystemPrompt(tutor, session) {
