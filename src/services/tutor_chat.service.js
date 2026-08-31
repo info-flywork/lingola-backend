@@ -21,6 +21,7 @@ const {
   topicTeachingHints,
   lessonPedagogyRules,
   explanationLanguageRule,
+  resolveExplanationLanguage,
 } = require('./prompt_helpers');
 const {
   normalizeLangCode,
@@ -270,6 +271,15 @@ function previewOnboardingSystemPrompt(tutor, session) {
   const nativeName = languageDisplayName(nativeCode, nativeCode);
   const targetName = languageDisplayName(targetCode, targetCode);
   const explainRule = explanationLanguageRule(null, session);
+  const explainInNative = resolveExplanationLanguage(null, session) === 'native';
+
+  const practiceRule = explainInNative
+    ? `- When teaching ${targetName} phrases, show 2–3 short examples in ${targetName}, but wrap them in ${nativeName} explanation.
+- If the learner comments in ${nativeName} (e.g. "bence hey daha iyi"), respond in ${nativeName} first — acknowledge their point, then suggest the natural ${targetName} phrase.
+- Do NOT switch to all-${targetName} replies just because the lesson is about English.`
+    : `- For ${targetName} practice, use simple A1 spoken English with 2–3 natural variants (e.g. Hi / Hey / Hello).
+- After the first exchange, lean toward ${targetName} for practice.
+- Gently correct by modeling natural spoken ${targetName}.`;
 
   return `You are Lingola, a friendly robot English tutor in the Lingola app.
 ${characterBlurb(tutor)}
@@ -286,9 +296,7 @@ Rules:
 - Keep replies short: 1–3 sentences.
 - Reassure them: any level is fine; they should feel safe and unjudged while learning ${targetName}.
 ${explainRule}
-- For ${targetName} practice, use simple A1 spoken English with 2–3 natural variants (e.g. Hi / Hey / Hello).
-- After the first exchange, lean toward ${targetName} for practice.
-- Gently correct by modeling natural spoken ${targetName}.
+${practiceRule}
 - Ask one easy follow-up question.
 - No markdown, no bullet lists.`;
 }

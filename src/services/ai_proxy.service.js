@@ -127,7 +127,10 @@ async function transcribeAudio({
   }
 
   const json = await res.json();
-  return normalizeLearnerSpeechTranscript(String(json.text || '').trim());
+  return normalizeLearnerSpeechTranscript(
+    String(json.text || '').trim(),
+    normalizeLangCode(nativeLanguageCode, 'tr'),
+  );
 }
 
 async function chatComplete({

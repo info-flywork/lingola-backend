@@ -116,8 +116,8 @@ function explanationLanguageRule(user, session) {
   const nativeName = languageDisplayName(nativeCode, nativeCode);
   const mode = resolveExplanationLanguage(user, session);
 
-  const sttIntentRule = `- Speech-to-text may garble short English attempts (e.g. "hay" for "Hi", "high" for "Hi"). Infer the learner's intended English phrase charitably — never mock or echo offensive mis-transcriptions.
-- When teaching greetings, always show correct spelling: Hi, Hello, Hey — never Hay or homophone misspellings.`;
+  const sttIntentRule = `- Speech-to-text may garble short English attempts (e.g. "hay" for "Hi"). Infer English greeting intent charitably only when the learner clearly meant English — never translate ${nativeName} speech into English.
+- When teaching greetings, show correct English spelling: Hi, Hello, Hey — never Hay.`;
 
   if (mode === 'english') {
     return `- The learner prefers explanations in English only.
@@ -126,26 +126,39 @@ function explanationLanguageRule(user, session) {
 ${sttIntentRule}`;
   }
 
-  return `- The learner prefers explanations in their native language (${nativeName}) when they ask in ${nativeName}.
-- If they write in ${nativeName}, reply in ${nativeName} to explain, encourage, or answer — then gently invite them back to English practice in the same reply.
-- For English practice parts, keep using simple spoken English.
+  return `- CRITICAL — The learner chose "explain in ${nativeName}".
+- If their message is in ${nativeName} (e.g. Turkish words like "bence", "merhaba", "daha iyi"), reply primarily in ${nativeName}: explain, agree, encourage — at least one full sentence in ${nativeName}.
+- Do NOT reply entirely in English when they spoke or asked in ${nativeName}. You may add one short English phrase example after the ${nativeName} explanation.
+- If they practice English phrases, model natural spoken English for those phrases only.
 ${sttIntentRule}`;
 }
 
-/** Whisper prompt — İngilizce selamlaşma + anadil karışık konuşmayı doğru yazmaya yardım eder. */
+/** Whisper prompt — konuşulan dili yaz; İngilizceye çevirme. */
 function englishLearnerWhisperPrompt(nativeCode = 'tr') {
   const nativeName = languageDisplayName(nativeCode, nativeCode);
   return (
-    'English language learning lesson. Common phrases: Hi, Hello, Hey, Good morning. ' +
-    'I am good. How are you? Nice to meet you. ' +
-    `Learner may also speak ${nativeName} for questions.`
+    `Transcribe exactly in the language spoken. Do not translate. ` +
+    `The learner may speak ${nativeName} or English. ` +
+    `English lesson words: Hi, Hello, Hey, I am good. ` +
+    `${nativeName} example: bence, merhaba, nasılsın, daha iyi.`
   );
 }
 
-/** Kısa İngilizce selamlaşmalarda yaygın STT hatalarını düzelt. */
-function normalizeLearnerSpeechTranscript(text) {
+function looksLikeNativeSpeech(text, nativeCode = 'tr') {
+  const t = String(text || '');
+  if (/[çğıöşüÇĞİÖŞÜ]/.test(t)) return true;
+  const lower = t.toLowerCase();
+  const trWords =
+    /\b(bence|merhaba|nasıl|nasılsın|daha|iyi|evet|hayır|hayir|teşekkür|tesekkur|tamam|neden|güzel|super|harika|olur|değil|degil|ingilizce|türkçe|turkce)\b/;
+  if (nativeCode === 'tr' && trWords.test(lower)) return true;
+  return false;
+}
+
+/** Kısa İngilizce selamlaşmalarda yaygın STT hatalarını düzelt — anadil metnine dokunma. */
+function normalizeLearnerSpeechTranscript(text, nativeCode = 'tr') {
   let t = String(text || '').trim();
   if (!t) return t;
+  if (looksLikeNativeSpeech(t, nativeCode)) return t;
 
   const words = t.split(/\s+/);
   if (words.length === 1) {
@@ -182,5 +195,6 @@ module.exports = {
   resolveExplanationLanguage,
   explanationLanguageRule,
   englishLearnerWhisperPrompt,
+  looksLikeNativeSpeech,
   normalizeLearnerSpeechTranscript,
 };
