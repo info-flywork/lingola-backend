@@ -120,9 +120,10 @@ function explanationLanguageRule(user, session) {
 - When teaching greetings, show correct English spelling: Hi, Hello, Hey — never Hay.`;
 
   if (mode === 'english') {
-    return `- The learner prefers explanations in English only.
-- Even if they write in ${nativeName}, explain in simple clear English (A1–A2).
-- Do not switch to ${nativeName} for explanations or answers.
+    return `- CRITICAL — The learner chose "explain in English only".
+- Reply ONLY in simple clear English (A1–A2) — every sentence, every reply.
+- Even if they write or speak in ${nativeName}, still explain and answer in English only.
+- Do not use ${nativeName} in your replies at all.
 ${sttIntentRule}`;
   }
 
