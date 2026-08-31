@@ -28,6 +28,41 @@ function resolveVoiceId(voiceId) {
   return id;
 }
 
+/** İçerik tipi yanlış gelse bile Whisper'a doğru uzantı/mime ver. */
+function sniffAudioFormat(buffer, contentType = '') {
+  const ct = String(contentType || '').toLowerCase();
+  if (buffer.length >= 4) {
+    const head4 = buffer.subarray(0, 4).toString('ascii');
+    if (head4 === 'RIFF') {
+      return { ext: 'wav', mime: 'audio/wav' };
+    }
+    if (head4 === 'fLaC') {
+      return { ext: 'flac', mime: 'audio/flac' };
+    }
+    if (head4 === 'OggS') {
+      return { ext: 'ogg', mime: 'audio/ogg' };
+    }
+    if (buffer.length >= 8 && buffer.subarray(4, 8).toString('ascii') === 'ftyp') {
+      return { ext: 'm4a', mime: 'audio/mp4' };
+    }
+    if (buffer.subarray(0, 3).toString('ascii') === 'ID3') {
+      return { ext: 'mp3', mime: 'audio/mpeg' };
+    }
+    if (head4 === '\xff\xfb' || head4.startsWith('\xff\xf3')) {
+      return { ext: 'mp3', mime: 'audio/mpeg' };
+    }
+  }
+
+  if (ct.includes('wav')) return { ext: 'wav', mime: 'audio/wav' };
+  if (ct.includes('mpeg') || ct.includes('mp3')) {
+    return { ext: 'mp3', mime: 'audio/mpeg' };
+  }
+  if (ct.includes('webm')) return { ext: 'webm', mime: 'audio/webm' };
+  if (ct.includes('ogg')) return { ext: 'ogg', mime: 'audio/ogg' };
+  if (ct.includes('flac')) return { ext: 'flac', mime: 'audio/flac' };
+  return { ext: 'm4a', mime: 'audio/mp4' };
+}
+
 async function transcribeAudio({
   audioBase64,
   contentType = 'audio/m4a',
@@ -48,20 +83,19 @@ async function transcribeAudio({
     err.status = 400;
     throw err;
   }
+  if (buffer.length < 800) {
+    const err = new Error('Audio too short or corrupt');
+    err.status = 400;
+    throw err;
+  }
 
-  const ext = contentType.includes('wav')
-    ? 'wav'
-    : contentType.includes('mpeg') || contentType.includes('mp3')
-      ? 'mp3'
-      : contentType.includes('webm')
-        ? 'webm'
-        : 'm4a';
+  const sniffed = sniffAudioFormat(buffer, contentType);
 
   const form = new FormData();
   form.append(
     'file',
-    new Blob([buffer], { type: contentType || 'audio/m4a' }),
-    `speech.${ext}`,
+    new Blob([buffer], { type: sniffed.mime }),
+    `speech.${sniffed.ext}`,
   );
   form.append('model', 'whisper-1');
   // Dil verilmezse Whisper otomatik algılar (TR/ES/EN karışık konuşma).
