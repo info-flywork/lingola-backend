@@ -81,6 +81,19 @@ async function getOrCreateSession(
     : 'chat';
 
   if (!forceNew) {
+    if (title && String(title).trim()) {
+      const [byTitle] = await pool.query(
+        `SELECT * FROM tutor_chat_sessions
+         WHERE user_id = ? AND tutor_id = ? AND title = ?
+         ORDER BY COALESCE(last_message_at, created_at) DESC
+         LIMIT 1`,
+        [userId, tutorId, String(title).trim()],
+      );
+      if (byTitle.length) {
+        return { session: mapSession(byTitle[0]), tutor, created: false };
+      }
+    }
+
     const [existing] = await pool.query(
       `SELECT * FROM tutor_chat_sessions
        WHERE user_id = ? AND tutor_id = ?

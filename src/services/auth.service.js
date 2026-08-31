@@ -129,18 +129,58 @@ async function refreshSessionToken(token) {
   }
 }
 
+async function findGuestByDeviceId(deviceId, connection = pool) {
+  const [rows] = await connection.query(
+    `SELECT u.*
+     FROM auth_identities ai
+     INNER JOIN users u ON u.id = ai.user_id
+     WHERE ai.provider = 'guest'
+       AND ai.provider_subject = ?
+       AND u.deleted_at IS NULL
+     LIMIT 1`,
+    [deviceId],
+  );
+  return rows[0] || null;
+}
+
 async function createGuestUser({
   appLocale,
   notificationsEnabled,
   onboarding,
+  deviceId,
 }) {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
 
+    const subject =
+      typeof deviceId === 'string' ? deviceId.trim() : '';
+    if (subject.length >= 8) {
+      const existing = await findGuestByDeviceId(subject, connection);
+      if (existing) {
+        await connection.query(
+          `UPDATE users
+           SET app_locale = ?,
+               notifications_enabled = ?,
+               updated_at = CURRENT_TIMESTAMP
+           WHERE id = ?`,
+          [appLocale, notificationsEnabled ? 1 : 0, existing.id],
+        );
+        const session = await createSession(connection, existing.id);
+        await connection.commit();
+        const user = await findUserById(existing.id, connection);
+        return {
+          user,
+          token: session.token,
+          expiresAt: session.expiresAt,
+          reused: true,
+        };
+      }
+    }
+
     const userId = uuid();
     const identityId = uuid();
-    const guestSubject = `guest_${userId}`;
+    const guestSubject = subject.length >= 8 ? subject : `guest_${userId}`;
 
     await connection.query(
       `INSERT INTO users (

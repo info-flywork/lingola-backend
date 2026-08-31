@@ -24,21 +24,30 @@ async function guest(req, res, next) {
     const appLocale = normalizeLocaleCode(body.appLocale ?? body.app_locale, 'en');
     const notificationsEnabled =
       body.notificationsEnabled ?? body.notifications_enabled ?? true;
+    const deviceId = String(body.deviceId ?? body.device_id ?? '').trim();
+    if (deviceId.length > 0 && deviceId.length < 8) {
+      return res.status(400).json({
+        ok: false,
+        error: 'deviceId must be at least 8 characters',
+      });
+    }
 
     const result = await createGuestUser({
       appLocale,
       notificationsEnabled: Boolean(notificationsEnabled),
       onboarding,
+      deviceId: deviceId || null,
     });
 
-    res.status(201).json({
+    res.status(result.reused ? 200 : 201).json({
       ok: true,
       token: result.token,
       expiresAt: result.expiresAt,
       user: result.user,
     });
     console.log(
-      `[auth] guest ok user=${result.user?.id} locale=${appLocale}`,
+      `[auth] guest ok user=${result.user?.id} locale=${appLocale}` +
+        ` reused=${Boolean(result.reused)} device=${deviceId ? 'yes' : 'no'}`,
     );
   } catch (err) {
     next(err);

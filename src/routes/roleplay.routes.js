@@ -7,5 +7,10 @@ const { requireAuth } = require('../middlewares/auth');
 const router = Router();
 
 router.get('/scenarios', requireAuth, roleplayController.listScenarios);
+router.post(
+  '/scenarios/:scenarioId/progress',
+  requireAuth,
+  roleplayController.saveProgress,
+);
 
 module.exports = router;
