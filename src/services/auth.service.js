@@ -209,8 +209,8 @@ async function createGuestUser({
     await connection.query(
       `INSERT INTO user_onboarding (
          user_id, native_language_code, target_language_code,
-         goal, level, pace, completed_at
-       ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+         goal, level, pace, explanation_language, completed_at
+       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         userId,
         onboarding.nativeLanguageCode,
@@ -218,6 +218,7 @@ async function createGuestUser({
         onboarding.goal,
         onboarding.level,
         onboarding.pace,
+        onboarding.explanationLanguage || 'native',
         completed,
       ],
     );
@@ -335,14 +336,15 @@ async function upsertOnboarding(connection, userId, onboarding) {
   await connection.query(
     `INSERT INTO user_onboarding (
        user_id, native_language_code, target_language_code,
-       goal, level, pace, completed_at
-     ) VALUES (?, ?, ?, ?, ?, ?, ?)
+       goal, level, pace, explanation_language, completed_at
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
      ON DUPLICATE KEY UPDATE
        native_language_code = VALUES(native_language_code),
        target_language_code = VALUES(target_language_code),
        goal = COALESCE(VALUES(goal), goal),
        level = COALESCE(VALUES(level), level),
        pace = COALESCE(VALUES(pace), pace),
+       explanation_language = COALESCE(VALUES(explanation_language), explanation_language),
        completed_at = COALESCE(VALUES(completed_at), completed_at)`,
     [
       userId,
@@ -351,9 +353,40 @@ async function upsertOnboarding(connection, userId, onboarding) {
       onboarding.goal,
       onboarding.level,
       onboarding.pace,
+      onboarding.explanationLanguage || 'native',
       completed,
     ],
   );
+}
+
+async function updateUserOnboarding(userId, patch = {}) {
+  const [rows] = await pool.query(
+    'SELECT * FROM user_onboarding WHERE user_id = ? LIMIT 1',
+    [userId],
+  );
+  if (!rows.length) {
+    const err = new Error('Onboarding profile not found');
+    err.status = 404;
+    throw err;
+  }
+
+  const fields = [];
+  const values = [];
+  if (patch.explanationLanguage !== undefined) {
+    fields.push('explanation_language = ?');
+    values.push(patch.explanationLanguage);
+  }
+
+  if (!fields.length) {
+    return findUserById(userId);
+  }
+
+  values.push(userId);
+  await pool.query(
+    `UPDATE user_onboarding SET ${fields.join(', ')} WHERE user_id = ?`,
+    values,
+  );
+  return findUserById(userId);
 }
 
 /**
@@ -483,4 +516,5 @@ module.exports = {
   updateUserAvatar,
   revokeSessionToken,
   loginWithProvider,
+  updateUserOnboarding,
 };

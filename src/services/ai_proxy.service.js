@@ -28,7 +28,11 @@ function resolveVoiceId(voiceId) {
   return id;
 }
 
-async function transcribeAudio({ audioBase64, contentType = 'audio/m4a' }) {
+async function transcribeAudio({
+  audioBase64,
+  contentType = 'audio/m4a',
+  language,
+}) {
   const apiKey = requireOpenAi();
 
   const buffer = Buffer.from(stripDataUrl(audioBase64), 'base64');
@@ -53,7 +57,11 @@ async function transcribeAudio({ audioBase64, contentType = 'audio/m4a' }) {
     `speech.${ext}`,
   );
   form.append('model', 'whisper-1');
-  form.append('language', 'en');
+  // Dil verilmezse Whisper otomatik algılar (TR/ES/EN karışık konuşma).
+  const lang = String(language || '').trim().toLowerCase().split(/[-_]/)[0];
+  if (lang && /^[a-z]{2,3}$/.test(lang)) {
+    form.append('language', lang);
+  }
   form.append('response_format', 'json');
 
   const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {

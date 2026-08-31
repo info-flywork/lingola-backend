@@ -4,6 +4,7 @@ const {
   createGuestUser,
   updateUserProfile,
   updateUserAvatar,
+  updateUserOnboarding,
   revokeSessionToken,
   loginWithProvider,
   refreshSessionToken,
@@ -11,6 +12,7 @@ const {
 const {
   parseOnboarding,
   normalizeLocaleCode,
+  EXPLANATION_LANGUAGE_VALUES,
 } = require('../utils/auth');
 const {
   resolveIdentity,
@@ -210,6 +212,33 @@ async function updateNotifications(req, res, next) {
   }
 }
 
+async function updateOnboarding(req, res, next) {
+  try {
+    const body = req.body || {};
+    const patch = {};
+    const raw =
+      body.explanationLanguage ?? body.explanation_language ?? undefined;
+    if (raw !== undefined) {
+      const value = String(raw).trim().toLowerCase();
+      if (!EXPLANATION_LANGUAGE_VALUES.has(value)) {
+        const err = new Error('Invalid explanationLanguage');
+        err.status = 400;
+        throw err;
+      }
+      patch.explanationLanguage = value;
+    }
+    if (!Object.keys(patch).length) {
+      const err = new Error('No onboarding fields to update');
+      err.status = 400;
+      throw err;
+    }
+    const user = await updateUserOnboarding(req.user.id, patch);
+    res.json({ ok: true, user });
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function uploadAvatar(req, res, next) {
   try {
     const body = req.body || {};
@@ -313,6 +342,7 @@ module.exports = {
   streak,
   refresh,
   updateMe,
+  updateOnboarding,
   updateNotifications,
   uploadAvatar,
   logout,

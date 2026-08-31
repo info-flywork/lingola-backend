@@ -7,6 +7,7 @@ async function transcribe(req, res, next) {
     const text = await ai.transcribeAudio({
       audioBase64: req.body?.audioBase64,
       contentType: req.body?.contentType,
+      language: req.body?.language ?? req.body?.languageCode,
     });
     res.json({ ok: true, text });
   } catch (err) {

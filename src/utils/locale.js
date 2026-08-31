@@ -25,9 +25,29 @@ function resolveContentNativeLang(user) {
   return native;
 }
 
+const LANGUAGE_DISPLAY_NAMES = {
+  en: 'English',
+  tr: 'Turkish',
+  de: 'German',
+  it: 'Italian',
+  fr: 'French',
+  ja: 'Japanese',
+  es: 'Spanish',
+  ru: 'Russian',
+  hi: 'Hindi',
+  pt: 'Portuguese',
+  zh: 'Chinese',
+};
+
+function languageDisplayName(code, fallback = 'English') {
+  const normalized = normalizeLangCode(code, '');
+  return LANGUAGE_DISPLAY_NAMES[normalized] || fallback;
+}
+
 module.exports = {
   PROFILE_LANGUAGES,
   SEED_LANGUAGES,
   normalizeLangCode,
   resolveContentNativeLang,
+  languageDisplayName,
 };

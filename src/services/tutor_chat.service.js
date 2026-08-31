@@ -21,6 +21,10 @@ const {
   topicTeachingHints,
   lessonPedagogyRules,
 } = require('./prompt_helpers');
+const {
+  normalizeLangCode,
+  languageDisplayName,
+} = require('../utils/locale');
 
 const PREVIEW_TTL_MS = 1000 * 60 * 30;
 const previewSessions = new Map();
@@ -259,25 +263,67 @@ function displayTutorName(tutor) {
   return raw.charAt(0).toUpperCase() + raw.slice(1);
 }
 
-function tutorSystemPrompt(tutor, session, user) {
-  const name = displayTutorName(tutor);
-  const title = String(session?.title || '');
-  if (/onboarding preview/i.test(title)) {
-    return `You are Lingola, a friendly robot English tutor in the Lingola app.
+function resolveExplanationLanguage(user, session) {
+  const raw =
+    user?.onboarding?.explanationLanguage ??
+    session?.explanationLanguage ??
+    'native';
+  return String(raw).trim().toLowerCase() === 'english' ? 'english' : 'native';
+}
+
+function explanationLanguageRule(user, session) {
+  const nativeCode = normalizeLangCode(
+    user?.onboarding?.nativeLanguageCode ?? session?.nativeLanguageCode,
+    'tr',
+  );
+  const nativeName = languageDisplayName(nativeCode, nativeCode);
+  const mode = resolveExplanationLanguage(user, session);
+
+  if (mode === 'english') {
+    return `- The learner prefers explanations in English only.
+- Even if they write in ${nativeName}, explain in simple clear English (A1–A2).
+- Do not switch to ${nativeName} for explanations or answers.`;
+  }
+
+  return `- The learner prefers explanations in their native language (${nativeName}) when they ask in ${nativeName}.
+- If they write in ${nativeName}, reply in ${nativeName} to explain, encourage, or answer — then gently invite them back to English practice in the same reply.
+- For English practice parts, keep using simple spoken English.`;
+}
+
+function previewOnboardingSystemPrompt(tutor, session) {
+  const nativeCode = normalizeLangCode(session?.nativeLanguageCode, 'tr');
+  const targetCode = normalizeLangCode(session?.targetLanguageCode, 'en');
+  const nativeName = languageDisplayName(nativeCode, nativeCode);
+  const targetName = languageDisplayName(targetCode, targetCode);
+  const explainRule = explanationLanguageRule(null, session);
+
+  return `You are Lingola, a friendly robot English tutor in the Lingola app.
 ${characterBlurb(tutor)}
 ${characterLockRule(tutor)}
 ${flavorRule(tutor)}
 ${naturalEnglishRule('A1')}
-${learnerAddressingRule(user || {})}
 This is a short onboarding preview before sign-up. The learner is trying Lingola for the first time.
+Learner native language: ${nativeName} (${nativeCode}).
+Target language they are learning: ${targetName} (${targetCode}).
+The first message was already sent in ${nativeName} — welcome, reassurance, and a first greeting in ${targetName}.
+
 Rules:
-- Greet warmly in English: welcome them to Lingola.
 - Stay in character as a curious, playful robot tutor only (no elves/orcs/forests).
 - Keep replies short: 1–3 sentences.
-- Teach natural everyday phrases with 2–3 variants (e.g. Hi / Hey / Hello; I'm good / Not bad / Pretty good).
-- Gently correct by modeling natural spoken English.
+- Reassure them: any level is fine; they should feel safe and unjudged while learning ${targetName}.
+${explainRule}
+- For ${targetName} practice, use simple A1 spoken English with 2–3 natural variants (e.g. Hi / Hey / Hello).
+- After the first exchange, lean toward ${targetName} for practice.
+- Gently correct by modeling natural spoken ${targetName}.
 - Ask one easy follow-up question.
 - No markdown, no bullet lists.`;
+}
+
+function tutorSystemPrompt(tutor, session, user) {
+  const name = displayTutorName(tutor);
+  const title = String(session?.title || '');
+  if (/onboarding preview/i.test(title)) {
+    return previewOnboardingSystemPrompt(tutor, session);
   }
   if (title.startsWith('Role Play:')) {
     return rolePlaySystemPrompt(title, { user, tutor });
@@ -297,6 +343,7 @@ ${learnerAddressingRule(user || {})}
 ${goalContext(user || {})}
 ${topicTeachingHints(topic)}
 ${lessonPedagogyRules()}
+${explanationLanguageRule(user, session)}
 Lesson topic: "${topic}".
 ${isPractice ? 'This is extra practice on the same topic — more repetition, simpler prompts.' : 'Teach phrase patterns in batches, then practice in conversation.'}
 Rules:
@@ -318,6 +365,7 @@ ${flavorRule(tutor)}
 ${inCharacterReactionRule(tutor)}
 ${naturalEnglishRule('A1')}
 ${learnerAddressingRule(user || {})}
+${explanationLanguageRule(user, session)}
 Rules:
 - EVERY reply must sound like this character — voice, word choice, attitude. Not a generic human tutor.
 - Stay in character as ${name} only. Never switch persona mid-chat.
@@ -464,6 +512,9 @@ async function openPreviewSession({
   title,
   openingMessage,
   kind = 'chat',
+  nativeLanguageCode,
+  targetLanguageCode,
+  explanationLanguage,
 }) {
   prunePreviewSessions();
   const tutor = await resolveTutor({ tutorId, tutorSlug });
@@ -476,6 +527,12 @@ async function openPreviewSession({
     tutor,
     title: sessionTitle,
     kind: ['chat', 'lesson', 'practice'].includes(kind) ? kind : 'chat',
+    nativeLanguageCode: normalizeLangCode(nativeLanguageCode, 'tr'),
+    targetLanguageCode: normalizeLangCode(targetLanguageCode, 'en'),
+    explanationLanguage:
+      String(explanationLanguage || 'native').trim().toLowerCase() === 'english'
+        ? 'english'
+        : 'native',
     createdAt,
     expiresAt: Date.now() + PREVIEW_TTL_MS,
     messages: [],

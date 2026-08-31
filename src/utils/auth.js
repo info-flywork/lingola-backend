@@ -23,6 +23,7 @@ const GOAL_VALUES = new Set([
 ]);
 const LEVEL_VALUES = new Set(['beginner', 'intermediate', 'advanced']);
 const PACE_VALUES = new Set(['light', 'recommended', 'fast']);
+const EXPLANATION_LANGUAGE_VALUES = new Set(['native', 'english']);
 const AUTH_PROVIDERS = new Set(['guest', 'google', 'apple']);
 
 /** App locale / learning language codes — open string, max 16 chars (12+ langs). */
@@ -68,12 +69,24 @@ function parseOnboarding(body = {}) {
     throw err;
   }
 
+  let explanationLanguage =
+    onboarding.explanationLanguage ?? onboarding.explanation_language ?? 'native';
+  if (typeof explanationLanguage === 'string') {
+    explanationLanguage = explanationLanguage.trim().toLowerCase();
+  }
+  if (!EXPLANATION_LANGUAGE_VALUES.has(explanationLanguage)) {
+    const err = new Error('Invalid onboarding.explanationLanguage');
+    err.status = 400;
+    throw err;
+  }
+
   return {
     nativeLanguageCode,
     targetLanguageCode,
     goal,
     level,
     pace,
+    explanationLanguage,
   };
 }
 
@@ -100,6 +113,8 @@ function mapUserRow(row, onboarding) {
           goal: onboarding.goal,
           level: onboarding.level,
           pace: onboarding.pace,
+          explanationLanguage:
+            onboarding.explanation_language || 'native',
           completedAt: onboarding.completed_at,
         }
       : null,
@@ -117,4 +132,5 @@ module.exports = {
   GOAL_VALUES,
   LEVEL_VALUES,
   PACE_VALUES,
+  EXPLANATION_LANGUAGE_VALUES,
 };

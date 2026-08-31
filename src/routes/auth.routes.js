@@ -13,6 +13,7 @@ router.post('/refresh', authController.refresh);
 router.get('/me', requireAuth, authController.me);
 router.get('/me/streak', requireAuth, authController.streak);
 router.patch('/me', requireAuth, authController.updateMe);
+router.patch('/me/onboarding', requireAuth, authController.updateOnboarding);
 router.patch('/me/notifications', requireAuth, authController.updateNotifications);
 router.post('/me/avatar', requireAuth, authController.uploadAvatar);
 router.post('/retention-offer', requireAuth, authController.retentionOffer);

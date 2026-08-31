@@ -88,6 +88,9 @@ async function openPreviewSession(req, res, next) {
       title: req.body?.title,
       openingMessage: req.body?.openingMessage,
       kind: req.body?.kind,
+      nativeLanguageCode: req.body?.nativeLanguageCode,
+      targetLanguageCode: req.body?.targetLanguageCode,
+      explanationLanguage: req.body?.explanationLanguage,
     });
     res.json({ ok: true, ...result });
   } catch (err) {
