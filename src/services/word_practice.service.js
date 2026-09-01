@@ -70,7 +70,7 @@ async function recordEncounters(userId, wordIds) {
 async function getPracticeCardsForUser(user, { count = 5 } = {}) {
   const onboarding = user.onboarding || {};
   const nativeLang = resolveContentNativeLang(user);
-  const appLevel = normalizeAppLevel(onboarding.level || 'beginner');
+  const appLevel = normalizeAppLevel(onboarding.level || 'a1');
   const limit = Math.min(Math.max(Number(count) || 5, 1), 10);
 
   let levels = LEVEL_MAP[appLevel] || LEVEL_MAP.beginner;

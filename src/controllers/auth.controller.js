@@ -255,7 +255,7 @@ async function updateOnboarding(req, res, next) {
 
     const levelRaw = onboardingBody.level ?? undefined;
     if (levelRaw !== undefined) {
-      const value = String(levelRaw).trim();
+      const value = String(levelRaw).trim().toLowerCase();
       if (!LEVEL_VALUES.has(value)) {
         const err = new Error('Invalid onboarding.level');
         err.status = 400;

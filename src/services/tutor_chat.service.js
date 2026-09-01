@@ -13,7 +13,8 @@ const {
   lessonTimingRule,
   inCharacterReactionRule,
 } = require('./tutor-personality');
-const { rolePlaySystemPrompt } = require('./roleplay-prompt');
+const { rolePlaySystemPrompt, parseCustomScenarioId } = require('./roleplay-prompt');
+const { fetchCustomById } = require('./roleplay_custom.service');
 const { findUserById } = require('./auth.service');
 const {
   learnerAddressingRule,
@@ -340,7 +341,7 @@ ${practiceRule}
 - No markdown, no bullet lists.`;
 }
 
-function tutorSystemPrompt(tutor, session, user) {
+async function tutorSystemPrompt(tutor, session, user) {
   const name = displayTutorName(tutor);
   const title = String(session?.title || '');
   if (/onboarding demo/i.test(title)) {
@@ -350,6 +351,17 @@ function tutorSystemPrompt(tutor, session, user) {
     return previewOnboardingSystemPrompt(tutor, session);
   }
   if (title.startsWith('Role Play:')) {
+    const customId = parseCustomScenarioId(title);
+    if (customId && user?.id) {
+      const custom = await fetchCustomById(user.id, customId);
+      if (custom?.promptPayload) {
+        return rolePlaySystemPrompt(title, {
+          user,
+          tutor,
+          customPayload: custom.promptPayload,
+        });
+      }
+    }
     return rolePlaySystemPrompt(title, { user, tutor });
   }
   if (title.startsWith('Lesson:') || title.startsWith('Practice:')) {
@@ -489,7 +501,7 @@ async function sendMessage({ userId, sessionId, content }) {
   let replyText;
   try {
     replyText = await callOpenAi({
-      system: tutorSystemPrompt(tutor, session, user),
+      system: await tutorSystemPrompt(tutor, session, user),
       history: prior,
       userMessage: text,
       maxTokens: richSession ? 320 : 220,
@@ -617,7 +629,7 @@ async function sendPreviewMessage({ sessionId, content }) {
     .slice(-16)
     .map((m) => ({ role: m.role, content: m.content }));
   const replyText = await callOpenAi({
-    system: tutorSystemPrompt(
+    system: await tutorSystemPrompt(
       session.tutor,
       {
         id: session.id,

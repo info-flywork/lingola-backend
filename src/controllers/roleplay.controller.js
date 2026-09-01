@@ -1,6 +1,7 @@
 'use strict';
 
 const roleplay = require('../services/roleplay.service');
+const roleplayGenerate = require('../services/roleplay_generate.service');
 
 async function listScenarios(req, res, next) {
   try {
@@ -40,7 +41,29 @@ async function saveProgress(req, res, next) {
   }
 }
 
+async function generateCustomScenario(req, res, next) {
+  try {
+    const prompt = String(req.body?.prompt || '').trim();
+    const nativeLanguageCode =
+      req.body?.nativeLanguageCode ||
+      req.user?.onboarding?.nativeLanguageCode ||
+      'tr';
+    const levelKey = req.body?.levelKey || req.user?.onboarding?.level || 'beginner';
+
+    const scenario = await roleplayGenerate.createCustomScenario(req.user.id, {
+      prompt,
+      nativeLanguageCode,
+      levelKey,
+    });
+
+    res.status(201).json({ ok: true, scenario });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   listScenarios,
   saveProgress,
+  generateCustomScenario,
 };

@@ -86,7 +86,10 @@ const SCENES = [
 
 function sceneFor(title) {
   const raw = String(title || '');
-  const scenario = raw.replace(/^Role Play:\s*/i, '').trim();
+  const scenario = raw
+    .replace(/^Role Play:\s*/i, '')
+    .replace(/\s*#custom:[a-f0-9-]{36}$/i, '')
+    .trim();
   const found = SCENES.find((s) => s.match.test(scenario) || s.match.test(raw));
   return (
     found || {
@@ -101,13 +104,30 @@ function sceneFor(title) {
   );
 }
 
+function sceneFromPayload(payload = {}, fallbackTitle = 'everyday conversation') {
+  return {
+    title: payload.title || fallbackTitle,
+    roleATutor: payload.roleATutor || 'the other person in the scene',
+    roleAUser: payload.roleAUser || 'the learner',
+    roleBTutor: payload.roleBTutor || 'the learner role',
+    roleBUser: payload.roleBUser || 'the other person',
+    phrases:
+      Array.isArray(payload.phrases) && payload.phrases.length
+        ? payload.phrases
+        : ['Hello.', 'Nice to meet you.', 'Could you help me?', 'Thank you.'],
+    rolePlayChecks:
+      Array.isArray(payload.rolePlayChecks) && payload.rolePlayChecks.length
+        ? payload.rolePlayChecks
+        : ['polite requests', 'thanks and closing'],
+  };
+}
+
 function displayTutorName(tutor) {
   const raw = String(tutor?.nameKey || tutor?.slug || 'Lingola');
   return raw.charAt(0).toUpperCase() + raw.slice(1);
 }
 
-function rolePlaySystemPrompt(sessionTitle, { user, tutor } = {}) {
-  const scene = sceneFor(sessionTitle);
+function buildRolePlayPrompt(scene, { user, tutor } = {}) {
   const phrases = scene.phrases.map((p) => `- ${p}`).join('\n');
   const checks = (scene.rolePlayChecks || [])
     .map((c) => `- ${c}`)
@@ -177,4 +197,22 @@ PHASE 4 — CHECK + CLOSE (teacher again, not in character)
 Never jump straight into "Welcome, what can I get you?" at the start. Brief and teach first.`;
 }
 
-module.exports = { rolePlaySystemPrompt, sceneFor };
+function rolePlaySystemPrompt(sessionTitle, { user, tutor, customPayload } = {}) {
+  const scene = customPayload
+    ? sceneFromPayload(customPayload, customPayload.title)
+    : sceneFor(sessionTitle);
+  return buildRolePlayPrompt(scene, { user, tutor });
+}
+
+function parseCustomScenarioId(title) {
+  const match = String(title || '').match(/#custom:([a-f0-9-]{36})/i);
+  return match ? match[1] : null;
+}
+
+module.exports = {
+  rolePlaySystemPrompt,
+  sceneFor,
+  sceneFromPayload,
+  buildRolePlayPrompt,
+  parseCustomScenarioId,
+};

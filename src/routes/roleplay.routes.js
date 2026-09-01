@@ -8,6 +8,11 @@ const router = Router();
 
 router.get('/scenarios', requireAuth, roleplayController.listScenarios);
 router.post(
+  '/scenarios/custom/generate',
+  requireAuth,
+  roleplayController.generateCustomScenario,
+);
+router.post(
   '/scenarios/:scenarioId/progress',
   requireAuth,
   roleplayController.saveProgress,

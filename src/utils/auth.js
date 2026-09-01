@@ -21,7 +21,10 @@ const GOAL_VALUES = new Set([
   'studyingAbroad',
   'other',
 ]);
-const LEVEL_VALUES = new Set(['beginner', 'intermediate', 'advanced']);
+const LEVEL_VALUES = new Set([
+  'a1', 'a2', 'b1', 'b2', 'c1', 'c2',
+  'beginner', 'intermediate', 'advanced',
+]);
 const PACE_VALUES = new Set(['light', 'recommended', 'fast']);
 const EXPLANATION_LANGUAGE_VALUES = new Set(['native', 'english']);
 const AUTH_PROVIDERS = new Set(['guest', 'google', 'apple']);
@@ -53,6 +56,16 @@ function parseOnboarding(body = {}) {
   let level = onboarding.level ?? null;
   let pace = onboarding.pace ?? null;
 
+  if (goal != null) {
+    goal = String(goal).trim();
+  }
+  if (level != null) {
+    level = String(level).trim().toLowerCase();
+  }
+  if (pace != null) {
+    pace = String(pace).trim();
+  }
+
   if (goal != null && !GOAL_VALUES.has(goal)) {
     const err = new Error('Invalid onboarding.goal');
     err.status = 400;
@@ -71,7 +84,7 @@ function parseOnboarding(body = {}) {
 
   // Login-first akış: onboarding ekranları atlanınca güvenli varsayılanlar.
   if (goal == null) goal = 'career';
-  if (level == null) level = 'beginner';
+  if (level == null) level = 'a1';
   if (pace == null) pace = 'recommended';
 
   let explanationLanguage =

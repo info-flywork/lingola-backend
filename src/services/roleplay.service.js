@@ -2,6 +2,7 @@
 
 const { pool } = require('../config/db');
 const { listScenarios } = require('../data/roleplay-catalog');
+const roleplayCustom = require('./roleplay_custom.service');
 
 function progressFromElapsed(elapsedSeconds, minutes = 8) {
   const total = Math.max(1, Number(minutes) || 8) * 60;
@@ -9,8 +10,12 @@ function progressFromElapsed(elapsedSeconds, minutes = 8) {
   return Math.min(1, elapsed / total);
 }
 
-function scenarioById(scenarioId) {
-  return listScenarios().find((row) => row.id === scenarioId) || null;
+async function scenarioById(userId, scenarioId) {
+  const staticRow = listScenarios().find((row) => row.id === scenarioId);
+  if (staticRow) return { ...staticRow, isCustom: false };
+  if (!userId) return null;
+  const custom = await roleplayCustom.fetchCustomById(userId, scenarioId);
+  return custom || null;
 }
 
 async function fetchUserProgressMap(userId) {
@@ -38,7 +43,7 @@ async function recordProgress(
   scenarioId,
   { sessionId, additionalSeconds } = {},
 ) {
-  const scenario = scenarioById(scenarioId);
+  const scenario = await scenarioById(userId, scenarioId);
   if (!scenario) {
     const err = new Error('Scenario not found');
     err.status = 404;
@@ -91,24 +96,32 @@ async function recordProgress(
   };
 }
 
+function attachProgress(row, progressMap) {
+  const progress = progressMap[row.id] || {};
+  return {
+    ...row,
+    elapsedSeconds: progress.elapsedSeconds || 0,
+    progressPercent: progress.progressPercent || 0,
+    sessionId: progress.sessionId || null,
+    completed:
+      Boolean(progress.completedAt) || (progress.progressPercent || 0) >= 1,
+  };
+}
+
 async function listScenariosForUser(userId) {
   const progressMap = await fetchUserProgressMap(userId);
-  return listScenarios()
+  const staticRows = listScenarios()
     .sort((a, b) => a.sortOrder - b.sortOrder)
-    .map((row) => {
-      const progress = progressMap[row.id] || {};
-      return {
-        ...row,
-        elapsedSeconds: progress.elapsedSeconds || 0,
-        progressPercent: progress.progressPercent || 0,
-        sessionId: progress.sessionId || null,
-        completed: Boolean(progress.completedAt) || (progress.progressPercent || 0) >= 1,
-      };
-    });
+    .map((row) => attachProgress({ ...row, isCustom: false }, progressMap));
+  const customRows = (await roleplayCustom.listCustomForUser(userId)).map((row) =>
+    attachProgress(row, progressMap),
+  );
+  return [...customRows, ...staticRows];
 }
 
 module.exports = {
   listScenariosForUser,
   recordProgress,
   progressFromElapsed,
+  scenarioById,
 };

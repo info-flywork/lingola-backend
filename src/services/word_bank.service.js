@@ -3,10 +3,24 @@
 const { pool } = require('../config/db');
 const { resolveContentNativeLang, normalizeLangCode } = require('../utils/locale');
 
+const CEFR_APP_LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
+
 const LEVEL_MAP = {
+  a1: ['A1'],
+  a2: ['A1', 'A2'],
+  b1: ['A1', 'A2', 'B1'],
+  b2: ['A1', 'A2', 'B1', 'B2'],
+  c1: ['A1', 'A2', 'B1', 'B2', 'C1'],
+  c2: ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'],
   beginner: ['A1', 'A2'],
   intermediate: ['B1', 'B2'],
   advanced: ['C1', 'C2'],
+};
+
+const LEGACY_LEVEL_ALIASES = {
+  beginner: 'a1',
+  intermediate: 'b1',
+  advanced: 'c1',
 };
 
 const NATIVE_COLUMN_MAP = {
@@ -68,8 +82,10 @@ const NATIVE_COLUMN_MAP = {
 };
 
 function normalizeAppLevel(level) {
-  if (level === 'intermediate' || level === 'advanced') return level;
-  return 'beginner';
+  const raw = String(level || 'a1').toLowerCase();
+  if (LEGACY_LEVEL_ALIASES[raw]) return LEGACY_LEVEL_ALIASES[raw];
+  if (CEFR_APP_LEVELS.includes(raw)) return raw;
+  return 'a1';
 }
 
 function nativeFields(nativeLang) {
@@ -169,7 +185,7 @@ async function pickRandomWords({
 
 async function fetchWordsWithFallback(user, { count, excludeIds, requireSentence }) {
   const onboarding = user.onboarding || {};
-  const appLevel = normalizeAppLevel(onboarding.level || 'beginner');
+  const appLevel = normalizeAppLevel(onboarding.level || 'a1');
   const nativeLang = resolveContentNativeLang(user);
   let levels = LEVEL_MAP[appLevel] || LEVEL_MAP.beginner;
 
@@ -181,7 +197,7 @@ async function fetchWordsWithFallback(user, { count, excludeIds, requireSentence
     requireSentence,
   });
 
-  if (!rows.length && appLevel === 'advanced') {
+  if (!rows.length && (appLevel === 'c1' || appLevel === 'c2' || appLevel === 'advanced')) {
     levels = ['B2', 'B1'];
     rows = await pickRandomWords({
       levels,

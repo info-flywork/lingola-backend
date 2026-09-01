@@ -25,12 +25,18 @@ const {
 
 const CEFR_ORDER = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
-/** Onboarding beginner/intermediate/advanced → açılacak en yüksek CEFR. */
+/** Onboarding CEFR (a1–c2) veya legacy beginner/intermediate/advanced → max açık CEFR. */
 function maxCefrForUser(user) {
-  const level = String(user?.onboarding?.level || 'beginner').toLowerCase();
-  if (level === 'intermediate') return 'B2';
-  if (level === 'advanced') return 'C1';
-  return 'A2';
+  const level = String(user?.onboarding?.level || 'a1').toLowerCase();
+  const legacy = {
+    beginner: 'A2',
+    intermediate: 'B2',
+    advanced: 'C1',
+  };
+  if (legacy[level]) return legacy[level];
+  const cefr = level.toUpperCase();
+  if (CEFR_ORDER.includes(cefr)) return cefr;
+  return 'A1';
 }
 
 function cefrIndex(cefr) {
@@ -357,7 +363,7 @@ async function getPath(user) {
   return {
     currentLessonSlug: currentSlug || needsPractice?.slug || null,
     userCefrMax: maxCefr,
-    userAppLevel: String(user?.onboarding?.level || 'beginner').toLowerCase(),
+    userAppLevel: String(user?.onboarding?.level || 'a1').toLowerCase(),
     levels: CEFR_ORDER.map((cefr) => ({
       id: cefr.toLowerCase(),
       cefrLevel: cefr,
