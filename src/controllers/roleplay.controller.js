@@ -43,20 +43,26 @@ async function saveProgress(req, res, next) {
 
 async function generateCustomScenario(req, res, next) {
   try {
-    const prompt = String(req.body?.prompt || '').trim();
+    const scenario = String(req.body?.scenario || req.body?.prompt || '').trim();
+    const tutorRole = String(req.body?.tutorRole || '').trim();
+    const userRole = String(req.body?.userRole || '').trim();
+    const extraInfo = String(req.body?.extraInfo || '').trim();
     const nativeLanguageCode =
       req.body?.nativeLanguageCode ||
       req.user?.onboarding?.nativeLanguageCode ||
       'tr';
     const levelKey = req.body?.levelKey || req.user?.onboarding?.level || 'beginner';
 
-    const scenario = await roleplayGenerate.createCustomScenario(req.user.id, {
-      prompt,
+    const created = await roleplayGenerate.createCustomScenario(req.user.id, {
+      scenario,
+      tutorRole,
+      userRole,
+      extraInfo: extraInfo || undefined,
       nativeLanguageCode,
       levelKey,
     });
 
-    res.status(201).json({ ok: true, scenario });
+    res.status(201).json({ ok: true, scenario: created });
   } catch (err) {
     next(err);
   }

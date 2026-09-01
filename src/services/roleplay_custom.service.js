@@ -21,9 +21,17 @@ function parseJsonFromContent(raw) {
   return JSON.parse(body);
 }
 
-async function callScenarioJson(prompt, nativeLanguageCode) {
+async function callScenarioJson(input, nativeLanguageCode) {
   const apiKey = requireOpenAi();
   const native = nativeLanguageCode || 'tr';
+  const {
+    scenario,
+    tutorRole,
+    userRole,
+    extraInfo,
+    prompt,
+  } = input;
+
   const system = `You design English role-play lessons for the Lingola app.
 Return ONLY valid JSON (no markdown) with this shape:
 {
@@ -38,7 +46,17 @@ Return ONLY valid JSON (no markdown) with this shape:
   "rolePlayChecks": ["3-6 real-life details to cover in the scene"],
   "imagePrompt": "flat colorful mobile app illustration, friendly cartoon style, no text, square composition"
 }
-Keep language A2-B1, everyday spoken English.`;
+Keep language A2-B1, everyday spoken English.
+Honor the learner-provided scenario and roles closely.`;
+
+  const userLines = [
+    `Learner native language: ${native}.`,
+    scenario ? `Scenario: ${scenario}` : null,
+    tutorRole ? `Tutor should play: ${tutorRole}` : null,
+    userRole ? `Learner should play: ${userRole}` : null,
+    extraInfo ? `Extra context: ${extraInfo}` : null,
+    prompt ? `Additional notes: ${prompt}` : null,
+  ].filter(Boolean);
 
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -54,8 +72,7 @@ Keep language A2-B1, everyday spoken English.`;
         { role: 'system', content: system },
         {
           role: 'user',
-          content: `Learner native language: ${native}.
-Scenario idea: ${prompt}`,
+          content: userLines.join('\n'),
         },
       ],
     }),
@@ -155,27 +172,53 @@ async function fetchCustomById(userId, scenarioId) {
   return rowToApi(rows[0]);
 }
 
-async function createCustomScenario(userId, { prompt, nativeLanguageCode, levelKey }) {
-  const idea = String(prompt || '').trim();
-  if (idea.length < 8) {
-    const err = new Error('prompt must be at least 8 characters');
+async function createCustomScenario(
+  userId,
+  { scenario, tutorRole, userRole, extraInfo, prompt, nativeLanguageCode, levelKey },
+) {
+  const scene = String(scenario || prompt || '').trim();
+  const tutor = String(tutorRole || '').trim();
+  const learner = String(userRole || '').trim();
+  const extra = String(extraInfo || '').trim();
+
+  if (scene.length < 2) {
+    const err = new Error('scenario must be at least 2 characters');
     err.status = 400;
     throw err;
   }
-  if (idea.length > 600) {
-    const err = new Error('prompt is too long');
+  if (tutor.length < 2 || learner.length < 2) {
+    const err = new Error('tutorRole and userRole are required');
+    err.status = 400;
+    throw err;
+  }
+  if (scene.length > 200 || tutor.length > 120 || learner.length > 120) {
+    const err = new Error('input is too long');
+    err.status = 400;
+    throw err;
+  }
+  if (extra.length > 600) {
+    const err = new Error('extraInfo is too long');
     err.status = 400;
     throw err;
   }
 
-  const generated = await callScenarioJson(idea, nativeLanguageCode);
+  const generated = await callScenarioJson(
+    { scenario: scene, tutorRole: tutor, userRole: learner, extraInfo: extra },
+    nativeLanguageCode,
+  );
   const imageUrl = await generateScenarioImage(generated.imagePrompt);
 
   const id = uuid();
   const payload = {
     title: generated.title,
-    roleATutor: generated.roleATutor,
-    roleAUser: generated.roleAUser,
+    userInput: {
+      scenario: scene,
+      tutorRole: tutor,
+      userRole: learner,
+      extraInfo: extra || null,
+    },
+    roleATutor: generated.roleATutor || tutor,
+    roleAUser: generated.roleAUser || learner,
     roleBTutor: generated.roleBTutor,
     roleBUser: generated.roleBUser,
     phrases: Array.isArray(generated.phrases) ? generated.phrases : [],
