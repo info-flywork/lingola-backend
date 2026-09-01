@@ -69,6 +69,11 @@ function parseOnboarding(body = {}) {
     throw err;
   }
 
+  // Login-first akış: onboarding ekranları atlanınca güvenli varsayılanlar.
+  if (goal == null) goal = 'career';
+  if (level == null) level = 'beginner';
+  if (pace == null) pace = 'recommended';
+
   let explanationLanguage =
     onboarding.explanationLanguage ?? onboarding.explanation_language ?? 'native';
   if (typeof explanationLanguage === 'string') {
@@ -116,9 +121,25 @@ function mapUserRow(row, onboarding) {
           explanationLanguage:
             onboarding.explanation_language || 'native',
           completedAt: onboarding.completed_at,
+          personalizationContext: parsePersonalizationContext(
+            onboarding.personalization_context,
+          ),
         }
       : null,
   };
+}
+
+function parsePersonalizationContext(raw) {
+  if (raw == null) return null;
+  if (typeof raw === 'object') return raw;
+  if (typeof raw === 'string' && raw.trim()) {
+    try {
+      return JSON.parse(raw);
+    } catch (_) {
+      return null;
+    }
+  }
+  return null;
 }
 
 module.exports = {

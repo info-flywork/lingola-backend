@@ -100,6 +100,26 @@ TEACHING PACE (15-minute segment):
 - Feedback must be specific ("Good — 'I'd like a latte' is natural; you can also say 'Can I get a latte?'").`;
 }
 
+function learnerPersonalizationContext(user) {
+  const ctx = user?.onboarding?.personalizationContext;
+  if (!ctx || typeof ctx !== 'object') return '';
+  const chunks = [];
+  if (ctx.summary) chunks.push(String(ctx.summary).trim());
+  if (Array.isArray(ctx.messages)) {
+    const userNotes = ctx.messages
+      .filter((m) => m?.role === 'user')
+      .slice(-8)
+      .map((m) => String(m.content || '').trim())
+      .filter(Boolean)
+      .join(' | ');
+    if (userNotes) {
+      chunks.push(`They mentioned during onboarding demo: ${userNotes}`);
+    }
+  }
+  if (!chunks.length) return '';
+  return `Personalization notes:\n${chunks.join('\n')}`;
+}
+
 function resolveExplanationLanguage(user, session) {
   const raw =
     user?.onboarding?.explanationLanguage ??
@@ -191,6 +211,7 @@ module.exports = {
   learnerFirstName,
   learnerAddressingRule,
   goalContext,
+  learnerPersonalizationContext,
   topicTeachingHints,
   lessonPedagogyRules,
   resolveExplanationLanguage,

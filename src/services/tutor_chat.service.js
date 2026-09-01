@@ -18,6 +18,7 @@ const { findUserById } = require('./auth.service');
 const {
   learnerAddressingRule,
   goalContext,
+  learnerPersonalizationContext,
   topicTeachingHints,
   lessonPedagogyRules,
   explanationLanguageRule,
@@ -265,6 +266,37 @@ function displayTutorName(tutor) {
   return raw.charAt(0).toUpperCase() + raw.slice(1);
 }
 
+function demoOnboardingSystemPrompt(tutor, session) {
+  const nativeCode = normalizeLangCode(session?.nativeLanguageCode, 'tr');
+  const targetCode = normalizeLangCode(session?.targetLanguageCode, 'en');
+  const nativeName = languageDisplayName(nativeCode, nativeCode);
+  const targetName = languageDisplayName(targetCode, targetCode);
+
+  return `You are Lingola, a friendly robot AI tutor in the Lingola app.
+${characterBlurb(tutor)}
+${characterLockRule(tutor)}
+${flavorRule(tutor)}
+${naturalEnglishRule('A1')}
+This is a short onboarding DEMO chat after sign-up and setup questions — before the account is fully created.
+Learner native language: ${nativeName} (${nativeCode}).
+Target language they are learning: ${targetName} (${targetCode}).
+
+The opening message already:
+- Introduced you as their AI tutor
+- Asked whether they want to continue in ${targetName} or prefer ${nativeName} if something is unclear
+- Asked how they are and whether they work or are a student
+
+Rules:
+- Stay in character as a curious, warm Lingola robot only.
+- If the learner says they do NOT want ${targetName}, do not understand, or writes in ${nativeName}, switch to ${nativeName} for ALL following replies until they ask for ${targetName} again.
+- If they are fine with ${targetName}, use simple A1 ${targetName} but check comprehension gently.
+- Continue the getting-to-know-you flow: wellbeing, work vs student, one natural follow-up (field of work, what they study, etc.).
+- Remember details they share (job, student status, mood) — you will use this to personalize their plan later.
+- Keep replies short: 1–3 sentences. One question at a time.
+- Reassure them: any level is fine, no pressure, no judgment.
+- No markdown, no bullet lists.`;
+}
+
 function previewOnboardingSystemPrompt(tutor, session) {
   const nativeCode = normalizeLangCode(session?.nativeLanguageCode, 'tr');
   const targetCode = normalizeLangCode(session?.targetLanguageCode, 'en');
@@ -311,6 +343,9 @@ ${practiceRule}
 function tutorSystemPrompt(tutor, session, user) {
   const name = displayTutorName(tutor);
   const title = String(session?.title || '');
+  if (/onboarding demo/i.test(title)) {
+    return demoOnboardingSystemPrompt(tutor, session);
+  }
   if (/onboarding preview/i.test(title)) {
     return previewOnboardingSystemPrompt(tutor, session);
   }
@@ -330,6 +365,7 @@ ${naturalEnglishRule('A2')}
 ${lessonTimingRule()}
 ${learnerAddressingRule(user || {})}
 ${goalContext(user || {})}
+${learnerPersonalizationContext(user || {})}
 ${topicTeachingHints(topic)}
 ${lessonPedagogyRules()}
 ${explanationLanguageRule(user, session)}
@@ -354,6 +390,8 @@ ${flavorRule(tutor)}
 ${inCharacterReactionRule(tutor)}
 ${naturalEnglishRule('A1')}
 ${learnerAddressingRule(user || {})}
+${goalContext(user || {})}
+${learnerPersonalizationContext(user || {})}
 ${explanationLanguageRule(user, session)}
 Rules:
 - EVERY reply must sound like this character — voice, word choice, attitude. Not a generic human tutor.

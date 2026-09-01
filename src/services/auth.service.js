@@ -7,6 +7,11 @@ const {
   hashToken,
   createSessionToken,
   mapUserRow,
+  normalizeLocaleCode,
+  GOAL_VALUES,
+  LEVEL_VALUES,
+  PACE_VALUES,
+  EXPLANATION_LANGUAGE_VALUES,
 } = require('../utils/auth');
 
 const SESSION_DAYS = 60;
@@ -201,10 +206,7 @@ async function createGuestUser({
       [identityId, userId, guestSubject],
     );
 
-    const completed =
-      onboarding.goal && onboarding.level && onboarding.pace
-        ? new Date()
-        : null;
+    const completed = new Date();
 
     await connection.query(
       `INSERT INTO user_onboarding (
@@ -330,8 +332,7 @@ async function updateUserAvatar(userId, { buffer, contentType }) {
 
 async function upsertOnboarding(connection, userId, onboarding) {
   if (!onboarding) return;
-  const completed =
-    onboarding.goal && onboarding.level && onboarding.pace ? new Date() : null;
+  const completed = new Date();
 
   await connection.query(
     `INSERT INTO user_onboarding (
@@ -372,9 +373,53 @@ async function updateUserOnboarding(userId, patch = {}) {
 
   const fields = [];
   const values = [];
+  if (patch.nativeLanguageCode !== undefined) {
+    fields.push('native_language_code = ?');
+    values.push(normalizeLocaleCode(patch.nativeLanguageCode, 'tr'));
+  }
+  if (patch.targetLanguageCode !== undefined) {
+    fields.push('target_language_code = ?');
+    values.push(normalizeLocaleCode(patch.targetLanguageCode, 'en'));
+  }
+  if (patch.goal !== undefined) {
+    if (!GOAL_VALUES.has(patch.goal)) {
+      const err = new Error('Invalid onboarding.goal');
+      err.status = 400;
+      throw err;
+    }
+    fields.push('goal = ?');
+    values.push(patch.goal);
+  }
+  if (patch.level !== undefined) {
+    if (!LEVEL_VALUES.has(patch.level)) {
+      const err = new Error('Invalid onboarding.level');
+      err.status = 400;
+      throw err;
+    }
+    fields.push('level = ?');
+    values.push(patch.level);
+  }
+  if (patch.pace !== undefined) {
+    if (!PACE_VALUES.has(patch.pace)) {
+      const err = new Error('Invalid onboarding.pace');
+      err.status = 400;
+      throw err;
+    }
+    fields.push('pace = ?');
+    values.push(patch.pace);
+  }
   if (patch.explanationLanguage !== undefined) {
+    if (!EXPLANATION_LANGUAGE_VALUES.has(patch.explanationLanguage)) {
+      const err = new Error('Invalid onboarding.explanationLanguage');
+      err.status = 400;
+      throw err;
+    }
     fields.push('explanation_language = ?');
     values.push(patch.explanationLanguage);
+  }
+  if (patch.personalizationContext !== undefined) {
+    fields.push('personalization_context = ?');
+    values.push(JSON.stringify(patch.personalizationContext));
   }
 
   if (!fields.length) {
@@ -387,6 +432,24 @@ async function updateUserOnboarding(userId, patch = {}) {
     values,
   );
   return findUserById(userId);
+}
+
+async function saveOnboardingPersonalization(userId, { messages, summary }) {
+  const sanitizedMessages = (Array.isArray(messages) ? messages : [])
+    .slice(-40)
+    .map((m) => ({
+      role: m?.role === 'user' ? 'user' : 'assistant',
+      content: String(m?.content || '').trim().slice(0, 4000),
+    }))
+    .filter((m) => m.content.length > 0);
+
+  const context = {
+    messages: sanitizedMessages,
+    summary: summary ? String(summary).trim().slice(0, 2000) : undefined,
+    savedAt: new Date().toISOString(),
+  };
+
+  return updateUserOnboarding(userId, { personalizationContext: context });
 }
 
 /**
@@ -517,4 +580,5 @@ module.exports = {
   revokeSessionToken,
   loginWithProvider,
   updateUserOnboarding,
+  saveOnboardingPersonalization,
 };

@@ -5,6 +5,7 @@ const {
   updateUserProfile,
   updateUserAvatar,
   updateUserOnboarding,
+  saveOnboardingPersonalization,
   revokeSessionToken,
   loginWithProvider,
   refreshSessionToken,
@@ -13,6 +14,9 @@ const {
   parseOnboarding,
   normalizeLocaleCode,
   EXPLANATION_LANGUAGE_VALUES,
+  GOAL_VALUES,
+  LEVEL_VALUES,
+  PACE_VALUES,
 } = require('../utils/auth');
 const {
   resolveIdentity,
@@ -216,8 +220,65 @@ async function updateOnboarding(req, res, next) {
   try {
     const body = req.body || {};
     const patch = {};
+
+    const onboardingBody =
+      body.onboarding && typeof body.onboarding === 'object'
+        ? body.onboarding
+        : body;
+
+    const nativeRaw =
+      onboardingBody.nativeLanguageCode ??
+      onboardingBody.native_language_code ??
+      undefined;
+    if (nativeRaw !== undefined) {
+      patch.nativeLanguageCode = normalizeLocaleCode(nativeRaw, 'tr');
+    }
+
+    const targetRaw =
+      onboardingBody.targetLanguageCode ??
+      onboardingBody.target_language_code ??
+      undefined;
+    if (targetRaw !== undefined) {
+      patch.targetLanguageCode = normalizeLocaleCode(targetRaw, 'en');
+    }
+
+    const goalRaw = onboardingBody.goal ?? undefined;
+    if (goalRaw !== undefined) {
+      const value = String(goalRaw).trim();
+      if (!GOAL_VALUES.has(value)) {
+        const err = new Error('Invalid onboarding.goal');
+        err.status = 400;
+        throw err;
+      }
+      patch.goal = value;
+    }
+
+    const levelRaw = onboardingBody.level ?? undefined;
+    if (levelRaw !== undefined) {
+      const value = String(levelRaw).trim();
+      if (!LEVEL_VALUES.has(value)) {
+        const err = new Error('Invalid onboarding.level');
+        err.status = 400;
+        throw err;
+      }
+      patch.level = value;
+    }
+
+    const paceRaw = onboardingBody.pace ?? undefined;
+    if (paceRaw !== undefined) {
+      const value = String(paceRaw).trim();
+      if (!PACE_VALUES.has(value)) {
+        const err = new Error('Invalid onboarding.pace');
+        err.status = 400;
+        throw err;
+      }
+      patch.pace = value;
+    }
+
     const raw =
-      body.explanationLanguage ?? body.explanation_language ?? undefined;
+      onboardingBody.explanationLanguage ??
+      onboardingBody.explanation_language ??
+      undefined;
     if (raw !== undefined) {
       const value = String(raw).trim().toLowerCase();
       if (!EXPLANATION_LANGUAGE_VALUES.has(value)) {
@@ -227,12 +288,34 @@ async function updateOnboarding(req, res, next) {
       }
       patch.explanationLanguage = value;
     }
+
     if (!Object.keys(patch).length) {
       const err = new Error('No onboarding fields to update');
       err.status = 400;
       throw err;
     }
     const user = await updateUserOnboarding(req.user.id, patch);
+    res.json({ ok: true, user });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function savePersonalization(req, res, next) {
+  try {
+    const body = req.body || {};
+    const messages = body.messages;
+    if (!Array.isArray(messages)) {
+      return res.status(400).json({
+        ok: false,
+        error: 'messages array is required',
+      });
+    }
+    const summary = body.summary ?? body.notes ?? undefined;
+    const user = await saveOnboardingPersonalization(req.user.id, {
+      messages,
+      summary,
+    });
     res.json({ ok: true, user });
   } catch (err) {
     next(err);
@@ -343,6 +426,7 @@ module.exports = {
   refresh,
   updateMe,
   updateOnboarding,
+  savePersonalization,
   updateNotifications,
   uploadAvatar,
   logout,
