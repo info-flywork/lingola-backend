@@ -4,7 +4,6 @@ const { env } = require('../config/env');
 const {
   prepareTtsText,
   looksMixedLanguage,
-  modelSupportsLanguageAuto,
 } = require('./tts_text_helpers');
 
 function stripDataUrl(base64) {
@@ -292,7 +291,7 @@ async function elevenLabsTts({
 
   const id = resolveVoiceId(voiceId);
   const resolvedModel = modelId || 'eleven_multilingual_v2';
-  const { spoken, mixed } = buildTtsPayload(text, {
+  const { spoken } = buildTtsPayload(text, {
     modelId: resolvedModel,
     nativeLanguageCode,
     targetLanguageCode,
@@ -306,9 +305,6 @@ async function elevenLabsTts({
     model_id: resolvedModel,
     voice_settings: { stability: 0.45, similarity_boost: 0.8 },
   };
-  if (mixed && modelSupportsLanguageAuto(resolvedModel)) {
-    requestBody.language_code = 'auto';
-  }
   const res = await fetch(
     `https://api.elevenlabs.io/v1/text-to-speech/${id}?output_format=mp3_44100_128`,
     {
@@ -559,7 +555,7 @@ async function synthesizeTtsWithLipsync({
 
   const id = resolveVoiceId(voiceId);
   const resolvedModel = modelId || 'eleven_multilingual_v2';
-  const { spoken, mixed } = buildTtsPayload(text, {
+  const { spoken } = buildTtsPayload(text, {
     modelId: resolvedModel,
     nativeLanguageCode,
     targetLanguageCode,
@@ -574,9 +570,6 @@ async function synthesizeTtsWithLipsync({
       model_id: resolvedModel,
       voice_settings: { stability: 0.45, similarity_boost: 0.8 },
     };
-    if (mixed && modelSupportsLanguageAuto(resolvedModel)) {
-      requestBody.language_code = 'auto';
-    }
     const res = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${id}/with-timestamps`,
       {
