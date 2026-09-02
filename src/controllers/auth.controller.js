@@ -16,7 +16,7 @@ const {
   EXPLANATION_LANGUAGE_VALUES,
   GOAL_VALUES,
   LEVEL_VALUES,
-  PACE_VALUES,
+  normalizePace,
 } = require('../utils/auth');
 const {
   resolveIdentity,
@@ -188,27 +188,66 @@ async function updateMe(req, res, next) {
 async function updateNotifications(req, res, next) {
   try {
     const body = req.body || {};
-    if (
-      body.notificationsEnabled === undefined &&
-      body.notifications_enabled === undefined &&
-      body.enabled === undefined
-    ) {
-      const err = apiError('notificationsEnabled is required', {
-        status: 400,
-        code: API_ERROR_CODES.NOTIFICATIONS_REQUIRED,
-      });
+    const {
+      normalizeReminderHour,
+      normalizeReminderMinute,
+    } = require('../utils/auth');
+
+    const hasEnabled =
+      body.notificationsEnabled !== undefined ||
+      body.notifications_enabled !== undefined ||
+      body.enabled !== undefined;
+    const hasHour =
+      body.reminderHour !== undefined ||
+      body.reminder_hour !== undefined ||
+      body.dailyReminderHour !== undefined ||
+      body.daily_reminder_hour !== undefined;
+    const hasMinute =
+      body.reminderMinute !== undefined ||
+      body.reminder_minute !== undefined ||
+      body.dailyReminderMinute !== undefined ||
+      body.daily_reminder_minute !== undefined;
+
+    if (!hasEnabled && !hasHour && !hasMinute) {
+      const err = apiError(
+        'notificationsEnabled or reminderHour/reminderMinute is required',
+        {
+          status: 400,
+          code: API_ERROR_CODES.NOTIFICATIONS_REQUIRED,
+        },
+      );
       throw err;
     }
 
-    const enabled = Boolean(
-      body.notificationsEnabled ?? body.notifications_enabled ?? body.enabled,
-    );
-    const user = await updateUserProfile(req.user.id, {
-      notificationsEnabled: enabled,
-    });
+    const patch = {};
+    if (hasEnabled) {
+      patch.notificationsEnabled = Boolean(
+        body.notificationsEnabled ?? body.notifications_enabled ?? body.enabled,
+      );
+    }
+    if (hasHour) {
+      patch.dailyReminderHour = normalizeReminderHour(
+        body.reminderHour ??
+          body.reminder_hour ??
+          body.dailyReminderHour ??
+          body.daily_reminder_hour,
+      );
+    }
+    if (hasMinute) {
+      patch.dailyReminderMinute = normalizeReminderMinute(
+        body.reminderMinute ??
+          body.reminder_minute ??
+          body.dailyReminderMinute ??
+          body.daily_reminder_minute,
+      );
+    }
+
+    const user = await updateUserProfile(req.user.id, patch);
     res.json({
       ok: true,
       notificationsEnabled: user.notificationsEnabled,
+      dailyReminderHour: user.dailyReminderHour,
+      dailyReminderMinute: user.dailyReminderMinute,
       user,
     });
   } catch (err) {
@@ -266,8 +305,8 @@ async function updateOnboarding(req, res, next) {
 
     const paceRaw = onboardingBody.pace ?? undefined;
     if (paceRaw !== undefined) {
-      const value = String(paceRaw).trim();
-      if (!PACE_VALUES.has(value)) {
+      const value = normalizePace(paceRaw);
+      if (value == null) {
         const err = new Error('Invalid onboarding.pace');
         err.status = 400;
         throw err;

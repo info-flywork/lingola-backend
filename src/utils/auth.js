@@ -25,7 +25,19 @@ const LEVEL_VALUES = new Set([
   'a1', 'a2', 'b1', 'b2', 'c1', 'c2',
   'beginner', 'intermediate', 'advanced',
 ]);
-const PACE_VALUES = new Set(['light', 'recommended', 'fast']);
+const PACE_VALUES = new Set(['min5', 'min10', 'min15', 'min30', 'min60']);
+const LEGACY_PACE_MAP = {
+  light: 'min5',
+  recommended: 'min15',
+  fast: 'min30',
+};
+
+function normalizePace(value) {
+  if (value == null) return null;
+  const raw = String(value).trim();
+  if (LEGACY_PACE_MAP[raw]) return LEGACY_PACE_MAP[raw];
+  return PACE_VALUES.has(raw) ? raw : null;
+}
 const EXPLANATION_LANGUAGE_VALUES = new Set(['native', 'english']);
 const AUTH_PROVIDERS = new Set(['guest', 'google', 'apple']);
 
@@ -63,7 +75,7 @@ function parseOnboarding(body = {}) {
     level = String(level).trim().toLowerCase();
   }
   if (pace != null) {
-    pace = String(pace).trim();
+    pace = normalizePace(pace);
   }
 
   if (goal != null && !GOAL_VALUES.has(goal)) {
@@ -85,7 +97,7 @@ function parseOnboarding(body = {}) {
   // Login-first akış: onboarding ekranları atlanınca güvenli varsayılanlar.
   if (goal == null) goal = 'career';
   if (level == null) level = 'a1';
-  if (pace == null) pace = 'recommended';
+  if (pace == null) pace = 'min15';
 
   let explanationLanguage =
     onboarding.explanationLanguage ?? onboarding.explanation_language ?? 'native';
@@ -108,6 +120,19 @@ function parseOnboarding(body = {}) {
   };
 }
 
+function normalizeReminderHour(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return 15;
+  return Math.min(23, Math.max(0, Math.trunc(n)));
+}
+
+function normalizeReminderMinute(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return 0;
+  const clamped = Math.min(59, Math.max(0, Math.trunc(n)));
+  return clamped - (clamped % 15);
+}
+
 function mapUserRow(row, onboarding) {
   if (!row) return null;
   return {
@@ -118,6 +143,8 @@ function mapUserRow(row, onboarding) {
     authProvider: row.auth_provider,
     isGuest: Boolean(row.is_guest),
     notificationsEnabled: Boolean(row.notifications_enabled),
+    dailyReminderHour: normalizeReminderHour(row.daily_reminder_hour),
+    dailyReminderMinute: normalizeReminderMinute(row.daily_reminder_minute),
     appLocale: row.app_locale,
     subscriptionStatus: row.subscription_status,
     deletionRequestedAt: row.deletion_requested_at || null,
@@ -162,9 +189,12 @@ module.exports = {
   normalizeLocaleCode,
   parseOnboarding,
   mapUserRow,
+  normalizeReminderHour,
+  normalizeReminderMinute,
   AUTH_PROVIDERS,
   GOAL_VALUES,
   LEVEL_VALUES,
   PACE_VALUES,
+  normalizePace,
   EXPLANATION_LANGUAGE_VALUES,
 };

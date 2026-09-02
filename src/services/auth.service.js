@@ -10,7 +10,7 @@ const {
   normalizeLocaleCode,
   GOAL_VALUES,
   LEVEL_VALUES,
-  PACE_VALUES,
+  normalizePace,
   EXPLANATION_LANGUAGE_VALUES,
 } = require('../utils/auth');
 
@@ -250,6 +250,14 @@ async function updateUserProfile(userId, patch) {
     fields.push('notifications_enabled = ?');
     values.push(patch.notificationsEnabled ? 1 : 0);
   }
+  if (patch.dailyReminderHour !== undefined) {
+    fields.push('daily_reminder_hour = ?');
+    values.push(patch.dailyReminderHour);
+  }
+  if (patch.dailyReminderMinute !== undefined) {
+    fields.push('daily_reminder_minute = ?');
+    values.push(patch.dailyReminderMinute);
+  }
   if (patch.appLocale !== undefined) {
     fields.push('app_locale = ?');
     values.push(patch.appLocale);
@@ -400,13 +408,14 @@ async function updateUserOnboarding(userId, patch = {}) {
     values.push(patch.level);
   }
   if (patch.pace !== undefined) {
-    if (!PACE_VALUES.has(patch.pace)) {
+    const normalized = normalizePace(patch.pace);
+    if (normalized == null) {
       const err = new Error('Invalid onboarding.pace');
       err.status = 400;
       throw err;
     }
     fields.push('pace = ?');
-    values.push(patch.pace);
+    values.push(normalized);
   }
   if (patch.explanationLanguage !== undefined) {
     if (!EXPLANATION_LANGUAGE_VALUES.has(patch.explanationLanguage)) {
