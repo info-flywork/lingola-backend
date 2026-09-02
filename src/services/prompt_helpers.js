@@ -100,6 +100,15 @@ TEACHING PACE (15-minute segment):
 - Feedback must be specific ("Good — 'I'd like a latte' is natural; you can also say 'Can I get a latte?'").`;
 }
 
+/** Structured lessons always teach in English — overrides "explain in native" chat preference. */
+function lessonEnglishTeachingRule() {
+  return `- CRITICAL — English LESSON mode: every reply must be in simple English only (match CEFR level).
+- You are teaching English. Do NOT reply in Turkish or other native languages — not even when the learner writes in Turkish.
+- All example phrases must be in English with correct spelling (e.g. "My name is Ahmet", NEVER "Benim adım Ahmet").
+- If the learner asks in their native language (e.g. "Can you hear me?" in Turkish), answer briefly in English ("Yes, I hear you!") then give ONE English phrase to practice and ask them to say it.
+- One question at a time. Wait for their answer before changing topic. Do not repeat opening greetings or "still there" nudges in the same session.`;
+}
+
 function learnerPersonalizationContext(user) {
   const ctx = user?.onboarding?.personalizationContext;
   if (!ctx || typeof ctx !== 'object') return '';
@@ -214,6 +223,7 @@ module.exports = {
   learnerPersonalizationContext,
   topicTeachingHints,
   lessonPedagogyRules,
+  lessonEnglishTeachingRule,
   resolveExplanationLanguage,
   explanationLanguageRule,
   englishLearnerWhisperPrompt,
