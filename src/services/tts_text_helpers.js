@@ -42,6 +42,11 @@ function modelSupportsPhonemeTags(modelId) {
   return m.includes('flash') || m.includes('turbo');
 }
 
+/** Yalnızca flash/turbo modeller `language_code: auto` kabul eder. */
+function modelSupportsLanguageAuto(modelId) {
+  return modelSupportsPhonemeTags(modelId);
+}
+
 function normalizeLangCode(code, fallback = 'en') {
   const raw = String(code || fallback).trim().toLowerCase();
   if (!raw) return fallback;
@@ -62,9 +67,10 @@ function looksLikeNativeExplanation(text, nativeCode) {
     ) {
       return true;
     }
+    return false;
   }
 
-  return native !== 'en';
+  return false;
 }
 
 function looksMixedLanguage(text, nativeCode) {
@@ -168,5 +174,6 @@ module.exports = {
   prepareTtsText,
   looksMixedLanguage,
   modelSupportsPhonemeTags,
+  modelSupportsLanguageAuto,
   ENGLISH_LESSON_PHONEMES,
 };

@@ -4,6 +4,7 @@ const { env } = require('../config/env');
 const {
   prepareTtsText,
   looksMixedLanguage,
+  modelSupportsLanguageAuto,
 } = require('./tts_text_helpers');
 
 function stripDataUrl(base64) {
@@ -305,7 +306,7 @@ async function elevenLabsTts({
     model_id: resolvedModel,
     voice_settings: { stability: 0.45, similarity_boost: 0.8 },
   };
-  if (mixed) {
+  if (mixed && modelSupportsLanguageAuto(resolvedModel)) {
     requestBody.language_code = 'auto';
   }
   const res = await fetch(
@@ -573,7 +574,7 @@ async function synthesizeTtsWithLipsync({
       model_id: resolvedModel,
       voice_settings: { stability: 0.45, similarity_boost: 0.8 },
     };
-    if (mixed) {
+    if (mixed && modelSupportsLanguageAuto(resolvedModel)) {
       requestBody.language_code = 'auto';
     }
     const res = await fetch(
