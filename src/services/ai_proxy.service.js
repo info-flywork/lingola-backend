@@ -226,6 +226,7 @@ async function translateToTurkish(text) {
 async function openAiTts(text, { voiceId } = {}) {
   const apiKey = requireOpenAi();
   const maleIds = new Set([
+    'JAATlCsz6GCH2vUjFcLg',
     'sJ8GED3d0sN1d0bmD6mH',
     'PIGsltMj3gFMR34aFDI3',
     'uDsPstFWFBUXjIBimV7s',

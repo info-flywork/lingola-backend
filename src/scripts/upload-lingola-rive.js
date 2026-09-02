@@ -11,7 +11,7 @@ require('dotenv').config();
 const { pool } = require('../config/db');
 const { uploadBuffer } = require('../services/bunny.service');
 
-const MALE_VOICE = 'sJ8GED3d0sN1d0bmD6mH';
+const LINGOLA_VOICE = 'JAATlCsz6GCH2vUjFcLg';
 const LOCAL_RIVE = 'assets/riv/Female/lingola_robot.riv';
 const FRONTEND_ROOT = path.join(__dirname, '../../../lingola');
 
@@ -35,7 +35,7 @@ async function main() {
          rive_cdn_url = ?,
          voice_id = ?
      WHERE slug = 'lingola'`,
-    [LOCAL_RIVE, riveCdnUrl, MALE_VOICE],
+    [LOCAL_RIVE, riveCdnUrl, LINGOLA_VOICE],
   );
 
   if (!result.affectedRows) {

@@ -7,6 +7,7 @@
 const FRONTEND_ROOT = require('path').join(__dirname, '../../../lingola');
 
 const MALE_VOICE = 'sJ8GED3d0sN1d0bmD6mH';
+const LINGOLA_VOICE = 'JAATlCsz6GCH2vUjFcLg';
 const FEMALE_VOICE = 'WZlYpi1yf6zJhNWXih74';
 const DIEGO_VOICE = 'PIGsltMj3gFMR34aFDI3';
 
@@ -15,7 +16,7 @@ const tutors = [
     slug: 'lingola',
     nameKey: 'lingola',
     tagKeys: ['analytic', 'curious'],
-    voiceId: MALE_VOICE,
+    voiceId: LINGOLA_VOICE,
     localImage: 'assets/images/tutors/hero.png',
     localRive: 'assets/riv/Female/lingola_robot.riv',
     flagAsset: 'assets/images/home/flag_icon.svg',
