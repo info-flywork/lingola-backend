@@ -225,15 +225,20 @@ async function translateToTurkish(text) {
 
 async function openAiTts(text, { voiceId } = {}) {
   const apiKey = requireOpenAi();
+  const LINGOLA_VOICE = 'JAATlCsz6GCH2vUjFcLg';
+  const resolved = resolveVoiceId(voiceId);
+  if (resolved === LINGOLA_VOICE) {
+    const err = new Error('Lingola voice must use ElevenLabs only');
+    err.status = 502;
+    throw err;
+  }
   const maleIds = new Set([
-    'JAATlCsz6GCH2vUjFcLg',
     'sJ8GED3d0sN1d0bmD6mH',
     'PIGsltMj3gFMR34aFDI3',
     'uDsPstFWFBUXjIBimV7s',
     'wXvR48IpOq9HACltTmt7',
     'TsHrPyMlNFuIYnbODF01',
   ]);
-  const resolved = resolveVoiceId(voiceId);
   const openAiVoice = maleIds.has(resolved) ? 'onyx' : 'nova';
   console.warn(`[tts] OpenAI fallback voice=${openAiVoice} for eleven=${resolved}`);
   const res = await fetch('https://api.openai.com/v1/audio/speech', {
@@ -450,6 +455,10 @@ async function synthesizeTts({
         visemes: heuristicVisemesFromText(spoken),
       };
     } catch (err) {
+      const isLingola = resolveVoiceId(voiceId) === 'JAATlCsz6GCH2vUjFcLg';
+      if (isLingola || !env.openai.apiKey) {
+        throw err;
+      }
       if (env.openai.apiKey) {
         const audioBase64 = await openAiTts(body, { voiceId });
         return {
@@ -611,16 +620,42 @@ async function synthesizeTtsWithLipsync({
     return { audioBase64, visemes };
   } catch (err) {
     console.warn(
-      '[tts/lipsync] with-timestamps failed, fallback TTS:',
+      '[tts/lipsync] with-timestamps failed, fallback ElevenLabs (no OpenAI):',
       err?.message || err,
     );
-    return synthesizeTts({
-      text,
-      voiceId,
-      modelId,
-      nativeLanguageCode,
-      targetLanguageCode,
-    });
+    try {
+      const audioBase64 = await elevenLabsTts({
+        text,
+        voiceId,
+        modelId,
+        nativeLanguageCode,
+        targetLanguageCode,
+      });
+      const { spoken } = buildTtsPayload(String(text || '').trim(), {
+        modelId,
+        nativeLanguageCode,
+        targetLanguageCode,
+      });
+      return {
+        audioBase64,
+        visemes: heuristicVisemesFromText(spoken),
+      };
+    } catch (fallbackErr) {
+      console.warn(
+        '[tts/lipsync] ElevenLabs plain fallback failed:',
+        fallbackErr?.message || fallbackErr,
+      );
+      if (resolveVoiceId(voiceId) === 'JAATlCsz6GCH2vUjFcLg') {
+        throw fallbackErr;
+      }
+      return synthesizeTts({
+        text,
+        voiceId,
+        modelId,
+        nativeLanguageCode,
+        targetLanguageCode,
+      });
+    }
   }
 }
 
