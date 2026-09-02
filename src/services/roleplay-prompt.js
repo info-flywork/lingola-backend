@@ -413,7 +413,7 @@ function rolePlayLanguageRule(user) {
 - In-character role-play lines are always English.`;
 }
 
-function buildRolePlayPrompt(scene, { user, tutor } = {}) {
+function buildRolePlayPrompt(scene, { user, tutor, resuming = false } = {}) {
   const phrases = scene.phrases.map((p) => `- ${p}`).join('\n');
   const checks = (scene.rolePlayChecks || [])
     .map((c) => `- ${c}`)
@@ -427,6 +427,16 @@ ${flavorRule(tutor)}`
       : `You are Lingola, a friendly robot English tutor running this role-play.`;
 
   const languageRule = rolePlayLanguageRule(user);
+
+  const resumeRule = resuming
+    ? `
+RESUME RULE (chat history already exists — learner returned to this scenario):
+- Do NOT restart Phase 1 or repeat the opening briefing ("Hi! Today we'll practice...").
+- Welcome them back briefly (one short sentence) and continue from the last phase you were in.
+- Pick up naturally from prior messages; do not re-teach phrases they already practiced unless they ask.
+`
+    : `
+Never jump straight into "Welcome, what can I get you?" at the start. Brief and teach first.`;
 
   return `You are ${tutorName}, a friendly English tutor running a ROLE-PLAY lesson.
 ${character}
@@ -468,14 +478,14 @@ PHASE 4 — CHECK + CLOSE (teacher again, not in character)
 - Ask: "Is there anything you didn't understand?"
 - If fine, encourage them warmly and invite them to finish the session.
 
-Never jump straight into "Welcome, what can I get you?" at the start. Brief and teach first.`;
+${resumeRule}`;
 }
 
-function rolePlaySystemPrompt(sessionTitle, { user, tutor, customPayload } = {}) {
+function rolePlaySystemPrompt(sessionTitle, { user, tutor, customPayload, resuming = false } = {}) {
   const scene = customPayload
     ? sceneFromPayload(customPayload, customPayload.title)
     : sceneFor(sessionTitle);
-  return buildRolePlayPrompt(scene, { user, tutor });
+  return buildRolePlayPrompt(scene, { user, tutor, resuming });
 }
 
 function parseCustomScenarioId(title) {

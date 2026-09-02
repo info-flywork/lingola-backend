@@ -344,7 +344,7 @@ ${practiceRule}
 - No markdown, no bullet lists.`;
 }
 
-async function tutorSystemPrompt(tutor, session, user) {
+async function tutorSystemPrompt(tutor, session, user, { resuming = false } = {}) {
   const name = displayTutorName(tutor);
   const title = String(session?.title || '');
   if (/onboarding demo/i.test(title)) {
@@ -362,10 +362,11 @@ async function tutorSystemPrompt(tutor, session, user) {
           user,
           tutor,
           customPayload: custom.promptPayload,
+          resuming,
         });
       }
     }
-    return rolePlaySystemPrompt(title, { user, tutor });
+    return rolePlaySystemPrompt(title, { user, tutor, resuming });
   }
   if (title.startsWith('Lesson:') || title.startsWith('Practice:')) {
     const isPractice = title.startsWith('Practice:');
@@ -501,10 +502,14 @@ async function sendMessage({ userId, sessionId, content }) {
     title.startsWith('Lesson:') ||
     title.startsWith('Practice:');
 
+  const hasUserTurn = prior.some((m) => m.role === 'user');
+  const resuming =
+    title.startsWith('Role Play:') && (hasUserTurn || prior.length > 1);
+
   let replyText;
   try {
     replyText = await callOpenAi({
-      system: await tutorSystemPrompt(tutor, session, user),
+      system: await tutorSystemPrompt(tutor, session, user, { resuming }),
       history: prior,
       userMessage: text,
       maxTokens: richSession ? 320 : 220,
