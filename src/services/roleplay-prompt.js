@@ -6,7 +6,11 @@ const {
   flavorRule,
   naturalEnglishRule,
 } = require('./tutor-personality');
-const { learnerAddressingRule, explanationLanguageRule } = require('./prompt_helpers');
+const {
+  learnerAddressingRule,
+  resolveExplanationLanguage,
+} = require('./prompt_helpers');
+const { normalizeLangCode, languageDisplayName } = require('../utils/locale');
 
 const SCENES = [
   {
@@ -385,6 +389,30 @@ function displayTutorName(tutor) {
   return raw.charAt(0).toUpperCase() + raw.slice(1);
 }
 
+function rolePlayLanguageRule(user) {
+  const nativeCode = normalizeLangCode(
+    user?.onboarding?.nativeLanguageCode,
+    'tr',
+  );
+  const nativeName = languageDisplayName(nativeCode, nativeCode);
+  const strictEnglishOnly =
+    resolveExplanationLanguage(user, null) === 'english';
+
+  if (strictEnglishOnly) {
+    return `CRITICAL LANGUAGE RULE:
+- Speak and write ONLY in English in every message (briefing, role-play, feedback).
+- Never reply in ${nativeName} or any other language. The app UI translates separately if needed.`;
+  }
+
+  return `CRITICAL LANGUAGE RULE:
+- DEFAULT: Start in English and keep briefing, role-play dialogue, and feedback in English.
+- The chat bubble text MUST match the language you are speaking for that sentence.
+- Use ${nativeName} ONLY when the learner's latest message is clearly in ${nativeName} (they asked for help, meaning, grammar, or wrote in ${nativeName}).
+- Do NOT open with ${nativeName}. Do NOT write ${nativeName} while the voice speaks English.
+- After a short ${nativeName} explanation, return to English practice in the same reply (one English phrase or question).
+- In-character role-play lines are always English.`;
+}
+
 function buildRolePlayPrompt(scene, { user, tutor } = {}) {
   const phrases = scene.phrases.map((p) => `- ${p}`).join('\n');
   const checks = (scene.rolePlayChecks || [])
@@ -397,20 +425,8 @@ function buildRolePlayPrompt(scene, { user, tutor } = {}) {
 ${characterLockRule(tutor)}
 ${flavorRule(tutor)}`
       : `You are Lingola, a friendly robot English tutor running this role-play.`;
-  const explainRule = explanationLanguageRule(user, null);
-  const strictEnglishOnly =
-    String(user?.onboarding?.explanationLanguage || 'native').trim().toLowerCase() ===
-    'english';
 
-  const languageRule = strictEnglishOnly
-    ? `CRITICAL LANGUAGE RULE:
-- Speak ONLY English in every message (briefing, role-play, feedback).
-- Never reply in Turkish or any other language. The app UI translates for the learner separately.`
-    : `LANGUAGE RULE:
-- In-character role-play lines stay in English (the scenario dialogue).
-- If the learner asks a question in their native language (grammar, vocabulary, "what does X mean?"), answer that part in their native language — then return to English practice in the same reply.
-- Briefing and feedback phases may use their native language for explanations when helpful.
-${explainRule}`;
+  const languageRule = rolePlayLanguageRule(user);
 
   return `You are ${tutorName}, a friendly English tutor running a ROLE-PLAY lesson.
 ${character}

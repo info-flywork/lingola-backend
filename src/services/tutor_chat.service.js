@@ -89,29 +89,32 @@ async function getOrCreateSession(
     : 'chat';
 
   if (!forceNew) {
-    if (title && String(title).trim()) {
+    const trimmedTitle = title && String(title).trim() ? String(title).trim() : '';
+
+    if (trimmedTitle) {
       const [byTitle] = await pool.query(
         `SELECT * FROM tutor_chat_sessions
          WHERE user_id = ? AND tutor_id = ? AND title = ?
          ORDER BY COALESCE(last_message_at, created_at) DESC
          LIMIT 1`,
-        [userId, tutorId, String(title).trim()],
+        [userId, tutorId, trimmedTitle],
       );
       if (byTitle.length) {
         return { session: mapSession(byTitle[0]), tutor, created: false };
       }
-    }
+      // Başlık verildi ama oturum yok → aşağıda yeni oturum (eski Lingola sohbetini alma).
+    } else {
+      const [existing] = await pool.query(
+        `SELECT * FROM tutor_chat_sessions
+         WHERE user_id = ? AND tutor_id = ?
+         ORDER BY COALESCE(last_message_at, created_at) DESC
+         LIMIT 1`,
+        [userId, tutorId],
+      );
 
-    const [existing] = await pool.query(
-      `SELECT * FROM tutor_chat_sessions
-       WHERE user_id = ? AND tutor_id = ?
-       ORDER BY COALESCE(last_message_at, created_at) DESC
-       LIMIT 1`,
-      [userId, tutorId],
-    );
-
-    if (existing.length) {
-      return { session: mapSession(existing[0]), tutor, created: false };
+      if (existing.length) {
+        return { session: mapSession(existing[0]), tutor, created: false };
+      }
     }
   }
 
