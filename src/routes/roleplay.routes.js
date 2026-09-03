@@ -17,5 +17,10 @@ router.post(
   requireAuth,
   roleplayController.saveProgress,
 );
+router.delete(
+  '/scenarios/:scenarioId',
+  requireAuth,
+  roleplayController.deleteCustomScenario,
+);
 
 module.exports = router;

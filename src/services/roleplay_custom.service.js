@@ -3,6 +3,7 @@
 const { pool } = require('../config/db');
 const { env } = require('../config/env');
 const { uuid } = require('../utils/auth');
+const { uploadBuffer } = require('./bunny.service');
 
 function requireOpenAi() {
   const apiKey = env.openai.apiKey;
@@ -44,7 +45,7 @@ Return ONLY valid JSON (no markdown) with this shape:
   "roleBUser": "learner role phase 3 after switch",
   "phrases": ["8-14 natural English phrases"],
   "rolePlayChecks": ["3-6 real-life details to cover in the scene"],
-  "imagePrompt": "flat colorful mobile app illustration, friendly cartoon style, no text, square composition"
+  "imagePrompt": "one specific visual of THIS scene only, unique setting and characters, not a generic cafe"
 }
 Keep language A2-B1, everyday spoken English.
 Honor the learner-provided scenario and roles closely.`;
@@ -96,28 +97,94 @@ Honor the learner-provided scenario and roles closely.`;
   return parsed;
 }
 
-async function generateScenarioImage(imagePrompt) {
-  try {
-    const apiKey = requireOpenAi();
-    const res = await fetch('https://api.openai.com/v1/images/generations', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'dall-e-3',
-        prompt: String(imagePrompt || 'friendly flat illustration for language learning app'),
-        size: '1024x1024',
-        n: 1,
-      }),
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data?.data?.[0]?.url || null;
-  } catch (_) {
-    return null;
+function buildImagePrompt(generated, input) {
+  const title = String(generated.title || input.scenario || '').trim();
+  const scene = String(generated.screenplay || input.scenario || '').trim();
+  const tutor = String(generated.roleATutor || input.tutorRole || 'tutor').trim();
+  const learner = String(generated.roleAUser || input.userRole || 'learner').trim();
+  const extra = String(generated.imagePrompt || input.extraInfo || '').trim();
+  return [
+    'Bright colorful cartoon illustration for a language-learning app card.',
+    `Unique scene: ${title}. ${scene}`,
+    `Show ${tutor} interacting with ${learner} in this exact situation.`,
+    extra ? `Visual details: ${extra}` : '',
+    'Vivid colors, square 1:1 crop, friendly characters, clear setting.',
+    'No text, no letters, no logos, no watermarks, no UI chrome.',
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .slice(0, 3500);
+}
+
+async function requestImageGeneration(apiKey, body) {
+  const res = await fetch('https://api.openai.com/v1/images/generations', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  const raw = await res.text();
+  if (!res.ok) {
+    const err = new Error(`OpenAI image generation failed: ${raw.slice(0, 280)}`);
+    err.status = 502;
+    throw err;
   }
+  return JSON.parse(raw);
+}
+
+async function bufferFromImageResponse(data) {
+  const item = data?.data?.[0];
+  if (item?.b64_json) {
+    return Buffer.from(item.b64_json, 'base64');
+  }
+  if (item?.url) {
+    const imgRes = await fetch(item.url);
+    if (!imgRes.ok) {
+      const err = new Error('OpenAI image download failed');
+      err.status = 502;
+      throw err;
+    }
+    return Buffer.from(await imgRes.arrayBuffer());
+  }
+  const err = new Error('OpenAI image payload missing');
+  err.status = 502;
+  throw err;
+}
+
+async function generateScenarioImageBuffer(imagePrompt) {
+  const apiKey = requireOpenAi();
+  const prompt = String(
+    imagePrompt || 'friendly colorful cartoon illustration for a language app, no text',
+  );
+
+  try {
+    const data = await requestImageGeneration(apiKey, {
+      model: 'gpt-image-1',
+      prompt,
+      size: '1024x1024',
+    });
+    return bufferFromImageResponse(data);
+  } catch (firstErr) {
+    console.warn('[roleplay] gpt-image-1 failed, trying dall-e-3:', firstErr.message);
+    const data = await requestImageGeneration(apiKey, {
+      model: 'dall-e-3',
+      prompt,
+      size: '1024x1024',
+      quality: 'standard',
+      n: 1,
+    });
+    return bufferFromImageResponse(data);
+  }
+}
+
+async function persistScenarioImage(userId, scenarioId, buffer) {
+  return uploadBuffer(
+    `roleplay/custom/${userId}/${scenarioId}.png`,
+    buffer,
+    'image/png',
+  );
 }
 
 function rowToApi(row) {
@@ -206,9 +273,17 @@ async function createCustomScenario(
     { scenario: scene, tutorRole: tutor, userRole: learner, extraInfo: extra },
     nativeLanguageCode,
   );
-  const imageUrl = await generateScenarioImage(generated.imagePrompt);
 
   const id = uuid();
+  const imagePrompt = buildImagePrompt(generated, {
+    scenario: scene,
+    tutorRole: tutor,
+    userRole: learner,
+    extraInfo: extra,
+  });
+  const imageBuffer = await generateScenarioImageBuffer(imagePrompt);
+  const imageUrl = await persistScenarioImage(userId, id, imageBuffer);
+
   const payload = {
     title: generated.title,
     userInput: {
@@ -246,8 +321,37 @@ async function createCustomScenario(
   return fetchCustomById(userId, id);
 }
 
+async function deleteCustomScenario(userId, scenarioId) {
+  const id = String(scenarioId || '').trim();
+  if (!id) {
+    const err = new Error('scenarioId is required');
+    err.status = 400;
+    throw err;
+  }
+
+  const existing = await fetchCustomById(userId, id);
+  if (!existing) {
+    const err = new Error('Scenario not found');
+    err.status = 404;
+    throw err;
+  }
+
+  await pool.query(
+    `DELETE FROM roleplay_progress
+     WHERE user_id = ? AND scenario_id = ?`,
+    [userId, id],
+  );
+  await pool.query(
+    `DELETE FROM user_roleplay_scenarios
+     WHERE user_id = ? AND id = ?`,
+    [userId, id],
+  );
+  return true;
+}
+
 module.exports = {
   createCustomScenario,
+  deleteCustomScenario,
   listCustomForUser,
   fetchCustomById,
   rowToApi,

@@ -68,8 +68,22 @@ async function generateCustomScenario(req, res, next) {
   }
 }
 
+async function deleteCustomScenario(req, res, next) {
+  try {
+    const scenarioId = String(req.params.scenarioId || '').trim();
+    if (!scenarioId) {
+      return res.status(400).json({ ok: false, message: 'scenarioId is required' });
+    }
+    await roleplayGenerate.deleteCustomScenario(req.user.id, scenarioId);
+    res.json({ ok: true });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   listScenarios,
   saveProgress,
   generateCustomScenario,
+  deleteCustomScenario,
 };
