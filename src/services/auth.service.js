@@ -8,6 +8,7 @@ const {
   createSessionToken,
   mapUserRow,
   normalizeLocaleCode,
+  normalizeInterests,
   GOAL_VALUES,
   LEVEL_VALUES,
   normalizePace,
@@ -211,13 +212,14 @@ async function createGuestUser({
     await connection.query(
       `INSERT INTO user_onboarding (
          user_id, native_language_code, target_language_code,
-         goal, level, pace, explanation_language, completed_at
-       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+         goal, interests, level, pace, explanation_language, completed_at
+       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         userId,
         onboarding.nativeLanguageCode,
         onboarding.targetLanguageCode,
         onboarding.goal,
+        JSON.stringify(normalizeInterests(onboarding.interests)),
         onboarding.level,
         onboarding.pace,
         onboarding.explanationLanguage || 'native',
@@ -345,12 +347,13 @@ async function upsertOnboarding(connection, userId, onboarding) {
   await connection.query(
     `INSERT INTO user_onboarding (
        user_id, native_language_code, target_language_code,
-       goal, level, pace, explanation_language, completed_at
-     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+       goal, interests, level, pace, explanation_language, completed_at
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
      ON DUPLICATE KEY UPDATE
        native_language_code = VALUES(native_language_code),
        target_language_code = VALUES(target_language_code),
        goal = COALESCE(VALUES(goal), goal),
+       interests = COALESCE(VALUES(interests), interests),
        level = COALESCE(VALUES(level), level),
        pace = COALESCE(VALUES(pace), pace),
        explanation_language = COALESCE(VALUES(explanation_language), explanation_language),
@@ -360,6 +363,7 @@ async function upsertOnboarding(connection, userId, onboarding) {
       onboarding.nativeLanguageCode,
       onboarding.targetLanguageCode,
       onboarding.goal,
+      JSON.stringify(normalizeInterests(onboarding.interests)),
       onboarding.level,
       onboarding.pace,
       onboarding.explanationLanguage || 'native',
@@ -397,6 +401,10 @@ async function updateUserOnboarding(userId, patch = {}) {
     }
     fields.push('goal = ?');
     values.push(patch.goal);
+  }
+  if (patch.interests !== undefined) {
+    fields.push('interests = ?');
+    values.push(JSON.stringify(normalizeInterests(patch.interests)));
   }
   if (patch.level !== undefined) {
     if (!LEVEL_VALUES.has(patch.level)) {

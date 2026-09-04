@@ -17,18 +17,39 @@ function verifyUrl(token) {
   return `${PUBLIC_BASE_URL}/certificates/verify/${token}`;
 }
 
+function listTitleForLevel(level) {
+  switch (String(level || '').toUpperCase()) {
+    case 'A1':
+      return 'A1 - Starter Certificate';
+    case 'A2':
+      return 'A2 - Basic Certificate';
+    case 'B1':
+      return 'B1 - Intermediate Certificate';
+    case 'B2':
+      return 'B2 - Upper Intermediate Certificate';
+    case 'C1':
+      return 'C1 - Advanced Certificate';
+    case 'C2':
+      return 'C2 - Expert Certificate';
+    default:
+      return `${String(level || '').toUpperCase()} Certificate`;
+  }
+}
+
 function createVerifyToken() {
   return crypto.randomBytes(24).toString('base64url');
 }
 
 async function completedLevelsForUser(userId) {
+  // Tüm seviye derslerini say; progress yoksa tamamlanmamış sayılır.
   const [rows] = await pool.query(
     `SELECT l.cefr_level,
             COUNT(*) AS total,
             SUM(CASE WHEN p.status = 'completed' THEN 1 ELSE 0 END) AS done
      FROM lessons l
-     INNER JOIN user_lesson_progress p
+     LEFT JOIN user_lesson_progress p
        ON p.lesson_id = l.id AND p.user_id = ?
+     WHERE l.cefr_level IS NOT NULL AND TRIM(l.cefr_level) <> ''
      GROUP BY l.cefr_level`,
     [userId],
   );
@@ -78,13 +99,17 @@ async function listCertificatesForUser(userId) {
     [userId],
   );
 
-  return rows.map((row) => ({
-    id: row.id,
-    cefrLevel: String(row.cefr_level).toUpperCase(),
-    verifyToken: row.verify_token,
-    verifyUrl: verifyUrl(row.verify_token),
-    issuedAt: row.issued_at,
-  }));
+  return rows.map((row) => {
+    const cefrLevel = String(row.cefr_level).toUpperCase();
+    return {
+      id: row.id,
+      cefrLevel,
+      title: listTitleForLevel(cefrLevel),
+      verifyToken: row.verify_token,
+      verifyUrl: verifyUrl(row.verify_token),
+      issuedAt: row.issued_at,
+    };
+  });
 }
 
 async function getCertificatesForUser(user) {

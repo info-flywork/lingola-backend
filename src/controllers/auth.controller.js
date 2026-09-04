@@ -13,6 +13,7 @@ const {
 const {
   parseOnboarding,
   normalizeLocaleCode,
+  normalizeInterests,
   EXPLANATION_LANGUAGE_VALUES,
   GOAL_VALUES,
   LEVEL_VALUES,
@@ -290,6 +291,15 @@ async function updateOnboarding(req, res, next) {
         throw err;
       }
       patch.goal = value;
+    }
+
+    if (
+      onboardingBody.interests !== undefined ||
+      onboardingBody.interestIds !== undefined
+    ) {
+      patch.interests = normalizeInterests(
+        onboardingBody.interests ?? onboardingBody.interestIds,
+      );
     }
 
     const levelRaw = onboardingBody.level ?? undefined;

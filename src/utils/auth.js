@@ -21,15 +21,47 @@ const GOAL_VALUES = new Set([
   'studyingAbroad',
   'other',
 ]);
+const INTEREST_VALUES = new Set([
+  'travel',
+  'shopping',
+  'food',
+  'popCulture',
+  'film',
+  'music',
+  'sport',
+  'technology',
+  'science',
+  'health',
+  'fashion',
+  'art',
+  'literature',
+  'history',
+  'culture',
+  'astronomy',
+  'pet',
+  'socialMedia',
+  'entrepreneur',
+]);
 const LEVEL_VALUES = new Set([
   'a1', 'a2', 'b1', 'b2', 'c1', 'c2',
   'beginner', 'intermediate', 'advanced',
 ]);
-const PACE_VALUES = new Set(['min5', 'min10', 'min15', 'min30', 'min60']);
+const PACE_VALUES = new Set([
+  'month1',
+  'month2_3',
+  'month6',
+  'year1',
+  'relaxed',
+]);
 const LEGACY_PACE_MAP = {
-  light: 'min5',
-  recommended: 'min15',
-  fast: 'min30',
+  light: 'relaxed',
+  recommended: 'month6',
+  fast: 'month2_3',
+  min5: 'relaxed',
+  min10: 'year1',
+  min15: 'month6',
+  min30: 'month2_3',
+  min60: 'month1',
 };
 
 function normalizePace(value) {
@@ -50,6 +82,28 @@ function normalizeLocaleCode(value, fallback = 'en') {
   return code.replace('_', '-');
 }
 
+function normalizeInterests(raw) {
+  if (raw == null) return [];
+  let list = raw;
+  if (typeof raw === 'string') {
+    try {
+      list = JSON.parse(raw);
+    } catch (_) {
+      list = raw.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+  }
+  if (!Array.isArray(list)) return [];
+  const out = [];
+  const seen = new Set();
+  for (const item of list) {
+    const id = String(item || '').trim();
+    if (!id || !INTEREST_VALUES.has(id) || seen.has(id)) continue;
+    seen.add(id);
+    out.push(id);
+  }
+  return out;
+}
+
 function parseOnboarding(body = {}) {
   const onboarding = body.onboarding && typeof body.onboarding === 'object'
     ? body.onboarding
@@ -67,6 +121,9 @@ function parseOnboarding(body = {}) {
   let goal = onboarding.goal ?? null;
   let level = onboarding.level ?? null;
   let pace = onboarding.pace ?? null;
+  const interests = normalizeInterests(
+    onboarding.interests ?? onboarding.interestIds ?? null,
+  );
 
   if (goal != null) {
     goal = String(goal).trim();
@@ -97,7 +154,7 @@ function parseOnboarding(body = {}) {
   // Login-first akış: onboarding ekranları atlanınca güvenli varsayılanlar.
   if (goal == null) goal = 'career';
   if (level == null) level = 'a1';
-  if (pace == null) pace = 'min15';
+  if (pace == null) pace = 'month2_3';
 
   let explanationLanguage =
     onboarding.explanationLanguage ?? onboarding.explanation_language ?? 'native';
@@ -114,6 +171,7 @@ function parseOnboarding(body = {}) {
     nativeLanguageCode,
     targetLanguageCode,
     goal,
+    interests,
     level,
     pace,
     explanationLanguage,
@@ -156,6 +214,7 @@ function mapUserRow(row, onboarding) {
           nativeLanguageCode: onboarding.native_language_code,
           targetLanguageCode: onboarding.target_language_code,
           goal: onboarding.goal,
+          interests: normalizeInterests(onboarding.interests),
           level: onboarding.level,
           pace: onboarding.pace,
           explanationLanguage:
@@ -187,12 +246,14 @@ module.exports = {
   hashToken,
   createSessionToken,
   normalizeLocaleCode,
+  normalizeInterests,
   parseOnboarding,
   mapUserRow,
   normalizeReminderHour,
   normalizeReminderMinute,
   AUTH_PROVIDERS,
   GOAL_VALUES,
+  INTEREST_VALUES,
   LEVEL_VALUES,
   PACE_VALUES,
   normalizePace,
