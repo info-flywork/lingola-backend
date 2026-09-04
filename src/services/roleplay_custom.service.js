@@ -31,7 +31,15 @@ async function callScenarioJson(input, nativeLanguageCode) {
     userRole,
     extraInfo,
     prompt,
+    levelKey,
   } = input;
+
+  const levelGuide = {
+    beginner: 'CEFR A1 — very simple words, short sentences, slow clear speech.',
+    easy: 'CEFR A2 — simple everyday English, common phrases.',
+    medium: 'CEFR B1 — natural conversational English, some nuance.',
+    hard: 'CEFR B2 — richer vocabulary, idioms, faster natural speech.',
+  }[String(levelKey || 'beginner')] || 'CEFR A2-B1 — everyday spoken English.';
 
   const system = `You design English role-play lessons for the Lingola app.
 Return ONLY valid JSON (no markdown) with this shape:
@@ -47,11 +55,12 @@ Return ONLY valid JSON (no markdown) with this shape:
   "rolePlayChecks": ["3-6 real-life details to cover in the scene"],
   "imagePrompt": "one specific visual of THIS scene only, unique setting and characters, not a generic cafe"
 }
-Keep language A2-B1, everyday spoken English.
+Target difficulty: ${levelGuide}
 Honor the learner-provided scenario and roles closely.`;
 
   const userLines = [
     `Learner native language: ${native}.`,
+    `Difficulty level: ${levelKey || 'beginner'}.`,
     scenario ? `Scenario: ${scenario}` : null,
     tutorRole ? `Tutor should play: ${tutorRole}` : null,
     userRole ? `Learner should play: ${userRole}` : null,
@@ -205,7 +214,8 @@ function rowToApi(row) {
     screenplay: row.screenplay,
     openingMessage: row.opening_message,
     imageAsset: row.image_url || '',
-    sectionKey: 'custom',
+    sectionKey: 'lingolaRolePlay',
+    categoryKey: 'lingolaRolePlay',
     minutes: Number(row.minutes) || 8,
     levelKey: row.level_key || 'beginner',
     sortOrder: Number(row.sort_order) || 1000,
@@ -270,7 +280,13 @@ async function createCustomScenario(
   }
 
   const generated = await callScenarioJson(
-    { scenario: scene, tutorRole: tutor, userRole: learner, extraInfo: extra },
+    {
+      scenario: scene,
+      tutorRole: tutor,
+      userRole: learner,
+      extraInfo: extra,
+      levelKey: levelKey || 'beginner',
+    },
     nativeLanguageCode,
   );
 

@@ -1,118 +1,167 @@
 'use strict';
 
-const SCENARIOS = [
+/**
+ * Role-play katalogu.
+ * Her taban senaryo beginner / easy / medium / hard varyantına açılır.
+ * categoryKey → ana filtre; Lingola RolePlay = kullanıcı custom’ları (DB).
+ */
+
+const BASE_SCENARIOS = [
   {
     id: 'coffee',
     titleKey: 'coffee',
     imageAsset: 'assets/images/roleplay/orderingcoffe.png',
-    sectionKey: null,
+    categoryKey: 'shopping',
     minutes: 8,
-    levelKey: 'beginner',
-    sortOrder: 0,
-  },
-  {
-    id: 'directions',
-    titleKey: 'directions',
-    imageAsset: 'assets/images/roleplay/askingdirection.png',
-    sectionKey: 'dailyInteractions',
-    minutes: 8,
-    levelKey: 'beginner',
-    sortOrder: 1,
-  },
-  {
-    id: 'missedTrain',
-    titleKey: 'missedTrain',
-    imageAsset: 'assets/images/roleplay/missedtrain.png',
-    sectionKey: 'dailyInteractions',
-    minutes: 5,
-    levelKey: 'beginner',
-    sortOrder: 2,
-  },
-  {
-    id: 'flightAttendant',
-    titleKey: 'flightAttendant',
-    imageAsset: 'assets/images/roleplay/flightattendant.png',
-    sectionKey: 'dailyInteractions',
-    minutes: 6,
-    levelKey: 'beginner',
-    sortOrder: 3,
-  },
-  {
-    id: 'trainTicket',
-    titleKey: 'trainTicket',
-    imageAsset: 'assets/images/roleplay/trainticket.png',
-    sectionKey: 'dailyInteractions',
-    minutes: 6,
-    levelKey: 'beginner',
-    sortOrder: 4,
-  },
-  {
-    id: 'restaurantReservation',
-    titleKey: 'restaurantReservation',
-    imageAsset: 'assets/images/roleplay/restaurantreservation.png',
-    sectionKey: 'dailyInteractions',
-    minutes: 6,
-    levelKey: 'beginner',
-    sortOrder: 5,
-  },
-  {
-    id: 'doctorAppointment',
-    titleKey: 'doctorAppointment',
-    imageAsset: 'assets/images/roleplay/doctorappointment.png',
-    sectionKey: 'dailyInteractions',
-    minutes: 6,
-    levelKey: 'beginner',
-    sortOrder: 6,
   },
   {
     id: 'shoppingClothes',
     titleKey: 'shoppingClothes',
     imageAsset: 'assets/images/roleplay/shoppingclothes.png',
-    sectionKey: 'dailyInteractions',
+    categoryKey: 'shopping',
     minutes: 6,
-    levelKey: 'beginner',
-    sortOrder: 7,
+  },
+  {
+    id: 'flirtingMeet',
+    titleKey: 'flirtingMeet',
+    imageAsset: 'assets/images/roleplay/orderingcoffe.png',
+    categoryKey: 'flirting',
+    minutes: 7,
+  },
+  {
+    id: 'directions',
+    titleKey: 'directions',
+    imageAsset: 'assets/images/roleplay/askingdirection.png',
+    categoryKey: 'lifeInTheUs',
+    minutes: 8,
   },
   {
     id: 'takingTaxi',
     titleKey: 'takingTaxi',
     imageAsset: 'assets/images/roleplay/takingtaxi.png',
-    sectionKey: 'dailyInteractions',
+    categoryKey: 'lifeInTheUs',
     minutes: 6,
-    levelKey: 'beginner',
-    sortOrder: 8,
   },
   {
-    id: 'birthdayParty',
-    titleKey: 'birthdayParty',
+    id: 'missedTrain',
+    titleKey: 'missedTrain',
+    imageAsset: 'assets/images/roleplay/missedtrain.png',
+    categoryKey: 'lifeInTheUs',
+    minutes: 5,
+  },
+  {
+    id: 'freeTalkHobby',
+    titleKey: 'freeTalkHobby',
     imageAsset: 'assets/images/roleplay/birthdayparty.png',
-    sectionKey: 'dailyInteractions',
+    categoryKey: 'freeDiscussion',
     minutes: 7,
-    levelKey: 'beginnerIntermediate',
-    sortOrder: 9,
-  },
-  {
-    id: 'rentingApartment',
-    titleKey: 'rentingApartment',
-    imageAsset: 'assets/images/roleplay/rentingapartment.png',
-    sectionKey: 'dailyInteractions',
-    minutes: 7,
-    levelKey: 'intermediate',
-    sortOrder: 10,
   },
   {
     id: 'interview',
     titleKey: 'interview',
     imageAsset: 'assets/images/roleplay/jobinterview.png',
-    sectionKey: 'business',
+    categoryKey: 'jobInterview',
     minutes: 8,
-    levelKey: 'beginner',
-    sortOrder: 11,
+  },
+  {
+    id: 'doctorAppointment',
+    titleKey: 'doctorAppointment',
+    imageAsset: 'assets/images/roleplay/doctorappointment.png',
+    categoryKey: 'dailyInteractions',
+    minutes: 6,
+  },
+  {
+    id: 'birthdayParty',
+    titleKey: 'birthdayParty',
+    imageAsset: 'assets/images/roleplay/birthdayparty.png',
+    categoryKey: 'dailyInteractions',
+    minutes: 7,
+  },
+  {
+    id: 'rentingApartment',
+    titleKey: 'rentingApartment',
+    imageAsset: 'assets/images/roleplay/rentingapartment.png',
+    categoryKey: 'socialDynamics',
+    minutes: 7,
+  },
+  {
+    id: 'restaurantReservation',
+    titleKey: 'restaurantReservation',
+    imageAsset: 'assets/images/roleplay/restaurantreservation.png',
+    categoryKey: 'restaurant',
+    minutes: 6,
+  },
+  {
+    id: 'flightAttendant',
+    titleKey: 'flightAttendant',
+    imageAsset: 'assets/images/roleplay/flightattendant.png',
+    categoryKey: 'travel',
+    minutes: 6,
+  },
+  {
+    id: 'trainTicket',
+    titleKey: 'trainTicket',
+    imageAsset: 'assets/images/roleplay/trainticket.png',
+    categoryKey: 'travel',
+    minutes: 6,
   },
 ];
 
+/** Ana sayfa filtre sırası (All + Lingola RolePlay FE’de eklenir). */
+const CATEGORY_KEYS = [
+  'shopping',
+  'flirting',
+  'lifeInTheUs',
+  'freeDiscussion',
+  'jobInterview',
+  'dailyInteractions',
+  'socialDynamics',
+  'restaurant',
+  'travel',
+];
+
+const DIFFICULTIES = [
+  { key: 'beginner', idSuffix: '', minuteDelta: 0 },
+  { key: 'easy', idSuffix: '-easy', minuteDelta: 0 },
+  { key: 'medium', idSuffix: '-medium', minuteDelta: 1 },
+  { key: 'hard', idSuffix: '-hard', minuteDelta: 2 },
+];
+
 function listScenarios() {
-  return SCENARIOS.map((row) => ({ ...row }));
+  const out = [];
+  let sortOrder = 0;
+  for (const base of BASE_SCENARIOS) {
+    for (const diff of DIFFICULTIES) {
+      out.push({
+        id: `${base.id}${diff.idSuffix}`,
+        titleKey: base.titleKey,
+        imageAsset: base.imageAsset,
+        categoryKey: base.categoryKey,
+        // FE geriye uyum: sectionKey = category
+        sectionKey: base.categoryKey,
+        minutes: base.minutes + diff.minuteDelta,
+        levelKey: diff.key,
+        sortOrder: sortOrder++,
+        baseId: base.id,
+      });
+    }
+  }
+  return out;
 }
 
-module.exports = { listScenarios };
+function listCategories() {
+  return CATEGORY_KEYS.slice();
+}
+
+function baseIdFromScenarioId(scenarioId) {
+  const id = String(scenarioId || '');
+  return id.replace(/-(easy|medium|hard)$/i, '');
+}
+
+module.exports = {
+  listScenarios,
+  listCategories,
+  baseIdFromScenarioId,
+  CATEGORY_KEYS,
+  DIFFICULTIES,
+};
