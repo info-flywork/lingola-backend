@@ -4,6 +4,7 @@ const {
   listActiveTutors,
   findActiveTutorBySlug,
 } = require('../services/tutor.service');
+const { probeRiveUrl } = require('../utils/rive-probe');
 
 async function listTutors(_req, res, next) {
   try {
@@ -99,48 +100,6 @@ async function callEnter(req, res, next) {
   } catch (err) {
     console.error(`[call-enter] fail slug=${slug}:`, err?.message || err);
     next(err);
-  }
-}
-
-async function probeRiveUrl(url) {
-  const t0 = Date.now();
-  try {
-    const r = await fetch(url, {
-      method: 'GET',
-      headers: { Range: 'bytes=0-3' },
-    });
-    const ms = Date.now() - t0;
-    const status = r.status;
-    const contentLength =
-      r.headers.get('content-length') || r.headers.get('Content-Length');
-    const contentType = r.headers.get('content-type') || '-';
-
-    let magic = '-';
-    let magicOk = false;
-    if (r.ok || status === 206) {
-      const buf = Buffer.from(await r.arrayBuffer());
-      magic = buf.toString('utf8').slice(0, 4);
-      magicOk = magic === 'RIVE';
-    }
-
-    return {
-      reachable: (r.ok || status === 206) && magicOk,
-      status,
-      ms,
-      contentLength,
-      contentType,
-      magic,
-      magicOk,
-    };
-  } catch (err) {
-    return {
-      reachable: false,
-      status: 0,
-      ms: Date.now() - t0,
-      magic: '-',
-      magicOk: false,
-      error: err?.message || String(err),
-    };
   }
 }
 

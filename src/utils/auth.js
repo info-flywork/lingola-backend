@@ -167,6 +167,24 @@ function parseOnboarding(body = {}) {
     throw err;
   }
 
+  const reminderHourRaw =
+    onboarding.reminderHour ??
+    onboarding.reminder_hour ??
+    onboarding.dailyReminderHour ??
+    onboarding.daily_reminder_hour;
+  const reminderMinuteRaw =
+    onboarding.reminderMinute ??
+    onboarding.reminder_minute ??
+    onboarding.dailyReminderMinute ??
+    onboarding.daily_reminder_minute;
+
+  const practiceTimeOfDayRaw =
+    onboarding.practiceTimeOfDay ?? onboarding.practice_time_of_day ?? null;
+  const practiceTimeOfDay =
+    typeof practiceTimeOfDayRaw === 'string' && practiceTimeOfDayRaw.trim()
+      ? practiceTimeOfDayRaw.trim().toLowerCase()
+      : null;
+
   return {
     nativeLanguageCode,
     targetLanguageCode,
@@ -175,6 +193,19 @@ function parseOnboarding(body = {}) {
     level,
     pace,
     explanationLanguage,
+    reminderHour: normalizeReminderHour(
+      reminderHourRaw !== undefined && reminderHourRaw !== null
+        ? reminderHourRaw
+        : 15,
+    ),
+    reminderMinute: normalizeReminderMinute(
+      reminderMinuteRaw !== undefined && reminderMinuteRaw !== null
+        ? reminderMinuteRaw
+        : 0,
+    ),
+    hasReminderTime:
+      reminderHourRaw !== undefined && reminderHourRaw !== null,
+    practiceTimeOfDay,
   };
 }
 

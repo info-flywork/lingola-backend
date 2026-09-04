@@ -148,7 +148,7 @@ const tutors = [
     tagKeys: ['smart', 'patient'],
     voiceId: MALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/morgan.png',
-    localRive: 'assets/riv/Male/morgan.riv',
+    localRive: 'assets/riv/morgan.riv',
     flagAsset: 'assets/images/flags/en.svg',
     sortOrder: 14,
   },

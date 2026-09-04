@@ -9,6 +9,8 @@ const {
   mapUserRow,
   normalizeLocaleCode,
   normalizeInterests,
+  normalizeReminderHour,
+  normalizeReminderMinute,
   GOAL_VALUES,
   LEVEL_VALUES,
   normalizePace,
@@ -164,14 +166,34 @@ async function createGuestUser({
     if (subject.length >= 8) {
       const existing = await findGuestByDeviceId(subject, connection);
       if (existing) {
-        await connection.query(
-          `UPDATE users
-           SET app_locale = ?,
-               notifications_enabled = ?,
-               updated_at = CURRENT_TIMESTAMP
-           WHERE id = ?`,
-          [appLocale, notificationsEnabled ? 1 : 0, existing.id],
-        );
+        // Onboarding tamamlanıp tekrar guest olunca hatırlatma saatini uygula.
+        if (onboarding?.hasReminderTime) {
+          await connection.query(
+            `UPDATE users
+             SET app_locale = ?,
+                 notifications_enabled = ?,
+                 daily_reminder_hour = ?,
+                 daily_reminder_minute = ?,
+                 updated_at = CURRENT_TIMESTAMP
+             WHERE id = ?`,
+            [
+              appLocale,
+              notificationsEnabled ? 1 : 0,
+              normalizeReminderHour(onboarding.reminderHour),
+              normalizeReminderMinute(onboarding.reminderMinute),
+              existing.id,
+            ],
+          );
+        } else {
+          await connection.query(
+            `UPDATE users
+             SET app_locale = ?,
+                 notifications_enabled = ?,
+                 updated_at = CURRENT_TIMESTAMP
+             WHERE id = ?`,
+            [appLocale, notificationsEnabled ? 1 : 0, existing.id],
+          );
+        }
         const session = await createSession(connection, existing.id);
         await connection.commit();
         const user = await findUserById(existing.id, connection);
@@ -188,16 +210,26 @@ async function createGuestUser({
     const identityId = uuid();
     const guestSubject = subject.length >= 8 ? subject : `guest_${userId}`;
 
+    const reminderHour = normalizeReminderHour(
+      onboarding?.hasReminderTime ? onboarding.reminderHour : 15,
+    );
+    const reminderMinute = normalizeReminderMinute(
+      onboarding?.hasReminderTime ? onboarding.reminderMinute : 0,
+    );
+
     await connection.query(
       `INSERT INTO users (
          id, display_name, email, auth_provider, is_guest,
-         notifications_enabled, app_locale, subscription_status
-       ) VALUES (?, ?, NULL, 'guest', 1, ?, ?, 'free')`,
+         notifications_enabled, app_locale, subscription_status,
+         daily_reminder_hour, daily_reminder_minute
+       ) VALUES (?, ?, NULL, 'guest', 1, ?, ?, 'free', ?, ?)`,
       [
         userId,
         'Guest',
         notificationsEnabled ? 1 : 0,
         appLocale,
+        reminderHour,
+        reminderMinute,
       ],
     );
 
@@ -545,11 +577,18 @@ async function loginWithProvider({
         );
       } else {
         userId = uuid();
+        const reminderHour = normalizeReminderHour(
+          onboarding?.hasReminderTime ? onboarding.reminderHour : 15,
+        );
+        const reminderMinute = normalizeReminderMinute(
+          onboarding?.hasReminderTime ? onboarding.reminderMinute : 0,
+        );
         await connection.query(
           `INSERT INTO users (
              id, display_name, email, avatar_url, auth_provider, is_guest,
-             notifications_enabled, app_locale, subscription_status
-           ) VALUES (?, ?, ?, ?, ?, 0, ?, ?, 'free')`,
+             notifications_enabled, app_locale, subscription_status,
+             daily_reminder_hour, daily_reminder_minute
+           ) VALUES (?, ?, ?, ?, ?, 0, ?, ?, 'free', ?, ?)`,
           [
             userId,
             displayName || (provider === 'apple' ? 'Apple User' : 'Google User'),
@@ -558,6 +597,8 @@ async function loginWithProvider({
             provider,
             notificationsEnabled ? 1 : 0,
             appLocale,
+            reminderHour,
+            reminderMinute,
           ],
         );
       }
@@ -570,6 +611,21 @@ async function loginWithProvider({
     }
 
     await upsertOnboarding(connection, userId, onboarding);
+
+    if (onboarding?.hasReminderTime) {
+      await connection.query(
+        `UPDATE users
+         SET daily_reminder_hour = ?,
+             daily_reminder_minute = ?,
+             updated_at = CURRENT_TIMESTAMP
+         WHERE id = ? AND deleted_at IS NULL`,
+        [
+          normalizeReminderHour(onboarding.reminderHour),
+          normalizeReminderMinute(onboarding.reminderMinute),
+          userId,
+        ],
+      );
+    }
 
     const session = await createSession(connection, userId);
     await connection.commit();

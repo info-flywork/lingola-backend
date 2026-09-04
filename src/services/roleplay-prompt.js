@@ -350,7 +350,8 @@ function sceneFor(title) {
   const raw = String(title || '');
   const scenario = raw
     .replace(/^Role Play:\s*/i, '')
-    .replace(/\s*#custom:[a-f0-9-]{36}$/i, '')
+    .replace(/\s*#custom:[a-f0-9-]{36}/i, '')
+    .replace(/\s*#scenario:[a-z0-9_-]+/i, '')
     .trim();
   const found = SCENES.find((s) => s.match.test(scenario) || s.match.test(raw));
   return (
@@ -365,6 +366,49 @@ function sceneFor(title) {
     }
   );
 }
+
+function parseScenarioId(title) {
+  const match = String(title || '').match(/#scenario:([a-z0-9_-]+)/i);
+  return match ? match[1] : null;
+}
+
+function levelKeyFromScenarioId(scenarioId) {
+  const id = String(scenarioId || '');
+  if (/-hard$/i.test(id)) return 'hard';
+  if (/-medium$/i.test(id)) return 'medium';
+  if (/-easy$/i.test(id)) return 'easy';
+  return 'beginner';
+}
+
+function levelKeyFromTitle(title, customPayload) {
+  if (customPayload?.levelKey) return String(customPayload.levelKey);
+  const scenarioId = parseScenarioId(title);
+  if (scenarioId) return levelKeyFromScenarioId(scenarioId);
+  return 'beginner';
+}
+
+const LEVEL_GUIDES = {
+  beginner: {
+    cefr: 'A1',
+    guide:
+      'CEFR A1 — very simple words, short sentences, slow clear speech. Avoid idioms. One idea per sentence.',
+  },
+  easy: {
+    cefr: 'A2',
+    guide:
+      'CEFR A2 — simple everyday English and common phrases. Keep sentences short; light connectors only.',
+  },
+  medium: {
+    cefr: 'B1',
+    guide:
+      'CEFR B1 — natural conversational English with some nuance. Slightly longer turns are OK.',
+  },
+  hard: {
+    cefr: 'B2',
+    guide:
+      'CEFR B2 — richer vocabulary, light idioms, faster natural speech. Expect more detail from the learner.',
+  },
+};
 
 function sceneFromPayload(payload = {}, fallbackTitle = 'everyday conversation') {
   return {
@@ -413,7 +457,7 @@ function rolePlayLanguageRule(user) {
 - In-character role-play lines are always English.`;
 }
 
-function buildRolePlayPrompt(scene, { user, tutor, resuming = false } = {}) {
+function buildRolePlayPrompt(scene, { user, tutor, resuming = false, levelKey = 'beginner' } = {}) {
   const phrases = scene.phrases.map((p) => `- ${p}`).join('\n');
   const checks = (scene.rolePlayChecks || [])
     .map((c) => `- ${c}`)
@@ -427,6 +471,7 @@ ${flavorRule(tutor)}`
       : `You are Lingola, a friendly robot English tutor running this role-play.`;
 
   const languageRule = rolePlayLanguageRule(user);
+  const level = LEVEL_GUIDES[String(levelKey)] || LEVEL_GUIDES.beginner;
 
   const resumeRule = resuming
     ? `
@@ -440,9 +485,11 @@ Never jump straight into "Welcome, what can I get you?" at the start. Brief and 
 
   return `You are ${tutorName}, a friendly English tutor running a ROLE-PLAY lesson.
 ${character}
-${naturalEnglishRule('A2')}
+${naturalEnglishRule(level.cefr)}
 ${learnerAddressingRule(user || {})}
 Scenario: "${scene.title}".
+Difficulty: ${levelKey} — ${level.guide}
+Match your speaking pace, vocabulary, and expectations to this difficulty throughout all phases.
 
 ${languageRule}
 
@@ -455,7 +502,7 @@ Follow these FOUR phases in order. Do not skip ahead. Replies: 1–3 short sente
 PHASE 1 — BRIEFING (you are the TEACHER, not in character yet)
 - Greet the learner by name if you know it. Say today you will practice "${scene.title}".
 - Explain the situation in 1–2 sentences.
-- Teach phrases in 2–3 small batches (not all at once). For each idea show 2 natural variants.
+- Teach phrases in 2–3 small batches (not all at once). For each idea show 2 natural variants appropriate for ${level.cefr}.
 - Minimum: cover at least 8 phrases from this list before Phase 2:
 ${phrases}
 - After each batch, ask the learner to repeat or try one phrase.
@@ -467,6 +514,7 @@ PHASE 2 — ROLE PLAY (first roles)
 - You MUST cover these real-life details during the scene (not only the first order line):
 ${checks}
 - Gently model more natural English if they sound stiff or make a mistake. Give brief specific praise when good.
+- Keep in-character lines at ${level.cefr} difficulty.
 
 PHASE 3 — SWITCH ROLES
 - Say you are switching. Now you are ${scene.roleBTutor}; the learner is ${scene.roleBUser}.
@@ -485,7 +533,8 @@ function rolePlaySystemPrompt(sessionTitle, { user, tutor, customPayload, resumi
   const scene = customPayload
     ? sceneFromPayload(customPayload, customPayload.title)
     : sceneFor(sessionTitle);
-  return buildRolePlayPrompt(scene, { user, tutor, resuming });
+  const levelKey = levelKeyFromTitle(sessionTitle, customPayload);
+  return buildRolePlayPrompt(scene, { user, tutor, resuming, levelKey });
 }
 
 function parseCustomScenarioId(title) {
@@ -499,4 +548,7 @@ module.exports = {
   sceneFromPayload,
   buildRolePlayPrompt,
   parseCustomScenarioId,
+  parseScenarioId,
+  levelKeyFromScenarioId,
+  levelKeyFromTitle,
 };

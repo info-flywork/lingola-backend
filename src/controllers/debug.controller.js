@@ -1,6 +1,7 @@
 'use strict';
 
 const { listActiveTutors } = require('../services/tutor.service');
+const { probeRiveUrl } = require('../utils/rive-probe');
 
 /**
  * GET /debug/rive-check
@@ -29,42 +30,22 @@ async function checkRiveCdn(_req, res, next) {
         continue;
       }
       try {
-        const t0 = Date.now();
-        const r = await fetch(url, {
-          method: 'GET',
-          headers: { Range: 'bytes=0-3' },
-        });
-        const ms = Date.now() - t0;
-        const status = r.status;
-        const contentLength =
-          r.headers.get('content-length') || r.headers.get('Content-Length');
-        const contentType = r.headers.get('content-type') || '-';
-
-        let magic = '-';
-        let magicOk = false;
-        let bodyBytes = null;
-        if (r.ok || status === 206) {
-          const buf = Buffer.from(await r.arrayBuffer());
-          bodyBytes = buf.length;
-          magic = buf.toString('utf8').slice(0, 4);
-          magicOk = magic === 'RIVE';
-        }
-
-        const ok = (r.ok || status === 206) && magicOk;
+        const probe = await probeRiveUrl(url);
         results.push({
           slug: t.slug,
           url,
-          ok,
-          status,
-          ms,
-          contentLength,
-          contentType,
-          magic,
-          magicOk,
-          bodyBytes,
+          ok: probe.reachable,
+          status: probe.status,
+          ms: probe.ms,
+          contentLength: probe.contentLength,
+          contentType: probe.contentType,
+          magic: probe.magic,
+          magicOk: probe.magicOk,
+          bodyBytes: probe.bodyBytes,
+          error: probe.error,
         });
         console.log(
-          `[rive-check] ${t.slug} status=${status} ms=${ms} ct=${contentType} magic=${magic} ok=${ok} url=${url}`,
+          `[rive-check] ${t.slug} status=${probe.status} ms=${probe.ms} ct=${probe.contentType} magic=${probe.magic} ok=${probe.reachable} url=${url}`,
         );
       } catch (err) {
         results.push({

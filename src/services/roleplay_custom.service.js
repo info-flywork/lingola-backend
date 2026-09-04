@@ -302,6 +302,7 @@ async function createCustomScenario(
 
   const payload = {
     title: generated.title,
+    levelKey: levelKey || 'beginner',
     userInput: {
       scenario: scene,
       tutorRole: tutor,

@@ -361,7 +361,10 @@ async function tutorSystemPrompt(tutor, session, user, { resuming = false } = {}
         return rolePlaySystemPrompt(title, {
           user,
           tutor,
-          customPayload: custom.promptPayload,
+          customPayload: {
+            ...custom.promptPayload,
+            levelKey: custom.promptPayload.levelKey || custom.levelKey,
+          },
           resuming,
         });
       }
