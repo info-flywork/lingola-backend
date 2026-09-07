@@ -692,7 +692,7 @@ ${learnerAddressingRule(user || {})}
 ${goalContext(user || {})}
 ${topicTeachingHints(topic)}
 ${lessonPedagogyRules()}
-${lessonEnglishTeachingRule()}
+${lessonEnglishTeachingRule(user)}
 Lesson topic: "${topic}". CEFR level: ${level}.
 ${mode}
 ${handoffBit}

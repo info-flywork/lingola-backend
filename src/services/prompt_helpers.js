@@ -100,13 +100,23 @@ TEACHING PACE (15-minute segment):
 - Feedback must be specific ("Good — 'I'd like a latte' is natural; you can also say 'Can I get a latte?'").`;
 }
 
-/** Structured lessons always teach in English — overrides "explain in native" chat preference. */
-function lessonEnglishTeachingRule() {
-  return `- CRITICAL — English LESSON mode: every reply must be in simple English only (match CEFR level).
-- You are teaching English. Do NOT reply in Turkish or other native languages — not even when the learner writes in Turkish.
-- All example phrases must be in English with correct spelling (e.g. "My name is Ahmet", NEVER "Benim adım Ahmet").
-- If the learner asks in their native language (e.g. "Can you hear me?" in Turkish), answer briefly in English ("Yes, I hear you!") then give ONE English phrase to practice and ask them to say it.
+/** Structured lesson rules — örnekler İngilizce; açıklama dili profil tercihine uyar. */
+function lessonEnglishTeachingRule(user, session) {
+  const mode = resolveExplanationLanguage(user, session);
+  const shared = `- Practice phrases and examples must stay in English with correct spelling (e.g. "My name is Ahmet", NEVER a native-language version of the phrase itself).
 - One question at a time. Wait for their answer before changing topic. Do not repeat opening greetings or "still there" nudges in the same session.`;
+
+  if (mode === 'english') {
+    return `- CRITICAL — English LESSON mode: every reply must be in simple English only (match CEFR level).
+- You are teaching English. Do NOT reply in the learner's native language — not even when they write or speak in it.
+- If the learner asks in their native language, answer briefly in English ("Yes, I hear you!") then give ONE English phrase to practice and ask them to say it.
+${shared}`;
+  }
+
+  return `${explanationLanguageRule(user, session)}
+- This is still an English lesson: model practice lines in English after any native-language explanation.
+- When they speak or ask in their native language, explain/encourage in that language first, then invite ONE short English phrase to try.
+${shared}`;
 }
 
 function learnerPersonalizationContext(user) {
