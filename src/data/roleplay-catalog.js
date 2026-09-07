@@ -4,6 +4,7 @@
  * Role-play katalogu.
  * Her taban senaryo beginner / easy / medium / hard varyantına açılır.
  * categoryKey → ana filtre; Lingola RolePlay = kullanıcı custom’ları (DB).
+ * Zorluk başına farklı titleKey → FE i18n çeşitliliği.
  */
 
 const BASE_SCENARIOS = [
@@ -127,6 +128,100 @@ const DIFFICULTIES = [
   { key: 'hard', idSuffix: '-hard', minuteDelta: 2 },
 ];
 
+/** Taban → zorluk başına farklı senaryo başlığı (FE i18n key). */
+const VARIANT_TITLE_KEYS = {
+  coffee: {
+    beginner: 'coffee',
+    easy: 'coffeeQueue',
+    medium: 'coffeeRecommendation',
+    hard: 'coffeeWrongOrder',
+  },
+  shoppingClothes: {
+    beginner: 'shoppingClothes',
+    easy: 'shoppingFittingRoom',
+    medium: 'shoppingReturn',
+    hard: 'shoppingDiscount',
+  },
+  flirtingMeet: {
+    beginner: 'flirtingMeet',
+    easy: 'flirtingCompliment',
+    medium: 'flirtingAskOut',
+    hard: 'flirtingAwkward',
+  },
+  directions: {
+    beginner: 'directions',
+    easy: 'directionsLost',
+    medium: 'directionsTransit',
+    hard: 'directionsWrongWay',
+  },
+  takingTaxi: {
+    beginner: 'takingTaxi',
+    easy: 'taxiFare',
+    medium: 'taxiTraffic',
+    hard: 'taxiComplaint',
+  },
+  missedTrain: {
+    beginner: 'missedTrain',
+    easy: 'missedTrainNext',
+    medium: 'missedTrainTicket',
+    hard: 'missedTrainRefund',
+  },
+  freeTalkHobby: {
+    beginner: 'freeTalkHobby',
+    easy: 'freeTalkWeekend',
+    medium: 'freeTalkMovies',
+    hard: 'freeTalkDisagree',
+  },
+  interview: {
+    beginner: 'interview',
+    easy: 'interviewStrengths',
+    medium: 'interviewExperience',
+    hard: 'interviewSalary',
+  },
+  doctorAppointment: {
+    beginner: 'doctorAppointment',
+    easy: 'doctorSymptoms',
+    medium: 'doctorPrescription',
+    hard: 'doctorFollowUp',
+  },
+  birthdayParty: {
+    beginner: 'birthdayParty',
+    easy: 'birthdayInvite',
+    medium: 'birthdayGifts',
+    hard: 'birthdaySurprise',
+  },
+  rentingApartment: {
+    beginner: 'rentingApartment',
+    easy: 'rentingApartmentTour',
+    medium: 'rentingApartmentAgent',
+    hard: 'rentingApartmentNegotiate',
+  },
+  restaurantReservation: {
+    beginner: 'restaurantReservation',
+    easy: 'restaurantChange',
+    medium: 'restaurantAllergy',
+    hard: 'restaurantComplaint',
+  },
+  flightAttendant: {
+    beginner: 'flightAttendant',
+    easy: 'flightSeat',
+    medium: 'flightSpecialMeal',
+    hard: 'flightDelay',
+  },
+  trainTicket: {
+    beginner: 'trainTicket',
+    easy: 'trainTicketChange',
+    medium: 'trainTicketPlatform',
+    hard: 'trainTicketUpgrade',
+  },
+};
+
+function titleKeyFor(base, levelKey) {
+  const map = VARIANT_TITLE_KEYS[base.id];
+  if (map && map[levelKey]) return map[levelKey];
+  return base.titleKey;
+}
+
 function listScenarios() {
   const out = [];
   let sortOrder = 0;
@@ -134,10 +229,9 @@ function listScenarios() {
     for (const diff of DIFFICULTIES) {
       out.push({
         id: `${base.id}${diff.idSuffix}`,
-        titleKey: base.titleKey,
+        titleKey: titleKeyFor(base, diff.key),
         imageAsset: base.imageAsset,
         categoryKey: base.categoryKey,
-        // FE geriye uyum: sectionKey = category
         sectionKey: base.categoryKey,
         minutes: base.minutes + diff.minuteDelta,
         levelKey: diff.key,
@@ -164,4 +258,5 @@ module.exports = {
   baseIdFromScenarioId,
   CATEGORY_KEYS,
   DIFFICULTIES,
+  VARIANT_TITLE_KEYS,
 };

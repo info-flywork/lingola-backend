@@ -12,7 +12,10 @@ function progressFromElapsed(elapsedSeconds, minutes = 8) {
 
 async function scenarioById(userId, scenarioId) {
   const staticRow = listScenarios().find((row) => row.id === scenarioId);
-  if (staticRow) return { ...staticRow, isCustom: false };
+  if (staticRow) {
+    const imageMap = await fetchStaticImageMap();
+    return applyStaticImage({ ...staticRow, isCustom: false }, imageMap);
+  }
   if (!userId) return null;
   const custom = await roleplayCustom.fetchCustomById(userId, scenarioId);
   return custom || null;
@@ -108,11 +111,46 @@ function attachProgress(row, progressMap) {
   };
 }
 
+async function fetchStaticImageMap() {
+  try {
+    const [rows] = await pool.query(
+      'SELECT scenario_id, image_url FROM roleplay_scenario_images',
+    );
+    const map = {};
+    for (const row of rows) {
+      if (row.scenario_id && row.image_url) {
+        map[row.scenario_id] = row.image_url;
+      }
+    }
+    return map;
+  } catch (err) {
+    // Tablo henüz migrate edilmemişse katalog asset’ine düş.
+    if (err && (err.code === 'ER_NO_SUCH_TABLE' || err.errno === 1146)) {
+      return {};
+    }
+    throw err;
+  }
+}
+
+function applyStaticImage(row, imageMap) {
+  const url = imageMap[row.id];
+  if (!url) return row;
+  return { ...row, imageAsset: url };
+}
+
 async function listScenariosForUser(userId) {
-  const progressMap = await fetchUserProgressMap(userId);
+  const [progressMap, imageMap] = await Promise.all([
+    fetchUserProgressMap(userId),
+    fetchStaticImageMap(),
+  ]);
   const staticRows = listScenarios()
     .sort((a, b) => a.sortOrder - b.sortOrder)
-    .map((row) => attachProgress({ ...row, isCustom: false }, progressMap));
+    .map((row) =>
+      attachProgress(
+        applyStaticImage({ ...row, isCustom: false }, imageMap),
+        progressMap,
+      ),
+    );
   const customRows = (await roleplayCustom.listCustomForUser(userId)).map((row) =>
     attachProgress(row, progressMap),
   );

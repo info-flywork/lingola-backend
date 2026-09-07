@@ -68,7 +68,8 @@ const tutors = [
     tagKeys: ['methodical', 'patient'],
     voiceId: MALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/marco.png',
-    localRive: 'assets/riv/Male/avatar2.riv',
+    // Rive dosya adları kaymıştı: avatar3 = Marco yüzü
+    localRive: 'assets/riv/Male/avatar3.riv',
     flagAsset: 'assets/images/flags/italian.svg',
     sortOrder: 6,
   },
@@ -78,7 +79,8 @@ const tutors = [
     tagKeys: ['adaptive', 'calm'],
     voiceId: MALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/julian.png',
-    localRive: 'assets/riv/Male/avatar1.riv',
+    // Rive dosya adları kaymıştı: avatar2 = Julian yüzü
+    localRive: 'assets/riv/Male/avatar2.riv',
     flagAsset: 'assets/images/flags/french.svg',
     sortOrder: 7,
   },
@@ -128,7 +130,8 @@ const tutors = [
     tagKeys: ['relaxed', 'attentive'],
     voiceId: MALE_VOICE,
     localImage: 'assets/images/profilIcons/tutor/erik.png',
-    localRive: 'assets/riv/Male/avatar3.riv',
+    // Rive dosya adları kaymıştı: avatar1 = Erik yüzü
+    localRive: 'assets/riv/Male/avatar1.riv',
     flagAsset: 'assets/images/flags/german.svg',
     sortOrder: 12,
   },

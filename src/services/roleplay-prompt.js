@@ -281,7 +281,7 @@ const SCENES = [
     ],
   },
   {
-    match: /rent.*apartment|landlord|ev sahibi|kira/i,
+    match: /rent.*apartment|landlord|ev sahibi|kira|realtor|emlak|real estate|apartment tour|deposit|lease/i,
     title: 'Renting an Apartment',
     roleATutor: 'landlord',
     roleAUser: 'prospective tenant',
