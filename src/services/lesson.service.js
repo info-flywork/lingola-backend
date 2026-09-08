@@ -398,7 +398,8 @@ async function assertLessonAccess(user, slug, { allowCompleted = true } = {}) {
     throw err;
   }
 
-  // Free: müfredatta yalnızca ilk 2 ders. Trial/premium → hepsi.
+  // Free: müfredatta yalnızca ilk 2 ders. Premium (aylık / 3 aylık) → hepsi.
+  // Not: Aylık ve quarterly ürünlerde ücretsiz deneme yok.
   const isPremium = String(user.subscriptionStatus || '').toLowerCase() === 'premium';
   if (!isPremium) {
     const ordered = await listLessonsOrdered();

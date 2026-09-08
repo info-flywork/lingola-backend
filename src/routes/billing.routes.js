@@ -9,10 +9,34 @@ const {
 const {
   syncUserSubscriptionFromRevenueCat,
 } = require('../services/revenuecat_sync.service');
+const {
+  listActiveSubscriptionPlans,
+} = require('../services/subscription_plans.service');
 const { mapUserRow } = require('../utils/auth');
 const { pool } = require('../config/db');
 
 const router = Router();
+
+/**
+ * GET /billing/plans
+ * Aktif abonelik paketleri (aylık + 3 aylık; trialDays her zaman 0).
+ */
+router.get('/plans', async (_req, res) => {
+  try {
+    const plans = await listActiveSubscriptionPlans();
+    return res.status(200).json({
+      ok: true,
+      plans,
+      policy: {
+        freeTrialDays: 0,
+        note: 'Monthly and quarterly plans have no free trial',
+      },
+    });
+  } catch (err) {
+    console.error('[BILLING] plans error', err);
+    return res.status(500).json({ ok: false, error: 'Failed to list plans' });
+  }
+});
 
 /**
  * POST /billing/revenuecat-webhook
@@ -54,7 +78,6 @@ router.post('/sync', requireAuth, async (req, res) => {
 
     const synced = await syncUserSubscriptionFromRevenueCat(userId);
     if (!synced.ok && synced.reason === 'missing_secret_key') {
-      // Secret yoksa sessizce mevcut user dön — client RC'ye güvenir.
       const [rows] = await pool.query(
         'SELECT * FROM users WHERE id = ? LIMIT 1',
         [userId],
@@ -74,6 +97,7 @@ router.post('/sync', requireAuth, async (req, res) => {
     return res.status(200).json({
       ok: true,
       isPremium: Boolean(synced.isPremium),
+      productId: synced.productId || null,
       user: rows[0] ? mapUserRow(rows[0]) : null,
     });
   } catch (err) {

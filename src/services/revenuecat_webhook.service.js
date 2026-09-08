@@ -3,15 +3,22 @@
 const { pool } = require('../config/db');
 const {
   setSubscriptionStatus,
+  setSubscriptionState,
   syncUserSubscriptionFromRevenueCat,
 } = require('./revenuecat_sync.service');
+const {
+  findPlanByProductId,
+  inferPeriodFromProductId,
+} = require('./subscription_plans.service');
 
 /**
- * RevenueCat webhook → users.subscription_status.
- * Trial (period_type=TRIAL / INTRO) de premium sayılır (3 gün ücretsiz).
+ * RevenueCat webhook → users.subscription_*.
  *
- * TRANSFER: anonim / başka hesaptan login sonrası entitlement taşınır —
- * transferred_to → premium (RC REST ile doğrula), transferred_from → free.
+ * Plan politikası: aylık + 3 aylık (quarterly) ürünlerde ücretsiz deneme YOK.
+ * Trial/intro Store'da kapalı olmalı. Eski sandbox TRIAL event'i gelse bile
+ * erişim premium yazılır; ürün kataloğu trialDays=0 döner.
+ *
+ * TRANSFER: transferred_to → sync/premium, transferred_from → free.
  */
 
 const ACTIVATE = new Set([
@@ -23,11 +30,6 @@ const ACTIVATE = new Set([
 ]);
 
 const DEACTIVATE = new Set(['EXPIRATION', 'SUBSCRIPTION_PAUSED']);
-
-function isTrialPeriod(periodType) {
-  const t = String(periodType || '').toUpperCase();
-  return t === 'TRIAL' || t === 'INTRO';
-}
 
 function isMappableUserId(id) {
   const s = String(id || '').trim();
@@ -44,6 +46,16 @@ function uniqueIds(list) {
     out.push(id);
   }
   return out;
+}
+
+function productIdFromEvent(event) {
+  const raw =
+    event.product_id ||
+    event.new_product_id ||
+    event.product_identifier ||
+    '';
+  const id = String(raw).trim();
+  return id || null;
 }
 
 async function applyTransfer(event) {
@@ -80,17 +92,16 @@ async function applyTransfer(event) {
       );
       continue;
     }
-    // REST ile doğrula (TRANSFER payload'da expiry yok).
     const synced = await syncUserSubscriptionFromRevenueCat(userId);
     if (synced.ok) {
       results.to.push({
         userId,
         isPremium: Boolean(synced.isPremium),
+        productId: synced.productId || null,
         via: 'rc_rest',
       });
       continue;
     }
-    // Secret yok / RC hata → iyimserce premium (entitlement taşındı).
     const rows = await setSubscriptionStatus(userId, 'premium');
     console.log(
       `[RC-WEBHOOK] TRANSFER to → user=${userId} premium fallback (rows=${rows}) reason=${synced.reason || '-'}`,
@@ -122,7 +133,6 @@ async function applyRevenueCatEvent(event) {
 
   const appUserId = String(event.app_user_id || '').trim();
 
-  // Flutter Purchases.logIn(user.id) → UUID. Anonim RC id eşlenmez.
   if (!isMappableUserId(appUserId)) {
     console.warn(
       `[RC-WEBHOOK] Eşlenemeyen app_user_id='${appUserId}' (type=${type})`,
@@ -143,10 +153,15 @@ async function applyRevenueCatEvent(event) {
     ? Number(event.expiration_at_ms)
     : null;
   const expiry = expiryMs && Number.isFinite(expiryMs) ? new Date(expiryMs) : null;
-  const trial = isTrialPeriod(event.period_type);
+  const productId = productIdFromEvent(event);
+  const plan = productId ? await findPlanByProductId(productId) : null;
+  const planId = plan
+    ? plan.id
+    : inferPeriodFromProductId(productId);
+  const periodType = String(event.period_type || '').toUpperCase();
 
   if (DEACTIVATE.has(type)) {
-    const rows = await setSubscriptionStatus(appUserId, 'free');
+    const rows = await setSubscriptionState(appUserId, { status: 'free' });
     console.log(
       `[RC-WEBHOOK] ${type} → user=${appUserId} free (rows=${rows})`,
     );
@@ -156,21 +171,30 @@ async function applyRevenueCatEvent(event) {
   if (ACTIVATE.has(type)) {
     const stillActive = !expiry || expiry.getTime() > Date.now();
     const status = stillActive ? 'premium' : 'free';
-    const rows = await setSubscriptionStatus(appUserId, status);
+    const rows = await setSubscriptionState(appUserId, {
+      status,
+      productId: stillActive ? productId : null,
+      planId: stillActive ? planId : null,
+      expiresAt: stillActive ? expiry : null,
+    });
     console.log(
       `[RC-WEBHOOK] ${type} → user=${appUserId} ${status}` +
-        ` trial=${trial} expiry=${expiry ? expiry.toISOString() : '-'} rows=${rows}`,
+        ` plan=${planId || '-'} product=${productId || '-'}` +
+        ` period_type=${periodType || '-'} expiry=${expiry ? expiry.toISOString() : '-'}` +
+        ` rows=${rows}`,
     );
     return {
       handled: true,
       type,
       userId: appUserId,
       isPremium: status === 'premium',
-      isTrial: trial,
+      planId: stillActive ? planId : null,
+      productId: stillActive ? productId : null,
+      // Katalogda deneme yok; RC period_type sadece log/telemetry.
+      storePeriodType: periodType || null,
     };
   }
 
-  // CANCELLATION / BILLING_ISSUE / TEST → süre bitene kadar premium kalsın
   console.log(
     `[RC-WEBHOOK] ${type} user=${appUserId} bilgilendirme, status değişmedi`,
   );
