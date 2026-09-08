@@ -1,10 +1,17 @@
 'use strict';
 
 const { pool } = require('../config/db');
+const {
+  setSubscriptionStatus,
+  syncUserSubscriptionFromRevenueCat,
+} = require('./revenuecat_sync.service');
 
 /**
  * RevenueCat webhook → users.subscription_status.
  * Trial (period_type=TRIAL / INTRO) de premium sayılır (3 gün ücretsiz).
+ *
+ * TRANSFER: anonim / başka hesaptan login sonrası entitlement taşınır —
+ * transferred_to → premium (RC REST ile doğrula), transferred_from → free.
  */
 
 const ACTIVATE = new Set([
@@ -22,14 +29,81 @@ function isTrialPeriod(periodType) {
   return t === 'TRIAL' || t === 'INTRO';
 }
 
-async function setSubscriptionStatus(userId, status) {
-  const [result] = await pool.query(
-    `UPDATE users
-     SET subscription_status = ?, updated_at = CURRENT_TIMESTAMP
-     WHERE id = ?`,
-    [status, userId],
-  );
-  return result.affectedRows || 0;
+function isMappableUserId(id) {
+  const s = String(id || '').trim();
+  return Boolean(s) && !s.startsWith('$RCAnonymousID');
+}
+
+function uniqueIds(list) {
+  const out = [];
+  const seen = new Set();
+  for (const raw of list) {
+    const id = String(raw || '').trim();
+    if (!id || seen.has(id)) continue;
+    seen.add(id);
+    out.push(id);
+  }
+  return out;
+}
+
+async function applyTransfer(event) {
+  const fromIds = uniqueIds(
+    Array.isArray(event.transferred_from) ? event.transferred_from : [],
+  ).filter(isMappableUserId);
+  const toIds = uniqueIds(
+    Array.isArray(event.transferred_to) ? event.transferred_to : [],
+  ).filter(isMappableUserId);
+
+  const results = { from: [], to: [] };
+
+  for (const userId of fromIds) {
+    const [users] = await pool.query(
+      'SELECT id FROM users WHERE id = ? LIMIT 1',
+      [userId],
+    );
+    if (!users.length) continue;
+    const rows = await setSubscriptionStatus(userId, 'free');
+    console.log(
+      `[RC-WEBHOOK] TRANSFER from → user=${userId} free (rows=${rows})`,
+    );
+    results.from.push({ userId, isPremium: false });
+  }
+
+  for (const userId of toIds) {
+    const [users] = await pool.query(
+      'SELECT id FROM users WHERE id = ? LIMIT 1',
+      [userId],
+    );
+    if (!users.length) {
+      console.warn(
+        `[RC-WEBHOOK] TRANSFER to user bulunamadı id=${userId}`,
+      );
+      continue;
+    }
+    // REST ile doğrula (TRANSFER payload'da expiry yok).
+    const synced = await syncUserSubscriptionFromRevenueCat(userId);
+    if (synced.ok) {
+      results.to.push({
+        userId,
+        isPremium: Boolean(synced.isPremium),
+        via: 'rc_rest',
+      });
+      continue;
+    }
+    // Secret yok / RC hata → iyimserce premium (entitlement taşındı).
+    const rows = await setSubscriptionStatus(userId, 'premium');
+    console.log(
+      `[RC-WEBHOOK] TRANSFER to → user=${userId} premium fallback (rows=${rows}) reason=${synced.reason || '-'}`,
+    );
+    results.to.push({ userId, isPremium: true, via: 'fallback' });
+  }
+
+  return {
+    handled: true,
+    type: 'TRANSFER',
+    noChange: results.from.length === 0 && results.to.length === 0,
+    transfer: results,
+  };
 }
 
 /**
@@ -41,10 +115,15 @@ async function applyRevenueCatEvent(event) {
   }
 
   const type = String(event.type || '').toUpperCase();
+
+  if (type === 'TRANSFER') {
+    return applyTransfer(event);
+  }
+
   const appUserId = String(event.app_user_id || '').trim();
 
   // Flutter Purchases.logIn(user.id) → UUID. Anonim RC id eşlenmez.
-  if (!appUserId || appUserId.startsWith('$RCAnonymousID')) {
+  if (!isMappableUserId(appUserId)) {
     console.warn(
       `[RC-WEBHOOK] Eşlenemeyen app_user_id='${appUserId}' (type=${type})`,
     );

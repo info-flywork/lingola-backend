@@ -292,10 +292,12 @@ function listScenarios() {
   let sortOrder = 0;
   for (const base of BASE_SCENARIOS) {
     for (const diff of DIFFICULTIES) {
+      const id = `${base.id}${diff.idSuffix}`;
       out.push({
-        id: `${base.id}${diff.idSuffix}`,
+        id,
         titleKey: titleKeyFor(base, diff.key),
-        imageAsset: base.imageAsset,
+        // Her varyant kendi CDN görseli — ortak local asset yok.
+        imageAsset: `https://lingola.b-cdn.net/roleplay/static/${id}.png`,
         categoryKey: base.categoryKey,
         sectionKey: base.categoryKey,
         minutes: base.minutes + diff.minuteDelta,
