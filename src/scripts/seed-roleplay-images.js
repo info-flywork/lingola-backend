@@ -151,6 +151,51 @@ const SCENE_BY_ID = {
     'Asking which platform to use: platform signs (no readable text), clocks, rushing travelers.',
   'trainTicket-hard':
     'Upgrading a train ticket to first class: premium seat area, ticket upgrade, polite negotiation.',
+
+  pharmacy:
+    'At a bright pharmacy counter: pharmacist in white coat, medicine shelves, customer describing symptoms.',
+  'pharmacy-easy':
+    'Discussing cold or headache symptoms at a pharmacy: tissue box, over-the-counter boxes, careful advice.',
+  'pharmacy-medium':
+    'Pharmacist explaining dosage with a medicine bottle: measuring spoon, label icons (no text), friendly teaching.',
+  'pharmacy-hard':
+    'Checking allergies before recommending medicine: allergy bracelet vibe, careful pharmacist, concerned customer.',
+
+  shoppingMall:
+    'Information desk in a bright shopping mall: map stand, information counter, visitor asking for a store.',
+  'shoppingMall-easy':
+    'Getting directions inside a mall: escalators, storefronts, staff pointing to a floor.',
+  'shoppingMall-medium':
+    'Asking about mall hours and parking: info desk tablet, parking signs (no text), helpful staff.',
+  'shoppingMall-hard':
+    'Helping a lost shopper find family or exit: mall atrium, information desk, reassuring staff.',
+
+  gym:
+    'Gym front desk: membership brochures, dumbbells in background, staff welcoming a new visitor.',
+  'gym-easy':
+    'Comparing gym membership plans at the desk: price cards (no readable text), water bottle, towels.',
+  'gym-medium':
+    'Talking with a personal trainer near machines: resistance bands, mats, motivating coach.',
+  'gym-hard':
+    'Touring gym facilities: cardio area, weights, locker hallway, staff guiding the visitor.',
+
+  library:
+    'Library help desk: librarian, tall bookshelves, soft reading lamps, visitor asking for a book.',
+  'library-easy':
+    'Applying for a library card: membership form (no text), librarian stamp, bookshelf backdrop.',
+  'library-medium':
+    'Choosing between a physical book and e-book: tablet, hardcover stack, librarian advising.',
+  'library-hard':
+    'Asking about quiet study rooms: glass study pods, laptop tables, librarian showing the way.',
+
+  bank:
+    'Bank counter for opening an account: teller window, forms, debit card brochure, polite clerk.',
+  'bank-easy':
+    'Choosing a debit card at the bank: card samples (no logos), smiling clerk, customer deciding.',
+  'bank-medium':
+    'Setting up mobile banking: phone screen glow, clerk explaining app icons (no text), modern branch.',
+  'bank-hard':
+    'Discussing account fees calmly: calculator notepad, fee brochure silhouette, transparent conversation.',
 };
 
 function requireOpenAi() {
@@ -217,7 +262,9 @@ function buildPrompt(scenario) {
 
 function parseArgs(argv) {
   const force = argv.includes('--force');
+  const skipDb = argv.includes('--skip-db');
   const onlyArg = argv.find((a) => a.startsWith('--only='));
+  const sqlOutArg = argv.find((a) => a.startsWith('--sql-out='));
   const only = onlyArg
     ? onlyArg
         .slice('--only='.length)
@@ -225,7 +272,8 @@ function parseArgs(argv) {
         .map((s) => s.trim())
         .filter(Boolean)
     : null;
-  return { force, only };
+  const sqlOut = sqlOutArg ? sqlOutArg.slice('--sql-out='.length) : null;
+  return { force, only, skipDb, sqlOut };
 }
 
 async function fetchExistingMap() {
@@ -249,12 +297,22 @@ async function upsertImage(scenarioId, titleKey, imageUrl) {
   );
 }
 
+function sqlUpsertLine(scenarioId, titleKey, imageUrl) {
+  const esc = (s) => String(s).replace(/'/g, "''");
+  return `INSERT INTO roleplay_scenario_images (scenario_id, title_key, image_url)
+VALUES ('${esc(scenarioId)}', '${esc(titleKey)}', '${esc(imageUrl)}')
+ON DUPLICATE KEY UPDATE
+  title_key = VALUES(title_key),
+  image_url = VALUES(image_url),
+  updated_at = CURRENT_TIMESTAMP(3);`;
+}
+
 async function sleep(ms) {
   await new Promise((r) => setTimeout(r, ms));
 }
 
 async function main() {
-  const { force, only } = parseArgs(process.argv.slice(2));
+  const { force, only, skipDb, sqlOut } = parseArgs(process.argv.slice(2));
   let scenarios = listScenarios();
   if (only?.length) {
     const set = new Set(only);
@@ -262,10 +320,24 @@ async function main() {
   }
 
   console.log(
-    `[seed-roleplay-images] ${scenarios.length} scenarios (force=${force})`,
+    `[seed-roleplay-images] ${scenarios.length} scenarios (force=${force} skipDb=${skipDb})`,
   );
 
-  const existing = await fetchExistingMap();
+  let existing = {};
+  let dbOk = !skipDb;
+  if (!skipDb) {
+    try {
+      existing = await fetchExistingMap();
+      console.log(`[seed-roleplay-images] DB rows=${Object.keys(existing).length}`);
+    } catch (err) {
+      dbOk = false;
+      console.warn(
+        `[seed-roleplay-images] DB unavailable (${err.message}) — CDN only + SQL file`,
+      );
+    }
+  }
+
+  const sqlLines = [];
   let ok = 0;
   let skipped = 0;
   let failed = 0;
@@ -287,7 +359,10 @@ async function main() {
       const buffer = await generateImageBuffer(prompt);
       const dest = `roleplay/static/${scenario.id}.png`;
       const url = await uploadBuffer(dest, buffer, 'image/png');
-      await upsertImage(scenario.id, scenario.titleKey, url);
+      if (dbOk) {
+        await upsertImage(scenario.id, scenario.titleKey, url);
+      }
+      sqlLines.push(sqlUpsertLine(scenario.id, scenario.titleKey, url));
       console.log(`${label} ✓ ${url} (${buffer.length} bytes)`);
       ok++;
       await sleep(800);
@@ -298,10 +373,25 @@ async function main() {
     }
   }
 
+  const outPath =
+    sqlOut ||
+    require('path').join(__dirname, '../../migrations/generated_roleplay_images.sql');
+  if (sqlLines.length) {
+    const fs = require('fs');
+    fs.writeFileSync(
+      outPath,
+      `-- Auto-generated roleplay CDN image upserts\n${sqlLines.join('\n\n')}\n`,
+      'utf8',
+    );
+    console.log(`[seed-roleplay-images] wrote SQL ${outPath} (${sqlLines.length})`);
+  }
+
   console.log(
-    `[seed-roleplay-images] done ok=${ok} skipped=${skipped} failed=${failed}`,
+    `[seed-roleplay-images] done ok=${ok} skipped=${skipped} failed=${failed} dbOk=${dbOk}`,
   );
-  await pool.end();
+  try {
+    await pool.end();
+  } catch (_) {}
   if (failed) process.exitCode = 1;
 }
 

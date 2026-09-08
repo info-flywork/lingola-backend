@@ -106,6 +106,41 @@ const BASE_SCENARIOS = [
     categoryKey: 'travel',
     minutes: 6,
   },
+  {
+    id: 'pharmacy',
+    titleKey: 'pharmacy',
+    imageAsset: 'assets/images/roleplay/doctorappointment.png',
+    categoryKey: 'dailyInteractions',
+    minutes: 6,
+  },
+  {
+    id: 'shoppingMall',
+    titleKey: 'shoppingMall',
+    imageAsset: 'assets/images/roleplay/shoppingclothes.png',
+    categoryKey: 'shopping',
+    minutes: 6,
+  },
+  {
+    id: 'gym',
+    titleKey: 'gym',
+    imageAsset: 'assets/images/roleplay/birthdayparty.png',
+    categoryKey: 'dailyInteractions',
+    minutes: 6,
+  },
+  {
+    id: 'library',
+    titleKey: 'library',
+    imageAsset: 'assets/images/roleplay/jobinterview.png',
+    categoryKey: 'dailyInteractions',
+    minutes: 6,
+  },
+  {
+    id: 'bank',
+    titleKey: 'bank',
+    imageAsset: 'assets/images/roleplay/rentingapartment.png',
+    categoryKey: 'dailyInteractions',
+    minutes: 6,
+  },
 ];
 
 /** Ana sayfa filtre sırası (All + Lingola RolePlay FE’de eklenir). */
@@ -213,6 +248,36 @@ const VARIANT_TITLE_KEYS = {
     easy: 'trainTicketChange',
     medium: 'trainTicketPlatform',
     hard: 'trainTicketUpgrade',
+  },
+  pharmacy: {
+    beginner: 'pharmacy',
+    easy: 'pharmacySymptoms',
+    medium: 'pharmacyDosage',
+    hard: 'pharmacyAllergy',
+  },
+  shoppingMall: {
+    beginner: 'shoppingMall',
+    easy: 'shoppingMallDirections',
+    medium: 'shoppingMallHours',
+    hard: 'shoppingMallLost',
+  },
+  gym: {
+    beginner: 'gym',
+    easy: 'gymMembership',
+    medium: 'gymTrainer',
+    hard: 'gymTour',
+  },
+  library: {
+    beginner: 'library',
+    easy: 'libraryCard',
+    medium: 'libraryEbook',
+    hard: 'libraryStudyRoom',
+  },
+  bank: {
+    beginner: 'bank',
+    easy: 'bankDebitCard',
+    medium: 'bankMobile',
+    hard: 'bankFees',
   },
 };
 

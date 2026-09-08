@@ -15,7 +15,8 @@
     "seed:lessons": "node src/scripts/seed-lessons.js",
     "seed:words": "node src/scripts/seed-word-table.js",
     "seed:expand-100": "node src/scripts/seed-word-expand-100.js",
-    "seed:translations": "node src/scripts/seed-word-translations.js"
+    "seed:translations": "node src/scripts/seed-word-translations.js",
+    "seed:roleplay-images": "node src/scripts/seed-roleplay-images.js"
   },
   "engines": {
     "node": ">=18"
