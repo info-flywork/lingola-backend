@@ -180,10 +180,30 @@ function parseOnboarding(body = {}) {
 
   const practiceTimeOfDayRaw =
     onboarding.practiceTimeOfDay ?? onboarding.practice_time_of_day ?? null;
-  const practiceTimeOfDay =
+  let practiceTimeOfDay =
     typeof practiceTimeOfDayRaw === 'string' && practiceTimeOfDayRaw.trim()
       ? practiceTimeOfDayRaw.trim().toLowerCase()
       : null;
+  const PRACTICE_SLOTS = new Set([
+    'morning',
+    'afternoon',
+    'evening',
+    'flexible',
+  ]);
+  if (practiceTimeOfDay && !PRACTICE_SLOTS.has(practiceTimeOfDay)) {
+    practiceTimeOfDay = null;
+  }
+
+  const windowEndHourRaw =
+    onboarding.practiceWindowEndHour ??
+    onboarding.practice_window_end_hour ??
+    null;
+  const windowEndMinuteRaw =
+    onboarding.practiceWindowEndMinute ??
+    onboarding.practice_window_end_minute ??
+    null;
+  const hasWindowEnd =
+    windowEndHourRaw !== undefined && windowEndHourRaw !== null;
 
   return {
     nativeLanguageCode,
@@ -206,6 +226,13 @@ function parseOnboarding(body = {}) {
     hasReminderTime:
       reminderHourRaw !== undefined && reminderHourRaw !== null,
     practiceTimeOfDay,
+    practiceWindowEndHour: hasWindowEnd
+      ? normalizeReminderHour(windowEndHourRaw)
+      : null,
+    practiceWindowEndMinute: hasWindowEnd
+      ? normalizeReminderMinute(windowEndMinuteRaw)
+      : null,
+    hasPracticeWindowEnd: hasWindowEnd,
   };
 }
 
@@ -234,6 +261,15 @@ function mapUserRow(row, onboarding) {
     notificationsEnabled: Boolean(row.notifications_enabled),
     dailyReminderHour: normalizeReminderHour(row.daily_reminder_hour),
     dailyReminderMinute: normalizeReminderMinute(row.daily_reminder_minute),
+    practiceTimeOfDay: row.practice_time_of_day || null,
+    practiceWindowEndHour:
+      row.practice_window_end_hour == null
+        ? null
+        : normalizeReminderHour(row.practice_window_end_hour),
+    practiceWindowEndMinute:
+      row.practice_window_end_minute == null
+        ? null
+        : normalizeReminderMinute(row.practice_window_end_minute),
     appLocale: row.app_locale,
     subscriptionStatus: row.subscription_status,
     subscriptionPlanId: row.subscription_plan_id || null,

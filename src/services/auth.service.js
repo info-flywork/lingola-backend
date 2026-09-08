@@ -174,6 +174,9 @@ async function createGuestUser({
                  notifications_enabled = ?,
                  daily_reminder_hour = ?,
                  daily_reminder_minute = ?,
+                 practice_time_of_day = ?,
+                 practice_window_end_hour = ?,
+                 practice_window_end_minute = ?,
                  updated_at = CURRENT_TIMESTAMP
              WHERE id = ?`,
             [
@@ -181,6 +184,13 @@ async function createGuestUser({
               notificationsEnabled ? 1 : 0,
               normalizeReminderHour(onboarding.reminderHour),
               normalizeReminderMinute(onboarding.reminderMinute),
+              onboarding.practiceTimeOfDay ?? null,
+              onboarding.hasPracticeWindowEnd
+                ? onboarding.practiceWindowEndHour
+                : null,
+              onboarding.hasPracticeWindowEnd
+                ? onboarding.practiceWindowEndMinute
+                : null,
               existing.id,
             ],
           );
@@ -221,8 +231,9 @@ async function createGuestUser({
       `INSERT INTO users (
          id, display_name, email, auth_provider, is_guest,
          notifications_enabled, app_locale, subscription_status,
-         daily_reminder_hour, daily_reminder_minute
-       ) VALUES (?, ?, NULL, 'guest', 1, ?, ?, 'free', ?, ?)`,
+         daily_reminder_hour, daily_reminder_minute,
+         practice_time_of_day, practice_window_end_hour, practice_window_end_minute
+       ) VALUES (?, ?, NULL, 'guest', 1, ?, ?, 'free', ?, ?, ?, ?, ?)`,
       [
         userId,
         'Guest',
@@ -230,6 +241,13 @@ async function createGuestUser({
         appLocale,
         reminderHour,
         reminderMinute,
+        onboarding?.practiceTimeOfDay ?? null,
+        onboarding?.hasPracticeWindowEnd
+          ? onboarding.practiceWindowEndHour
+          : null,
+        onboarding?.hasPracticeWindowEnd
+          ? onboarding.practiceWindowEndMinute
+          : null,
       ],
     );
 
@@ -291,6 +309,30 @@ async function updateUserProfile(userId, patch) {
   if (patch.dailyReminderMinute !== undefined) {
     fields.push('daily_reminder_minute = ?');
     values.push(patch.dailyReminderMinute);
+  }
+  if (patch.practiceTimeOfDay !== undefined) {
+    fields.push('practice_time_of_day = ?');
+    const raw = patch.practiceTimeOfDay;
+    const slot =
+      typeof raw === 'string' && raw.trim() ? raw.trim().toLowerCase() : null;
+    const allowed = new Set(['morning', 'afternoon', 'evening', 'flexible']);
+    values.push(slot && allowed.has(slot) ? slot : null);
+  }
+  if (patch.practiceWindowEndHour !== undefined) {
+    fields.push('practice_window_end_hour = ?');
+    values.push(
+      patch.practiceWindowEndHour == null
+        ? null
+        : normalizeReminderHour(patch.practiceWindowEndHour),
+    );
+  }
+  if (patch.practiceWindowEndMinute !== undefined) {
+    fields.push('practice_window_end_minute = ?');
+    values.push(
+      patch.practiceWindowEndMinute == null
+        ? null
+        : normalizeReminderMinute(patch.practiceWindowEndMinute),
+    );
   }
   if (patch.appLocale !== undefined) {
     fields.push('app_locale = ?');
@@ -587,8 +629,9 @@ async function loginWithProvider({
           `INSERT INTO users (
              id, display_name, email, avatar_url, auth_provider, is_guest,
              notifications_enabled, app_locale, subscription_status,
-             daily_reminder_hour, daily_reminder_minute
-           ) VALUES (?, ?, ?, ?, ?, 0, ?, ?, 'free', ?, ?)`,
+             daily_reminder_hour, daily_reminder_minute,
+             practice_time_of_day, practice_window_end_hour, practice_window_end_minute
+           ) VALUES (?, ?, ?, ?, ?, 0, ?, ?, 'free', ?, ?, ?, ?, ?)`,
           [
             userId,
             displayName || (provider === 'apple' ? 'Apple User' : 'Google User'),
@@ -599,6 +642,13 @@ async function loginWithProvider({
             appLocale,
             reminderHour,
             reminderMinute,
+            onboarding?.practiceTimeOfDay ?? null,
+            onboarding?.hasPracticeWindowEnd
+              ? onboarding.practiceWindowEndHour
+              : null,
+            onboarding?.hasPracticeWindowEnd
+              ? onboarding.practiceWindowEndMinute
+              : null,
           ],
         );
       }
@@ -617,11 +667,21 @@ async function loginWithProvider({
         `UPDATE users
          SET daily_reminder_hour = ?,
              daily_reminder_minute = ?,
+             practice_time_of_day = ?,
+             practice_window_end_hour = ?,
+             practice_window_end_minute = ?,
              updated_at = CURRENT_TIMESTAMP
          WHERE id = ? AND deleted_at IS NULL`,
         [
           normalizeReminderHour(onboarding.reminderHour),
           normalizeReminderMinute(onboarding.reminderMinute),
+          onboarding.practiceTimeOfDay ?? null,
+          onboarding.hasPracticeWindowEnd
+            ? onboarding.practiceWindowEndHour
+            : null,
+          onboarding.hasPracticeWindowEnd
+            ? onboarding.practiceWindowEndMinute
+            : null,
           userId,
         ],
       );

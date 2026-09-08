@@ -14,6 +14,8 @@ const {
   parseOnboarding,
   normalizeLocaleCode,
   normalizeInterests,
+  normalizeReminderHour,
+  normalizeReminderMinute,
   EXPLANATION_LANGUAGE_VALUES,
   GOAL_VALUES,
   LEVEL_VALUES,
@@ -208,8 +210,15 @@ async function updateNotifications(req, res, next) {
       body.reminder_minute !== undefined ||
       body.dailyReminderMinute !== undefined ||
       body.daily_reminder_minute !== undefined;
+    const hasPractice =
+      body.practiceTimeOfDay !== undefined ||
+      body.practice_time_of_day !== undefined ||
+      body.practiceWindowEndHour !== undefined ||
+      body.practice_window_end_hour !== undefined ||
+      body.practiceWindowEndMinute !== undefined ||
+      body.practice_window_end_minute !== undefined;
 
-    if (!hasEnabled && !hasHour && !hasMinute) {
+    if (!hasEnabled && !hasHour && !hasMinute && !hasPractice) {
       const err = apiError(
         'notificationsEnabled or reminderHour/reminderMinute is required',
         {
@@ -241,6 +250,31 @@ async function updateNotifications(req, res, next) {
           body.dailyReminderMinute ??
           body.daily_reminder_minute,
       );
+    }
+    if (
+      body.practiceTimeOfDay !== undefined ||
+      body.practice_time_of_day !== undefined
+    ) {
+      patch.practiceTimeOfDay =
+        body.practiceTimeOfDay ?? body.practice_time_of_day;
+    }
+    if (
+      body.practiceWindowEndHour !== undefined ||
+      body.practice_window_end_hour !== undefined
+    ) {
+      const raw =
+        body.practiceWindowEndHour ?? body.practice_window_end_hour;
+      patch.practiceWindowEndHour =
+        raw == null ? null : normalizeReminderHour(raw);
+    }
+    if (
+      body.practiceWindowEndMinute !== undefined ||
+      body.practice_window_end_minute !== undefined
+    ) {
+      const raw =
+        body.practiceWindowEndMinute ?? body.practice_window_end_minute;
+      patch.practiceWindowEndMinute =
+        raw == null ? null : normalizeReminderMinute(raw);
     }
 
     const user = await updateUserProfile(req.user.id, patch);
@@ -338,12 +372,66 @@ async function updateOnboarding(req, res, next) {
       patch.explanationLanguage = value;
     }
 
-    if (!Object.keys(patch).length) {
+    // Pratik penceresi users tablosunda tutulur (hatırlatma ile birlikte).
+    const reminderPatch = {};
+    const reminderHourRaw =
+      onboardingBody.reminderHour ??
+      onboardingBody.reminder_hour ??
+      onboardingBody.dailyReminderHour ??
+      onboardingBody.daily_reminder_hour;
+    const reminderMinuteRaw =
+      onboardingBody.reminderMinute ??
+      onboardingBody.reminder_minute ??
+      onboardingBody.dailyReminderMinute ??
+      onboardingBody.daily_reminder_minute;
+    if (reminderHourRaw !== undefined && reminderHourRaw !== null) {
+      reminderPatch.dailyReminderHour = normalizeReminderHour(reminderHourRaw);
+    }
+    if (reminderMinuteRaw !== undefined && reminderMinuteRaw !== null) {
+      reminderPatch.dailyReminderMinute =
+        normalizeReminderMinute(reminderMinuteRaw);
+    }
+    if (
+      onboardingBody.practiceTimeOfDay !== undefined ||
+      onboardingBody.practice_time_of_day !== undefined
+    ) {
+      reminderPatch.practiceTimeOfDay =
+        onboardingBody.practiceTimeOfDay ??
+        onboardingBody.practice_time_of_day;
+    }
+    if (
+      onboardingBody.practiceWindowEndHour !== undefined ||
+      onboardingBody.practice_window_end_hour !== undefined
+    ) {
+      const endH =
+        onboardingBody.practiceWindowEndHour ??
+        onboardingBody.practice_window_end_hour;
+      reminderPatch.practiceWindowEndHour =
+        endH == null ? null : normalizeReminderHour(endH);
+    }
+    if (
+      onboardingBody.practiceWindowEndMinute !== undefined ||
+      onboardingBody.practice_window_end_minute !== undefined
+    ) {
+      const endM =
+        onboardingBody.practiceWindowEndMinute ??
+        onboardingBody.practice_window_end_minute;
+      reminderPatch.practiceWindowEndMinute =
+        endM == null ? null : normalizeReminderMinute(endM);
+    }
+
+    if (!Object.keys(patch).length && !Object.keys(reminderPatch).length) {
       const err = new Error('No onboarding fields to update');
       err.status = 400;
       throw err;
     }
-    const user = await updateUserOnboarding(req.user.id, patch);
+    let user;
+    if (Object.keys(patch).length) {
+      user = await updateUserOnboarding(req.user.id, patch);
+    }
+    if (Object.keys(reminderPatch).length) {
+      user = await updateUserProfile(req.user.id, reminderPatch);
+    }
     res.json({ ok: true, user });
   } catch (err) {
     next(err);
